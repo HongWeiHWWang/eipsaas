@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.Calendar.dao.CalendarSettingDao">
+	<resultMap id="CalendarSetting"
+		type="com.hotent.Calendar.model.CalendarSetting">
+		<id property="id" column="ID_" jdbcType="VARCHAR" />
+		<result property="calendarId" column="CALENDAR_ID_" jdbcType="VARCHAR" />
+		<result property="years" column="YEARS_" jdbcType="NUMERIC" />
+		<result property="months" column="MONTHS_" jdbcType="NUMERIC" />
+		<result property="days" column="DAYS_" jdbcType="NUMERIC" />
+		<result property="dateType" column="DATE_TYPE_" jdbcType="VARCHAR" />
+		<result property="shiftId" column="SHIFT_ID_" jdbcType="VARCHAR" />
+		<result property="calDay" column="CAL_DAY_" jdbcType="VARCHAR" />
+		
+	</resultMap>
+
+	<resultMap id="CalendarSettingExt" extends="CalendarSetting"
+		type="com.hotent.Calendar.model.CalendarSetting">
+		<collection property="calendarShiftPeroidList"
+			ofType="com.hotent.Calendar.model.CalendarShiftPeroid"
+			javaType="ArrayList">
+			<result property="startTime" column="startTime" />
+			<result property="endTime" column="endTime" />
+		</collection>
+	</resultMap>
+
+	<sql id="columns">
+		id_,calendar_Id_,years_,months_,days_,date_type_,shift_id_,cal_Day_
+	</sql>
+
+	<select id="getByCalendarId" parameterType="Map" resultMap="CalendarSettingExt">
+		select a.id_,
+		a.calendar_Id_,
+		a.years_,
+		a.months_,
+		a.days_,
+		a.date_type_,
+		a.shift_Id_,
+		a.cal_Day_,
+		b.start_Time_,
+		b.end_Time_
+		from portal_cal_setting a, portal_portal_cal_shift_peroid b
+		where a.shift_id_ = b.shift_id_
+		and a.calendar_Id_ = #{calendarId}
+		and a.cal_Day_ >= #{startTime}
+		and date_type_ = 1
+		order by a.cal_Day_, b.start_Time_
+	</select>
+
+	<select id="getCalByIdYearMon" parameterType="Map" resultMap="CalendarSetting">
+		select a.id_,
+		a.calendar_Id_,
+		a.years_,
+		a.months_,
+		a.days_,
+		a.date_type_,
+		a.shift_Id_,
+		b.name_ wtName
+		from portal_cal_setting a
+		left join portal_cal_shift b
+		on a.shift_Id_ = b.id_
+		where a.calendar_Id_ = #{id}
+		and a.years_ = #{year}
+		and a.months_ = #{month}
+		order by a.days_
+	</select>
+
+	<select id="getCalByIdYear" parameterType="Map" resultMap="CalendarSetting">
+		select a.id_,
+		a.calendar_Id_,
+		a.years_,
+		a.months_,
+		a.days_,
+		a.date_type_,
+		a.shift_Id_,
+		b.name_ wtName
+		from portal_cal_setting a
+		left join portal_cal_shift b
+		on a.shift_Id_ = b.id_
+		where a.calendar_Id_ = #{id}
+		and a.years_ = #{year}
+		order by a.months_, a.days_
+	</select>
+
+	<select id="getSegmentByCalId" parameterType="Map"
+		resultMap="CalendarSettingExt">
+		select a.id_,
+		a.calendar_Id_,
+		a.years_,
+		a.months_,
+		a.days_,
+		a.date_type_,
+		a.shift_id_,
+		a.cal_Day_
+		from portal_cal_setting a
+		where a.calendar_Id_ = #{calendarId}
+		AND date_TYPE_ = 1
+		<if test="startDate!=null">
+			and a.cal_Day_ between #{startDate} and #{endDate}
+		</if>
+		order by a.cal_Day_
+	</select>
+
+	<delete id="delByCalidYearMon" parameterType="Map">
+		DELETE FROM
+		portal_cal_setting
+		WHERE calendar_Id_=#{id} and years_=#{year} and months_=#{month}
+	</delete>
+	
+	<delete id="delByCalendarId" parameterType="java.lang.String">
+		DELETE FROM
+		portal_cal_setting
+		WHERE calendar_Id_=#{calendarId}
+	</delete>
+
+	<delete id="delByCalId" parameterType="java.lang.String">
+		DELETE FROM portal_cal_setting
+		WHERE calendar_Id_=#{calendarId}
+	</delete>
+
+
+
+</mapper>

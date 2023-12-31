@@ -1,0 +1,6 @@
+com\hotent\mail\persistenc\util\MailUtilTest.class
+com\hotent\mail\MailTestCase.class
+com\hotent\mail\persistenc\manager\MailAttachmentManagerTest.class
+com\hotent\mail\persistenc\manager\MailSettingManagerTest.class
+com\hotent\mail\persistenc\manager\MailLinkmanManagerTest.class
+com\hotent\mail\persistenc\manager\MailManagerTest.class

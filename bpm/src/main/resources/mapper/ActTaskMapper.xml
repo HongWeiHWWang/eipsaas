@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.ActTaskDao">
+	<resultMap id="ActTask" type="com.hotent.bpm.persistence.model.ActTask">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="rev" column="REV_" jdbcType="NUMERIC"/>
+		<result property="executionId" column="EXECUTION_ID_" jdbcType="VARCHAR"/>
+		<result property="procInstId" column="PROC_INST_ID_" jdbcType="VARCHAR"/>
+		<result property="procDefId" column="PROC_DEF_ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="parentTaskId" column="PARENT_TASK_ID_" jdbcType="VARCHAR"/>
+		<result property="description" column="DESCRIPTION_" jdbcType="VARCHAR"/>
+		<result property="taskDefKey" column="TASK_DEF_KEY_" jdbcType="VARCHAR"/>
+		<result property="owner" column="OWNER_" jdbcType="VARCHAR"/>
+		<result property="assignee" column="ASSIGNEE_" jdbcType="VARCHAR"/>
+		<result property="delegation" column="DELEGATION_" jdbcType="VARCHAR"/>
+		<result property="priority" column="PRIORITY_" jdbcType="NUMERIC"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="dueDate" column="DUE_DATE_" jdbcType="TIMESTAMP"/>
+		<result property="suspensionState" column="SUSPENSION_STATE_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<insert id="create" parameterType="com.hotent.bpm.persistence.model.ActTask">
+		INSERT INTO act_ru_task
+		(ID_,REV_,EXECUTION_ID_,PROC_INST_ID_,PROC_DEF_ID_,NAME_,PARENT_TASK_ID_,DESCRIPTION_,TASK_DEF_KEY_,OWNER_,ASSIGNEE_,DELEGATION_,PRIORITY_,CREATE_TIME_,DUE_DATE_,SUSPENSION_STATE_)
+		VALUES 
+		(#{id,jdbcType=VARCHAR}, #{rev,jdbcType=NUMERIC}, #{executionId,jdbcType=VARCHAR}, #{procInstId,jdbcType=VARCHAR}, #{procDefId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{parentTaskId,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{taskDefKey,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR}, #{assignee,jdbcType=VARCHAR}, #{delegation,jdbcType=VARCHAR}, #{priority,jdbcType=NUMERIC}, #{createTime,jdbcType=TIMESTAMP}, #{dueDate,jdbcType=TIMESTAMP}, #{suspensionState,jdbcType=NUMERIC})
+	</insert>
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="ActTask">
+		SELECT * FROM act_ru_task 
+		WHERE 
+		ID_=#{id}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="ActTask">
+		SELECT * FROM act_ru_task
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY ID_ DESC
+		</if>
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM act_ru_task 
+		WHERE
+		ID_=#{id}
+	</delete>
+	
+	<delete id="delByInstList" >
+		DELETE FROM  act_ru_task where proc_inst_id_ in 
+			<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        	</foreach> 
+	</delete>
+	
+	
+	<delete id="delCandidateByInstList" >
+		DELETE FROM  act_ru_identitylink where PROC_INST_ID_ in 
+			<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        	</foreach> 
+	</delete>
+	
+	
+	<delete id="delSpecVarsByInstList" >
+		DELETE FROM  act_ru_variable where PROC_INST_ID_ in 
+			<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        	</foreach> 
+        	and NAME_ in ('nrOfInstances','nrOfCompletedInstances','nrOfActiveInstances','loopCounter')
+	</delete>
+	
+	
+	<select id="getByInstId" parameterType="java.lang.String" resultMap="ActTask">
+		SELECT * FROM act_ru_task 
+		WHERE 
+		PROC_INST_ID_=#{instId}
+	</select>
+	
+	<delete id="delTaskByInstList">
+		delete FROM act_ru_task where execution_id_ in (
+			select id_ from act_ru_execution where PROC_INST_ID_
+		  in <foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+		            #{instId} 
+		         </foreach> 
+		         AND ID_ != PARENT_ID_
+		)
+	</delete>
+	
+	
+</mapper>

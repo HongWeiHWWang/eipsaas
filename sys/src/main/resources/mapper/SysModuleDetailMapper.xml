@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.sys.persistence.dao.SysModuleDetailDao">
+    <resultMap id="SysModuleDetail" type="com.hotent.sys.persistence.model.SysModuleDetail">
+        <id property="id" column="ID_" jdbcType="VARCHAR"/>
+        <result property="moduleId" column="MODULE_ID_" jdbcType="VARCHAR"/>
+        <result property="type" column="TYPE_" jdbcType="VARCHAR"/>
+        <result property="columnName" column="COLUMN_NAME_" jdbcType="VARCHAR"/>
+        <result property="code" column="CODE_" jdbcType="VARCHAR"/>
+        <result property="name" column="NAME_" jdbcType="VARCHAR"/>
+        <result property="viewCode" column="VIEW_CODE_" jdbcType="VARCHAR"/>
+        <result property="viewName" column="VIEW_NAME_" jdbcType="VARCHAR"/>
+        <result property="url" column="URL_" jdbcType="VARCHAR"/>
+        <result property="chartType" column="CHART_TYPE_" jdbcType="VARCHAR"/>
+        <result property="showType" column="SHOW_TYPE_" jdbcType="VARCHAR"/>
+        <result property="sn" column="SN_" jdbcType="NUMERIC"/>
+        
+    </resultMap>
+
+    <select id="getModuleDetail"   parameterType="java.util.Map" resultMap="SysModuleDetail">
+        SELECT * FROM PORTAL_SYS_MODULE_DETAIL
+        WHERE
+        MODULE_ID_=${moduleId}
+        <if test="type!=null">
+            AND TYPE_=${type}
+        </if>
+        order by SN_
+    </select>
+
+    <delete id="removeByModuleId" parameterType="java.lang.String">
+		DELETE FROM PORTAL_SYS_MODULE_DETAIL
+		WHERE
+		MODULE_ID_=#{moduleId,jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

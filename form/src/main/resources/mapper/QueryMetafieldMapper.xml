@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.QueryMetafieldDao">
+	<resultMap id="QueryMetafield" type="com.hotent.form.model.QueryMetafield">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="sqlId" column="SQL_ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="fieldName" column="FIELD_NAME_" jdbcType="VARCHAR"/>
+		<result property="fieldDesc" column="FIELD_DESC_" jdbcType="VARCHAR"/>
+		<result property="isShow" column="IS_SHOW_" jdbcType="NUMERIC"/>
+		<result property="isSearch" column="IS_SEARCH_" jdbcType="NUMERIC"/>
+		<result property="isCombine" column="IS_COMBINE_" jdbcType="NUMERIC"/>
+		<result property="controlType" column="CONTROL_TYPE_" jdbcType="VARCHAR"/>
+		<result property="dataType" column="DATA_TYPE_" jdbcType="VARCHAR"/>
+		<result property="isVirtual" column="IS_VIRTUAL_" jdbcType="NUMERIC"/>
+		<result property="virtualFrom" column="VIRTUAL_FROM_" jdbcType="VARCHAR"/>
+		<result property="resultFromType" column="RESULT_FROM_TYPE_" jdbcType="VARCHAR"/>
+		<result property="resultFrom" column="RESULT_FROM_" jdbcType="VARCHAR"/>
+		<result property="alarmSetting" column="ALARM_SETTING_" jdbcType="VARCHAR"/>
+		<result property="dateFormat" column="DATE_FORMAT_" jdbcType="VARCHAR"/>
+		<result property="url" column="URL_" jdbcType="VARCHAR"/>
+		<result property="formater" column="FORMATER_" jdbcType="LONGVARCHAR"/>
+		<result property="controlContent" column="CONTROL_CONTENT_" jdbcType="VARCHAR"/>
+		<result property="sn" column="SN_" jdbcType="NUMERIC"/>
+		<result property="width" column="WIDTH_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<select id="getBySqlId" parameterType="java.lang.String" resultMap="QueryMetafield">
+		SELECT * FROM form_query_metafield 
+		WHERE 
+		SQL_ID_=#{sqlId} ORDER BY SN_
+	</select>
+	
+	<delete id="removeBySqlId" parameterType="java.lang.String">
+		DELETE FROM form_query_metafield 
+		WHERE
+		SQL_ID_=#{sqlId}
+	</delete>
+</mapper>

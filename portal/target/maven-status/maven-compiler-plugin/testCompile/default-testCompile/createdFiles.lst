@@ -1,0 +1,14 @@
+com\hotent\portal\persistence\manager\MessageReceiverManagerTest.class
+com\hotent\portal\persistence\manager\SysIndexLayoutManagerTest.class
+com\hotent\portal\persistence\manager\SysIndexToolsManagerTest.class
+com\hotent\portal\persistence\manager\SysMessageManagerTest.class
+com\hotent\portal\persistence\manager\SysTypeManagerTest.class
+com\hotent\portal\persistence\manager\SysIndexColumnManagerTest.class
+com\hotent\portal\PortalTestCase.class
+com\hotent\portal\persistence\manager\DataDictManagerTest.class
+com\hotent\portal\persistence\manager\SysIndexMyLayoutManagerTest.class
+com\hotent\portal\persistence\manager\AuthorityManagerTest.class
+com\hotent\portal\persistence\manager\SysLayoutToolsManagerTest.class
+com\hotent\portal\persistence\manager\SysIndexLayoutManageManagerTest.class
+com\hotent\portal\persistence\manager\SysLayoutSettingManagerTest.class
+com\hotent\portal\persistence\manager\MessageReadManagerTest.class

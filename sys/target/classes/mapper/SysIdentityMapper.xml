@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.sys.persistence.dao.SysIdentityDao">
+	<resultMap id="Identity" type="com.hotent.sys.persistence.model.SysIdentity">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="alias" column="alias_" jdbcType="VARCHAR"/>
+		<result property="regulation" column="regulation_" jdbcType="VARCHAR"/>
+		<result property="genType" column="gen_type_" jdbcType="NUMERIC"/>
+		<result property="noLength" column="no_length_" jdbcType="NUMERIC"/>
+		<result property="curDate" column="cur_date_" jdbcType="VARCHAR"/>
+		<result property="initValue" column="init_value_" jdbcType="NUMERIC"/>
+		<result property="curValue" column="cur_value_" jdbcType="NUMERIC"/>
+		<result property="step" column="step_" jdbcType="NUMERIC"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="update_time_" jdbcType="TIMESTAMP"/>
+		
+	</resultMap>
+	
+	<sql id="columns">
+		id_,name_,alias_,regulation_,gen_type_,no_length_,cur_date_,init_value_,cur_value_,step_,create_by_,CREATE_TIME_,create_org_id_,update_by_,update_time_,tenant_id_
+	</sql>
+	
+	<update id="updByAlias" parameterType="com.hotent.sys.persistence.model.SysIdentity">
+		UPDATE portal_sys_identity SET
+		cur_date_=#{curDate,jdbcType=VARCHAR},
+		cur_value_=#{newCurValue,jdbcType=NUMERIC}
+		WHERE alias_=#{alias,jdbcType=VARCHAR}
+		and cur_value_=#{curValue,jdbcType=NUMERIC}
+	</update>
+	
+	<select id="isAliasExisted" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from portal_sys_identity where alias_=#{alias} 
+		<if test="id!=null"> AND id_ !=#{id} </if>
+	</select>
+	
+	<!-- start getByAlias  -->
+	<select id="getByAlias" parameterType="java.lang.String" resultMap="Identity">
+		SELECT <include refid="columns"/>
+		FROM portal_sys_identity
+		WHERE
+		alias_=#{alias} 
+	</select>
+	<!-- end getByAlias  -->
+	
+</mapper>

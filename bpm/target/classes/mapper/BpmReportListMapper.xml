@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmReportListDao">
+	<resultMap id="bpmReportList" type="com.hotent.bpm.persistence.model.BpmReportList">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="type" column="TYPE_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createName" column="CREATE_NAME_" jdbcType="VARCHAR"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="orgName" column="CREATE_ORG_NAME_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="columns">
+		ID_,NAME_,TYPE_,CREATE_BY_,CREATE_NAME_,CREATE_ORG_ID_,CREATE_ORG_NAME_
+	</sql>
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(name)"> AND NAME_=#{name} </if>
+		</where>
+	</sql>
+</mapper>

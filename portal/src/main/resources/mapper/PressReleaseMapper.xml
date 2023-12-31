@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.portal.persistence.dao.PressReleaseDao">
+	<resultMap id="PressRelease" type="com.hotent.portal.model.PressRelease">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="refId" column="REF_ID_" jdbcType="VARCHAR"/>
+		<result property="FSfxysp" column="F_sfxysp" jdbcType="VARCHAR"/>
+		<result property="FSpr" column="F_spr" jdbcType="VARCHAR"/>
+		<result property="FFbfs" column="F_fbfs" jdbcType="VARCHAR"/>
+		<result property="FLbtssfl" column="F_lbtssfl" jdbcType="VARCHAR"/>
+		<result property="FGsbssfl" column="F_gsbssfl" jdbcType="VARCHAR"/>
+		<result property="FBt" column="F_bt" jdbcType="VARCHAR"/>
+		<result property="FCjsj" column="F_cjsj" jdbcType="TIMESTAMP"/>
+		<result property="FCjr" column="F_cjr" jdbcType="VARCHAR"/>
+		<result property="FSfwblj" column="F_sfwblj" jdbcType="VARCHAR"/>
+		<result property="FNrurl" column="F_nrurl" jdbcType="VARCHAR"/>
+		<result property="FNr" column="F_nr" jdbcType="CLOB"/>
+		<result property="FPx" column="F_px" jdbcType="NUMERIC"/>
+		<result property="FYxsj" column="F_yxsj" jdbcType="TIMESTAMP"/>
+		<result property="FSprzh" column="F_sprzh" jdbcType="VARCHAR"/>
+		<result property="FFormDataRev" column="F_form_data_rev_" jdbcType="NUMERIC"/>
+		<result property="FLbzstp" column="F_lbzstp" jdbcType="VARCHAR"/>
+		<result property="FBtms" column="F_btms" jdbcType="VARCHAR"/>
+		<result property="FYmqtgd" column="F_ymqtgd" jdbcType="VARCHAR"/>
+		
+	</resultMap>
+	
+	<select id="getNews" resultType="java.lang.String" parameterType="java.util.Map">
+		SELECT distinct F_gsbssfl FROM w_xwgg WHERE F_fbfs ='2' and F_yxsj &gt;= #{nowDate,jdbcType=TIMESTAMP} 
+	</select>
+	
+</mapper>

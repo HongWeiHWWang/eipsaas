@@ -1,0 +1,99 @@
+spring:
+  profiles:
+    active: dev
+    platform: mysql
+    base: com.hotent.uc.controller
+  application: 
+    name: uc-eureka
+  datasource: 
+    name: dev
+    url: jdbc:mysql://192.168.1.211:3306/x7_uc_dev?serverTimezone=UTC&useSSL=false&&characterEncoding=UTF-8
+    username: root
+    password: root
+#    url: jdbc:oracle:thin:@192.168.1.80:1521:ORCL 
+#    username: X7.1_UC_TEST
+#    password: X7.1_UC_TEST
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 1
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 200
+    maxPoolPreparedStatementPerConnectionSize: 20
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+# Server settings (ServerProperties)
+server:
+  port: 8088
+  address: 0.0.0.0
+  sessionTimeout: 30
+  contextPath: /
+  undertow:
+    io-threads: 2
+    worker-threads: 30
+  session:
+    timeout: 30
+  compression:
+    enabled: true
+    mime-types: 'text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json'
+    min-response-size: 1024
+
+system: 
+  id: 
+    machineName: uc
+
+eureka:
+  client:
+    healthcheck:
+      enabled:  true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+  instance:
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+
+# feign配置
+feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 50000
+        readTimeout: 50000
+        loggerLevel: full
+        
+# 断路器配置
+hystrix:
+  metrics:
+    enabled: true    
+  command:    
+    default:    
+      execution:    
+        isolation:
+          strategy: SEMAPHORE   # THREAD  SEMAPHORE
+          semaphore:
+            maxConcurrentRequests: 200 # 默认情况下下面两个值都是10，也就是超过10个的并发会直接进入fallback方法，不会去真正请求
+          thread:    
+            timeoutInMilliseconds: 50000 #缺省为1000
+      fallback:
+        isolation:
+          semaphore:
+            maxConcurrentRequests: 200   # 默认情况下下面两个值都是10，也就是超过10个的并发会直接进入fallback方法，不会去真正请求
+            
+# 负载均衡配置
+ribbon:
+  eureka:
+    enabled: true  

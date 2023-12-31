@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.portal.persistence.dao.SysLayoutToolsDao">
+	<resultMap id="SysLayoutTools" type="com.hotent.portal.model.SysLayoutTools">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="layoutId" column="LAYOUT_ID_" jdbcType="VARCHAR"/>
+		<result property="toolsIds" column="TOOLS_IDS" jdbcType="LONGVARCHAR"/>
+		<result property="toolsType" column="TOOLS_TYPE" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getByLayoutIDAndType"   parameterType="java.util.Map" resultMap="SysLayoutTools">
+		SELECT * FROM portal_sys_layout_tools 
+		WHERE 
+		LAYOUT_ID_=#{layoutId} AND TOOLS_TYPE = #{toolsType }
+	</select>
+</mapper>

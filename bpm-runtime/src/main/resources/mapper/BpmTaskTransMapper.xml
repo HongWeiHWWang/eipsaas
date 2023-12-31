@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.runtime.dao.BpmTaskTransDao">
+	<resultMap id="BpmTaskTrans" type="com.hotent.runtime.model.BpmTaskTrans">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="instanceId" column="instance_id_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="task_id_" jdbcType="VARCHAR"/>
+		<result property="action" column="action_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="creator" column="creator_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="decideType" column="decide_type_" jdbcType="VARCHAR"/>
+		<result property="voteType" column="vote_type_" jdbcType="VARCHAR"/>
+		<result property="voteAmount" column="vote_amount_" jdbcType="NUMERIC"/>
+		<result property="signType" column="sign_type_" jdbcType="VARCHAR"/>
+		<result property="totalAmount" column="total_amount_" jdbcType="NUMERIC"/>
+		<result property="agreeAmount" column="agree_amount_" jdbcType="NUMERIC"/>
+		<result property="opposeAmount" column="oppose_amount_" jdbcType="NUMERIC"/>
+		<result property="seq" column="seq_" jdbcType="NUMERIC"/>
+		<result property="userJson" column="user_json_" jdbcType="VARCHAR"/>
+		<result property="allowFormEdit" column="ALLOW_FORM_EDIT_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<select id="getByTaskId"   parameterType="java.lang.String" resultMap="BpmTaskTrans">
+		SELECT * FROM bpm_task_trans 
+		WHERE 
+		task_id_=#{taskId}
+	</select>
+	
+	<delete id="removeByInstId" parameterType="java.lang.String">
+		DELETE FROM bpm_task_trans 
+		WHERE
+		instance_id_=#{instanceId}
+	</delete>
+	
+	
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.OrgJobDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.OrgJob">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="code" column="CODE_" jdbcType="VARCHAR"/>
+		<result property="postLevel" column="JOB_LEVEL_" jdbcType="VARCHAR"/>
+		<result property="description" column="DESCRIPTION_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<parameterMap id="OrgJob" type="com.hotent.uc.model.OrgJob" />
+	
+	<sql id="Base_Column_List">
+		ID_,NAME_,CODE_,JOB_LEVEL_,DESCRIPTION_,UPDATE_TIME_,IS_DELE_,VERSION_
+	</sql>
+	
+	
+	
+	<select id="getByCode"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM UC_ORG_JOB 
+		WHERE 
+		CODE_=#{code} AND IS_DELE_!='1'
+	</select>
+	
+	
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_ORG_JOB WHERE IS_DELE_='1'
+	</delete>
+	
+	<select id="getByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM UC_ORG_JOB WHERE NAME_ = #{name}  AND IS_DELE_!='1'
+	</select>
+
+	<select id="getCountByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(1) FROM UC_ORG_JOB
+		WHERE CODE_ = #{code}
+	</select>
+	
+</mapper>

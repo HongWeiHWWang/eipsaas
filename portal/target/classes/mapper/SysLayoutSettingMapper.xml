@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.portal.persistence.dao.SysLayoutSettingDao">
+	<resultMap id="SysLayoutSetting" type="com.hotent.portal.model.SysLayoutSetting">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="layoutId" column="LAYOUT_ID_" jdbcType="VARCHAR"/>
+		<result property="logo" column="LOGO_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getByLayoutId"   parameterType="java.lang.String" resultMap="SysLayoutSetting">
+		SELECT * FROM portal_sys_layout_setting 
+		WHERE 
+		LAYOUT_ID_=#{layoutId}
+	</select>
+</mapper>

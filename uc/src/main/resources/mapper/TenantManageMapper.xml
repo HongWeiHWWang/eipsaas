@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.TenantManageDao">
+	<resultMap id="TenantManage" type="com.hotent.uc.model.TenantManage">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="typeId" column="TYPE_ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="code" column="CODE_" jdbcType="VARCHAR"/>
+		<result property="status" column="STATUS_" jdbcType="VARCHAR"/>
+		<result property="shorthand" column="SHORTHAND_" jdbcType="VARCHAR"/>
+		<result property="domain" column="DOMAIN_" jdbcType="VARCHAR"/>
+		<result property="manageLogo" column="MANAGE_LOGO_" jdbcType="VARCHAR"/>
+		<result property="frontLogo" column="FRONT_LOGO_" jdbcType="VARCHAR"/>
+		<result property="ico" column="ICO_" jdbcType="VARCHAR"/>
+		<result property="desc" column="DESC_" jdbcType="VARCHAR"/>
+		<result property="typeName" column="type_name_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+	<select id="getByCode"   parameterType="java.lang.String" resultMap="TenantManage">
+		SELECT * FROM UC_TENANT_MANAGE 
+		WHERE 
+		CODE_=#{code,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getByTypeId"   parameterType="java.lang.String" resultMap="TenantManage">
+		SELECT * FROM UC_TENANT_MANAGE 
+		WHERE 
+		TYPE_ID_=#{typeId,jdbcType=VARCHAR} and IS_DELE_ = '0'
+	</select>
+	
+	<select id="getByStatus"   parameterType="java.lang.String" resultMap="TenantManage">
+		SELECT * FROM UC_TENANT_MANAGE WHERE 1=1
+		<if test="status!=null">
+			AND STATUS_=#{status,jdbcType=VARCHAR}
+		</if>
+		<if test="typeId!=null">
+			AND TYPE_ID_=#{typeId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="getByDomain"   parameterType="java.lang.String" resultMap="TenantManage">
+		SELECT * FROM UC_TENANT_MANAGE 
+		WHERE 
+		DOMAIN_=#{domain,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<delete id="deleteByTypeId" parameterType="java.lang.String">
+		DELETE FROM UC_TENANT_MANAGE 
+		WHERE
+		TYPE_ID_=#{typeId,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="queryWithType" parameterType="java.util.Map" resultMap="TenantManage">
+		select * from (
+			select tm.*,tt.name_ "type_name_" from uc_tenant_manage tm
+			left join uc_tenant_type tt on tm.type_id_ = tt.id_ 
+			where tm.IS_DELE_!='1'
+		) mq
+		${ew.customSqlSegment}
+	</select>
+</mapper>

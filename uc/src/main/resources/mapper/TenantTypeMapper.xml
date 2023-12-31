@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.TenantTypeDao">
+	<resultMap id="TenantType" type="com.hotent.uc.model.TenantType">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="code" column="CODE_" jdbcType="VARCHAR"/>
+		<result property="status" column="STATUS_" jdbcType="VARCHAR"/>
+		<result property="isDefault" column="IS_DEFAULT_" jdbcType="VARCHAR"/>
+		<result property="desc" column="DESC_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getByCode"   parameterType="java.lang.String" resultMap="TenantType">
+		SELECT * FROM UC_TENANT_TYPE 
+		WHERE 
+		CODE_=#{code,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getByStatus"   parameterType="java.lang.String" resultMap="TenantType">
+		SELECT * FROM UC_TENANT_TYPE WHERE 1=1
+		<if test="status!=null">
+			AND STATUS_=#{status,jdbcType=VARCHAR}
+		</if>
+		<if test="authIds!=null">
+			AND ID_ in
+			<foreach collection="authIds" index="index" item="item" open="(" separator="," close=")">
+	              #{item}
+	        </foreach>
+		</if>
+		
+	</select>
+	
+	<select id="getDefault"   parameterType="java.lang.String" resultMap="TenantType">
+		SELECT * FROM UC_TENANT_TYPE 
+		WHERE 
+		IS_DEFAULT_='1'
+	</select>
+	
+	<update id="setNotDefault">
+		UPDATE UC_TENANT_TYPE SET IS_DEFAULT_='0' where IS_DEFAULT_= '1'
+	</update>
+	
+</mapper>

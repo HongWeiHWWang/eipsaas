@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.portal.persistence.dao.MessageReadDao">
+	<resultMap id="MessageRead" type="com.hotent.portal.model.MessageRead">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="msgId" column="msg_id_" jdbcType="VARCHAR"/>
+		<result property="receiverId" column="receiver_id_" jdbcType="VARCHAR"/>
+		<result property="receiver" column="receiver_" jdbcType="VARCHAR"/>
+		<result property="receiverTime" column="receiver_time_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<select id="getReadByUser" resultMap="MessageRead" parameterType="java.util.Map">
+		select * from portal_sys_msg_read a 
+		where a.receiver_id_=#{userId}
+		and a.msg_id_=#{msgId}
+	</select>
+	
+	<select id="getByMessageId" resultMap="MessageRead">
+		select * from portal_sys_msg_read a 
+		where a.msg_id_=#{messageId}
+	</select>
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.jee-soft.cn/bpm/plugins/userCalc/userRel"
+    targetNamespace="http://www.jee-soft.cn/bpm/plugins/userCalc/userRel"
+    xmlns:base="http://www.jee-soft.cn/bpm/plugins/userCalc/base" elementFormDefault="qualified">
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/userCalc/base"  schemaLocation="base.xsd"/>
+    <xs:element name="userRel">
+        <xs:annotation>
+            <xs:documentation>用户关系</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="base:abstractLogic">
+                    <xs:all maxOccurs="1" minOccurs="0">
+                        <xs:element name="var" minOccurs="0" type="base:executorVar">
+                        </xs:element> 
+                        <xs:element name="members" minOccurs="0">
+                            <xs:complexType>
+                                <xs:attribute name="account"  use="required" type="xs:string"/>
+                                <xs:attribute name="userName" use="required" type="xs:string"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:all>
+                    <xs:attribute name="source" type="userType" use="required"></xs:attribute>
+                    <xs:attribute name="relationKey" type="xs:string" use="required">
+                        <xs:annotation>
+                            <xs:documentation>用户间关系Key</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="relationName" type="xs:string" use="required">
+                        <xs:annotation>
+                            <xs:documentation>用户间关系名称</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="relationParty" type="relationParty" use="required">
+                        <xs:annotation>
+                            <xs:documentation>查找的关系方</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="relationPartyName" type="xs:string" use="required">
+                        <xs:annotation>
+                            <xs:documentation>查找的关系方名称</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>                
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="relationParty">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="cur"></xs:enumeration>
+            <xs:enumeration value="rel"></xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    
+    <xs:simpleType name="userType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="start"></xs:enumeration>
+            <xs:enumeration value="prev"></xs:enumeration>
+            <xs:enumeration value="spec"></xs:enumeration>
+            <xs:enumeration value="var"></xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

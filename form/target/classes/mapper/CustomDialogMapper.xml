@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.CustomDialogDao">
+	<resultMap id="CustomDialog" type="com.hotent.form.model.CustomDialog">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="alias" column="alias_" jdbcType="VARCHAR"/>
+		<result property="style" column="style_" jdbcType="NUMERIC"/>
+		<result property="objName" column="obj_name_" jdbcType="VARCHAR"/>
+		<result property="needPage" column="need_page_" jdbcType="NUMERIC"/>
+		<result property="pageSize" column="page_size_" jdbcType="NUMERIC"/>
+		<result property="displayfield" column="displayfield_" jdbcType="LONGVARCHAR"/>
+		<result property="conditionfield" column="conditionfield_" jdbcType="LONGVARCHAR"/>
+		<result property="resultfield" column="resultfield_" jdbcType="LONGVARCHAR"/>
+		<result property="sortfield" column="sortfield_" jdbcType="VARCHAR"/>
+		<result property="dsalias" column="dsalias_" jdbcType="VARCHAR"/>
+		<result property="isTable" column="is_table_" jdbcType="NUMERIC"/>
+		<result property="diySql" column="diy_sql_" jdbcType="VARCHAR"/>
+		<result property="sqlBuildType" column="sql_build_type_" jdbcType="NUMERIC"/>
+		<result property="width" column="width_" jdbcType="NUMERIC"/>
+		<result property="height" column="height_" jdbcType="NUMERIC"/>
+		<result property="selectNum" column="select_num_" jdbcType="NUMERIC"/>
+		<result property="system" column="system_" jdbcType="NUMERIC"/>
+		<result property="parentCheck" column="parent_check_" jdbcType="NUMERIC"/>
+		<result property="childrenCheck" column="children_check_" jdbcType="NUMERIC"/>
+		<result property="dsType" column="ds_type_" jdbcType="VARCHAR"/>
+		<result property="url" column="url_" jdbcType="VARCHAR"/>
+		<result property="header" column="header_" jdbcType="VARCHAR"/>
+		<result property="requestType" column="request_type_" jdbcType="VARCHAR"/>
+		<result property="dataParam" column="data_param_" jdbcType="VARCHAR"/>
+		<result property="pageKey" column="page_key_" jdbcType="VARCHAR"/>
+		<result property="pageSizeKey" column="pagesize_key_" jdbcType="VARCHAR"/>
+		<result property="totalKey" column="total_key_" jdbcType="VARCHAR"/>
+		<result property="listKey" column="list_key_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getByAlias"   parameterType="java.lang.String" resultMap="CustomDialog">
+		SELECT * FROM form_custom_dialog WHERE alias_= #{alias}
+	</select>
+</mapper>

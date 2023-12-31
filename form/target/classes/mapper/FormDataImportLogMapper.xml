@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.FormDataImportLogDao">
+	<resultMap id="FormDataImportLog" type="com.hotent.form.model.FormDataImportLog">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="PId" column="P_ID_" jdbcType="VARCHAR"/>
+		<result property="rowNumber" column="ROW_NUMBER_" jdbcType="NUMERIC"/>
+		<result property="columnName" column="COLUMN_NAME_" jdbcType="VARCHAR"/>
+		<result property="errorMsg" column="ERROR_MSG_" jdbcType="CLOB"/>
+	</resultMap>
+	
+	<delete id="deleteByPid" parameterType="java.lang.String">
+		DELETE FROM form_data_import_log 
+		WHERE
+		P_ID_=#{pid}
+	</delete>
+	
+</mapper>

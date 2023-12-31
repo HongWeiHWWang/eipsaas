@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.OrgAuthDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.OrgAuth">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="orgId" column="ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="demId" column="DEM_ID_" jdbcType="VARCHAR"/>
+		<result property="orgPerms" column="ORG_PERMS_" jdbcType="VARCHAR"/>
+		<result property="userPerms" column="USER_PERMS_" jdbcType="VARCHAR"/>
+		<result property="posPerms" column="POS_PERMS_" jdbcType="VARCHAR"/>
+		<result property="orgauthPerms" column="ORGAUTH_PERMS_" jdbcType="VARCHAR"/>
+		<result property="layoutPerms" column="LAYOUT_PERMS_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+		
+		
+		<result property="userName" column="USER_NAME" jdbcType="VARCHAR"/>
+		<result property="orgName" column="ORGNAME" jdbcType="VARCHAR"/>
+		<result property="demName" column="DEM_NAME" jdbcType="VARCHAR"/>
+		<result property="orgPath" column="orgPath" jdbcType="VARCHAR"/>
+		<result property="userAccount" column="USER_ACCOUNT" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<parameterMap id="OrgAuth" type="com.hotent.uc.model.OrgAuth" />
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT a.ID_,a.USER_ID_,a.ORG_ID_,a.DEM_ID_, a.ORG_PERMS_, a.USER_PERMS_,a.POS_PERMS_,a.ORGAUTH_PERMS_,a.LAYOUT_PERMS_,
+		b.FULLNAME_ as USER_NAME,b.ACCOUNT_ as USER_ACCOUNT,c.NAME_ as ORGNAME ,d.DEM_NAME_ as DEM_NAME
+		FROM UC_ORG_AUTH a
+		left join UC_USER b on a.USER_ID_ = b.ID_
+		left join UC_ORG c on a.ORG_ID_ = c.ID_
+		left join UC_DEMENSION d on a.DEM_ID_ = d.ID_ 
+	
+		<if test="ew.customSqlSegment!=null">
+			${ew.customSqlSegment}
+			AND a.IS_DELE_!='1' AND b.IS_DELE_!='1' AND c.IS_DELE_!='1' AND d.IS_DELE_!='1'
+		</if>
+		<if test="ew.customSqlSegment == null">
+			WHERE 1= 1 AND a.IS_DELE_!='1' AND b.IS_DELE_!='1' AND c.IS_DELE_!='1' AND d.IS_DELE_!='1'
+		</if>
+	
+	</select>
+	
+	<select id="queryOnSync" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT * FROM UC_ORG_AUTH
+		${ew.customSqlSegment}
+	</select>
+	
+	
+	
+
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_ORG_AUTH  WHERE IS_DELE_='1'
+	</delete>
+	
+	<select id="getAllOrgAuth" resultMap="BaseResultMap">
+		SELECT a.ID_,a.USER_ID_,a.ORG_ID_,a.DEM_ID_, a.ORG_PERMS_, a.USER_PERMS_,a.POS_PERMS_,a.ORGAUTH_PERMS_,a.LAYOUT_PERMS_,
+		b.FULLNAME_ as USER_NAME,c.NAME_ as ORGNAME ,d.DEM_NAME_ as DEM_NAME,d.CODE_ as demCode
+		FROM UC_ORG_AUTH a
+		inner join UC_USER b on a.USER_ID_ = b.ID_
+		inner join UC_ORG c on a.ORG_ID_ = c.ID_
+		inner join UC_DEMENSION d on a.DEM_ID_ = d.ID_ 
+		${ew.customSqlSegment}
+	</select>
+	
+	<select id="getByOrgIdAndUserId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select a.*,b.FULLNAME_ as USER_NAME,b.ACCOUNT_ as USER_ACCOUNT,c.NAME_ as ORGNAME,d.DEM_NAME_ as DEM_NAME , c.PATH_ as orgPath from UC_ORG_AUTH a 
+		inner join UC_USER b on a.USER_ID_ = b.ID_ 
+		INNER JOIN UC_ORG c ON a.ORG_ID_ = c.ID_ 
+	 	INNER JOIN UC_DEMENSION d ON d.ID_ = a.DEM_ID_
+		where a.ORG_ID_ = #{orgId} and a.USER_ID_ = #{userId} AND a.IS_DELE_!='1'
+	</select>
+
+	<select id="getListByOrgIdAndUserId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select a.*,b.FULLNAME_ as USER_NAME,b.ACCOUNT_ as USER_ACCOUNT,c.NAME_ as ORGNAME,d.DEM_NAME_ as DEM_NAME , c.PATH_ as orgPath from UC_ORG_AUTH a
+		inner join UC_USER b on a.USER_ID_ = b.ID_
+		INNER JOIN UC_ORG c ON a.ORG_ID_ = c.ID_
+		INNER JOIN UC_DEMENSION d ON d.ID_ = a.DEM_ID_
+		where a.ORG_ID_ = #{orgId} and a.USER_ID_ = #{userId} AND a.IS_DELE_!='1'
+	</select>
+	
+	<delete id="delByOrgId" parameterType="java.util.Map">
+		UPDATE UC_ORG_AUTH SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE
+		ORG_ID_=#{orgId}
+	</delete>
+	
+	
+	<select id="getLayoutOrgAuth" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT a.ID_,a.USER_ID_,a.ORG_ID_,a.DEM_ID_,a.LAYOUT_PERMS_,
+		b.FULLNAME_ as USER_NAME,c.NAME_ as ORGNAME ,d.DEM_NAME_ as DEM_NAME
+		FROM UC_ORG_AUTH a
+		inner join UC_USER b on a.USER_ID_ = b.ID_
+		inner join UC_ORG c on a.ORG_ID_ = c.ID_
+		inner join UC_DEMENSION d on a.DEM_ID_ = d.ID_ 
+		WHERE a.USER_ID_ =#{userId} and (a.LAYOUT_PERMS_ IS NOT NULL or a.LAYOUT_PERMS_ != '')
+		AND a.IS_DELE_!='1' AND b.IS_DELE_!='1' AND c.IS_DELE_!='1' AND d.IS_DELE_!='1'
+		ORDER BY ID_ DESC
+	</select>
+	
+	<select id="getByUserId" resultMap="BaseResultMap">
+		SELECT a.ID_,a.USER_ID_,a.ORG_ID_,a.DEM_ID_, a.ORG_PERMS_, a.USER_PERMS_,a.POS_PERMS_,a.ORGAUTH_PERMS_,
+		b.FULLNAME_ as userName,c.NAME_ as orgName,d.DEM_NAME_ as demName,c.PATH_ as orgPath
+		FROM UC_ORG_AUTH a 
+		left join UC_USER b on a.USER_ID_ = b.ID_
+		left join UC_ORG c on a.ORG_ID_ = c.ID_
+		left join UC_DEMENSION d on a.DEM_ID_ = d.ID_
+		where a.USER_ID_ = #{userId} 
+		AND a.IS_DELE_!='1' AND b.IS_DELE_!='1' AND c.IS_DELE_!='1' AND d.IS_DELE_!='1'
+	</select>
+	
+	
+	<select id="getOrgAuthListByDemAndUser" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select a.*,b.FULLNAME_ as USER_NAME,b.ACCOUNT_ as USER_ACCOUNT, c.NAME_ as ORGNAME ,c.PATH_ as orgPath,d.DEM_NAME_ as DEM_NAME from UC_ORG_AUTH a 
+		LEFT JOIN UC_USER b on a.USER_ID_ = b.ID_
+		left join UC_ORG c on a.ORG_ID_ = c.ID_
+		left join UC_DEMENSION d on a.DEM_ID_ = d.ID_
+		WHERE b.ACCOUNT_=#{account} AND d.code_=#{demCode} AND a.IS_DELE_!='1'
+	</select>
+</mapper>

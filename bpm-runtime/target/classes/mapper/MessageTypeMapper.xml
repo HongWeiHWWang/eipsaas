@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.runtime.dao.MessageTypeDao">
+	<resultMap id="MessageType" type="com.hotent.runtime.model.MessageType">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="classificationCode" column="CLASSIFICATION_CODE_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="isPending" column="IS_PENDING_" jdbcType="NUMERIC"/>
+		<result property="pendingUserId" column="PENDING_USER_ID_" jdbcType="VARCHAR"/>
+		<result property="pendingUserName" column="PENDING_USER_NAME_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+</mapper>

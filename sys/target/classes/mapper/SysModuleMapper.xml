@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.sys.persistence.dao.SysModuleDao">
+    <resultMap id="SysModule" type="com.hotent.sys.persistence.model.SysModule">
+        <id property="id" column="ID_" jdbcType="VARCHAR"/>
+        <result property="code" column="CODE_" jdbcType="VARCHAR"/>
+        <result property="name" column="NAME_" jdbcType="VARCHAR"/>
+        <result property="status" column="STATUS_" jdbcType="VARCHAR"/>
+        <result property="type" column="TYPE_" jdbcType="VARCHAR"/>
+        <result property="classifyId" column="CLASSIFY_ID_" jdbcType="VARCHAR"/>
+        <result property="classifyName" column="CLASSIFY_NAME_" jdbcType="VARCHAR"/>
+        <result property="relCode" column="REL_CODE_" jdbcType="VARCHAR"/>
+        <result property="relName" column="REL_NAME_" jdbcType="VARCHAR"/>
+        <result property="desc" column="DESC_" jdbcType="VARCHAR"/>
+        <result property="menu" column="MENU_" jdbcType="VARCHAR"/>
+        <result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+        <result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+        <result property="creator" column="CREATOR_" jdbcType="VARCHAR"/>
+        <result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+        <result property="postCode" column="POST_CODE_" jdbcType="VARCHAR"/>
+        <result property="postName" column="POST_NAME_" jdbcType="VARCHAR"/>
+        <result property="reportName" column="REPORT_NAME_" jdbcType="VARCHAR"/>
+        <result property="reportAlias" column="REPORT_ALIAS" jdbcType="VARCHAR"/>
+        <result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+        
+    </resultMap>
+
+    <select id="getModuleByCode"   parameterType="java.lang.String" resultMap="SysModule">
+        SELECT * FROM PORTAL_SYS_MODULE
+        WHERE
+        CODE_=#{code}
+    </select>
+</mapper>

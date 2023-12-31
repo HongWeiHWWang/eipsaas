@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.runtime.dao.BpmAutoStartConfDao">
+	<resultMap id="BoAutoStartConf" type="com.hotent.runtime.model.BpmAutoStartConf">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="defKey" column="DEF_KEY_" jdbcType="VARCHAR"/>
+		<result property="startUser" column="START_USER_" jdbcType="LONGVARCHAR"/>
+		<result property="formData" column="FORM_DATA_" jdbcType="LONGVARCHAR"/>
+		<result property="trigger" column="TRIGGER_" jdbcType="VARCHAR"/>
+		<result property="tenantId" column="tenant_id_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+	
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.FormBusSetDao">
+	<resultMap id="FormBusSet" type="com.hotent.form.model.FormBusSet">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="formKey" column="form_key_" jdbcType="VARCHAR"/>
+		<result property="jsPreScript" column="JS_PRE_SCRIPT" jdbcType="VARCHAR"/>
+		<result property="jsAfterScript" column="JS_AFTER_SCRIPT" jdbcType="VARCHAR"/>
+		<result property="preScript" column="PRE_SCRIPT" jdbcType="VARCHAR"/>
+		<result property="afterScript" column="AFTER_SCRIPT" jdbcType="VARCHAR"/>
+		<result property="isTreeList" column="isTreeList" jdbcType="NUMERIC"/>
+		<result property="treeConf" column="treeConf" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getByFormKey"   parameterType="java.lang.String" resultMap="FormBusSet">
+		SELECT * FROM form_bus_set 
+		WHERE 
+		form_key_=#{formKey}
+	</select>
+	
+	<select id="isExist" resultType="java.lang.Integer">
+		select count(1) from  form_bus_set where form_key_=#{formKey}
+		<if test="id!=null">
+			and id_!= #{id}
+		</if>
+	</select>
+	
+	<delete id="removeByFormKey"   parameterType="java.lang.String"  >
+		DELETE FROM form_bus_set  WHERE form_key_=#{formKey}
+	</delete>
+</mapper>

@@ -1,0 +1,30 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="actionMenuTextColor">#fcfcfc</item>
+        <item name="android:actionMenuTextAppearance">@style/ReadingMenuTextStyle</item>
+        <item name="actionMenuTextAppearance">@style/ReadingMenuTextStyle</item>
+        <item name="colorPrimaryDark">#2c90e0</item>
+        <!--设置透明背景-->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="ReadingMenuTextStyle">
+        <item name="android:textColor">#fcfcfc</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="DefaultExplainingPermissionsTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+       <!-- Used for the buttons -->
+       <item name="colorAccent">#fff</item>
+
+       <!-- Used for the title and text -->
+       <item name="android:textColorPrimary">#000</item>
+
+       <!-- Used for the background -->
+       <item name="android:background">#fff</item>
+   </style>
+
+</resources>

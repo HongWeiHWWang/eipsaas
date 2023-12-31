@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmExeStackDao">
+	<resultMap id="BpmExeStack" type="com.hotent.bpm.persistence.model.BpmExeStack">
+		<id property="id" column="id_" jdbcType="VARCHAR" />
+		<result property="prcoDefId" column="prco_def_id_" jdbcType="VARCHAR" />
+		<result property="nodeId" column="node_id_" jdbcType="VARCHAR" />
+		<result property="nodeName" column="node_name_" jdbcType="VARCHAR" />
+		<result property="startTime" column="start_time_" jdbcType="TIMESTAMP" />
+		<result property="endTime" column="end_time" jdbcType="TIMESTAMP" />
+		<result property="isMulitiTask" column="is_muliti_task_"
+			jdbcType="NUMERIC" />
+		<result property="parentId" column="parent_id_" jdbcType="VARCHAR" />
+		<result property="procInstId" column="proc_inst_id_" jdbcType="VARCHAR" />
+		<result property="nodePath" column="node_path_" jdbcType="VARCHAR" />
+		<result property="taskToken" column="task_token_" jdbcType="VARCHAR" />
+		<result property="targetNode" column="TARGET_NODE_" jdbcType="VARCHAR" />
+		<result property="targetToken" column="TARGET_TOKEN_" jdbcType="VARCHAR" />
+
+		<result property="interpose" column="INTERPOSE_" jdbcType="NUMERIC" />
+		<result property="nodeType" column="node_type_" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id_,node_type_,prco_def_id_,node_id_,node_name_,start_time_,end_time,is_muliti_task_,parent_id_,proc_inst_id_,node_path_,task_token_,TARGET_NODE_,TARGET_TOKEN_,INTERPOSE_
+	</sql>
+
+	<sql id="bpm_exe_stack_relation_column">
+		relation_id_,proc_inst_id_,from_stack_id_,to_stack_id_,from_node_id_,to_node_id_,relation_state_,from_node_type_,to_node_type_,created_time_
+	</sql>
+
+	<insert id="create" parameterType="com.hotent.bpm.persistence.model.BpmExeStack">
+		INSERT INTO bpm_exe_stack
+		(id_,node_type_,prco_def_id_,node_id_,node_name_,start_time_,end_time,is_muliti_task_,parent_id_,proc_inst_id_,node_path_,task_token_,TARGET_NODE_,TARGET_TOKEN_,INTERPOSE_)
+		VALUES
+		(#{id,jdbcType=VARCHAR},#{nodeType,jdbcType=VARCHAR},
+		#{prcoDefId,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR},
+		#{nodeName,jdbcType=VARCHAR},
+		#{startTime,jdbcType=TIMESTAMP},
+		#{endTime,jdbcType=TIMESTAMP}, #{isMulitiTask,jdbcType=NUMERIC},
+		#{parentId,jdbcType=VARCHAR}, #{procInstId,jdbcType=VARCHAR},
+		#{nodePath,jdbcType=VARCHAR},
+		#{taskToken,jdbcType=VARCHAR},#{targetNode,jdbcType=VARCHAR},
+		#{targetToken,jdbcType=VARCHAR}, #{interpose,jdbcType=NUMERIC})
+	</insert>
+
+	<select id="get" parameterType="java.lang.String" resultMap="BpmExeStack">
+		SELECT * FROM bpm_exe_stack
+		WHERE
+		id_=#{id}
+	</select>
+
+	<select id="query" parameterType="java.util.Map" resultMap="BpmExeStack">
+		SELECT * FROM bpm_exe_stack
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM bpm_exe_stack
+		WHERE
+		id_=#{id}
+	</delete>
+
+
+
+	<select id="getByInstNodeToken" resultMap="BpmExeStack">
+		SELECT * FROM bpm_exe_stack
+		WHERE node_id_=#{nodeId} and
+		proc_inst_id_=#{procInstId}
+		<if test="taskToken!=null and taskToken!=''">
+			and task_token_=#{taskToken}
+		</if>
+		ORDER BY START_TIME_ DESC
+	</select>
+
+
+	<select id="getInitStack" resultMap="BpmExeStack">
+		SELECT * FROM bpm_exe_stack
+		WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and parent_id_='0'
+	</select>
+
+	<delete id="removeByPath">
+		DELETE FROM bpm_exe_stack
+		WHERE
+		node_path_ != '${@com.hotent.base.util.StringUtil@substringBeforeLast(nodePath,
+		"%")}' and proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_path_
+		like #{nodePath}
+	</delete>
+	
+	<insert id="stack2HisByPath">
+		insert into bpm_exe_stack_his
+		(
+		<include refid="Base_Column_List" />
+		)
+		select
+		<include refid="Base_Column_List" />
+		from bpm_exe_stack
+		WHERE node_path_ !=
+		'${@com.hotent.base.util.StringUtil@substringBeforeLast(nodePath,
+		"%")}' and proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_path_
+		like
+		#{nodePath}
+	</insert>
+	<insert id="his2StackByInstId">
+		insert into bpm_exe_stack
+		(
+		<include refid="Base_Column_List" />
+		)
+		select
+		<include refid="Base_Column_List" />
+		from bpm_exe_stack_his
+		WHERE
+		proc_inst_id_=#{procInstId,jdbcType=VARCHAR}
+	</insert>
+	<delete id="removeHisByInstId">
+		DELETE FROM bpm_exe_stack_his
+		WHERE
+		proc_inst_id_=#{procInstId,jdbcType=VARCHAR}
+	</delete>
+
+
+	<delete id="removeExeStackExceptParentId">
+	<![CDATA[
+		DELETE FROM bpm_exe_stack
+		WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and parent_id_ <>#{parentId}
+	]]>
+	</delete>
+
+	<delete id="removeBpmTaskByPath">
+		DELETE FROM BPM_TASK
+		WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_id_ in
+		<foreach collection="nodeSet" index="index" item="nodeId"
+			open="(" separator="," close=")">
+			#{nodeId}
+		</foreach>
+	</delete>
+
+	<delete id="removeBpmTaskCandidateByPath">
+		DELETE FROM bpm_task_candidate where task_id_ in
+		(select id_ from BPM_TASK
+		WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_id_ in
+		<foreach collection="nodeSet" index="index" item="nodeId"
+			open="(" separator="," close=")">
+			#{nodeId}
+		</foreach>
+		)
+	</delete>
+
+	<delete id="removeBpmTaskTurnByPath">
+	   <![CDATA[
+	  DELETE FROM bpm_task_turn where task_id_ in
+	  (select id_  from BPM_TASK 
+		WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_id_ in
+		(select node_id_ FROM bpm_exe_stack 
+		WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_path_ like #{nodePath})
+	   ) 
+	   	]]>
+	</delete>
+
+	<delete id="removebpmProStatusPath">
+		DELETE FROM bpm_pro_status where
+		proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_id_ in
+		(select
+		node_id_ FROM bpm_exe_stack
+		WHERE
+		proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_path_ like
+		#{nodePath})
+	</delete>
+
+	<delete id="removeActRuVariableByPath">
+ <![CDATA[	
+ DELETE a.* FROM ACT_RU_VARIABLE a where a.EXECUTION_ID_ in
+	  (select exec_id_  from BPM_TASK 
+		WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} 
+		 and exec_id_ not in (${notIncludeExecuteIds}
+		and node_id_ in
+		(select node_id_ FROM bpm_exe_stack 
+		WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_path_ like #{nodePath}
+		 
+		 )
+	   ) 
+	   	]]>
+	</delete>
+
+	<delete id="removeBpmExeStackRelationInToStackId">
+ <![CDATA[	
+    DELETE FROM bpm_exe_stack_relation where to_stack_id_ in
+	  (SELECT id_ from  bpm_exe_stack  where node_path_ != '${@com.hotent.base.util.StringUtil@substringBeforeLast(nodePath, "%")}' and
+ proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_path_ like #{nodePath}
+	   )
+ 
+	   	]]>
+	</delete>
+
+	<insert id="stackRelation2HisInToStackIdOrFormStackId">
+		insert into bpm_exe_stack_relation_his
+		(
+		<include refid="bpm_exe_stack_relation_column" />
+		)
+		select
+		<include refid="bpm_exe_stack_relation_column" />
+		from bpm_exe_stack_relation
+		where to_stack_id_ in
+		(SELECT id_ from
+		bpm_exe_stack where node_path_ !=
+		'${@com.hotent.base.util.StringUtil@substringBeforeLast(nodePath,
+		"%")}' and
+		proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and
+		node_path_
+		like
+		#{nodePath}
+		)
+		or from_stack_id_ in
+		(SELECT id_ from
+		bpm_exe_stack where
+		proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and
+		node_path_ like
+		#{nodePath}
+		)
+	</insert>
+
+	<insert id="his2StackRelationByInstId">
+		insert into bpm_exe_stack_relation
+		(
+		<include refid="bpm_exe_stack_relation_column" />
+		)
+		select
+		<include refid="bpm_exe_stack_relation_column" />
+		from bpm_exe_stack_relation_his
+		where
+		proc_inst_id_=#{procInstId,jdbcType=VARCHAR}
+	</insert>
+	<delete id="removeStackRelationHisByInstId">
+		DELETE FROM bpm_exe_stack_relation_his where
+		proc_inst_id_=#{procInstId,jdbcType=VARCHAR}
+	</delete>
+
+
+	<delete id="removeBpmExeStackRelationInFromStackId">
+ <![CDATA[	
+ 
+	 DELETE FROM bpm_exe_stack_relation where from_stack_id_ in 
+	  (SELECT id_ from  bpm_exe_stack  where   node_path_ != '${@com.hotent.base.util.StringUtil@substringBeforeLast(nodePath, "%")}' and
+  proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_path_ like #{nodePath} 
+	   )
+	   	]]>
+	</delete>
+
+	<delete id="removeActRuTaskByPath">
+	  <![CDATA[
+	  DELETE FROM ACT_RU_TASK where EXECUTION_ID_ in
+	  (select exec_id_  from BPM_TASK 
+		WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} 
+		 
+		and exec_id_ not in (${notIncludeExecuteIds}
+		and node_id_ in
+		(select node_id_ FROM bpm_exe_stack 
+		WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_path_ like #{nodePath}  
+		)
+	   ) 
+	   	]]>
+	</delete>
+
+	<delete id="removeActRuExeCutionByPath">
+		<!-- DELETE FROM act_ru_execution where id_ in -->
+		<!-- (select exec_id_ from BPM_TASK -->
+		<!-- WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_id_ in -->
+		<!-- (select node_id_ FROM bpm_exe_stack -->
+		<!-- WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_path_ 
+			like #{nodePath}) -->
+		<!-- ) -->
+<![CDATA[
+ 	  DELETE FROM act_ru_execution where  
+ 	  PROC_INST_ID_=(SELECT BPMN_INST_ID_ from bpm_pro_inst where  ID_=#{procInstId,jdbcType=VARCHAR})  and ACT_ID_
+ 	  in
+ 		(select node_id_ FROM bpm_exe_stack 
+ 		WHERE proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and node_path_ like #{nodePath} ) 
+ 	 and PROC_INST_ID_<>ID_
+ 	 
+ 	 and ID_ not in (${notIncludeExecuteIds})
+ 	 ]]>
+	</delete>
+
+	<update id="multipleInstancesRejectAdjustOnBpmTask">
+	  <![CDATA[
+	  update   BPM_TASK  set exec_id_=BPMN_INST_ID_ 
+	  WHERE exec_id_=#{rejectAfterExecutionId,jdbcType=VARCHAR} 
+		]]>
+	</update>
+
+	<update id="updateTagertNode">
+		update bpm_exe_stack set target_node_="" WHERE
+		proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and target_node_ =
+		#{targetNode,jdbcType=VARCHAR}
+	</update>
+
+
+
+	<update id="multipleInstancesRejectAdjustOnActTask">
+	  <![CDATA[
+	  update   act_ru_task  set EXECUTION_ID_=PROC_INST_ID_ 
+	  WHERE EXECUTION_ID_=#{rejectAfterExecutionId,jdbcType=VARCHAR} 
+		]]>
+	</update>
+
+	<delete id="multipleInstancesRejectAdjustOnActExecution">
+	  <![CDATA[
+	  delete FROM act_ru_execution   
+	  WHERE ID_<>PROC_INST_ID_ and PROC_INST_ID_=#{actProcInstanceId,jdbcType=VARCHAR} 
+		]]>
+	</delete>
+
+
+	<select id="getByIds" resultMap="BpmExeStack">
+		SELECT * FROM bpm_exe_stack
+		WHERE id_ in
+		<foreach collection="ids" open="(" close=")" item="id"
+			separator=",">#{id}</foreach>
+	</select>
+
+	<select id="getToTaskIdByFromTaskId" resultType="java.lang.String">
+		SELECT
+		TASK_ID_
+		FROM
+		bpm_exe_stack_executor
+		WHERE
+		STACK_ID_ = (
+		SELECT
+		d.to_stack_id_
+		FROM
+		bpm_exe_stack_relation d
+		WHERE
+		d.FROM_STACK_ID_ = (
+		SELECT
+		b.STACK_ID_
+		FROM
+		bpm_exe_stack_executor b
+		WHERE
+		TO_NODE_TYPE_ != 'customSignTask'
+		AND
+		b.TASK_ID_ = #{fromTaskId}
+		) and from_node_id_ != to_node_id_
+		)
+	</select>
+
+	<select id="getCurrentTaskFromNodeId" resultType="java.lang.String">
+		SELECT
+		FROM_NODE_ID_
+		FROM
+		bpm_exe_stack_relation
+		WHERE
+		TO_STACK_ID_ = (
+		SELECT
+		a.ID_
+		FROM
+		bpm_exe_stack a
+		LEFT JOIN bpm_exe_stack_executor b ON a.id_ = b.STACK_ID_
+		WHERE b.TASK_ID_ = #{taskId}
+		)
+	</select>
+
+	<select id="getByInstIdAndTargetNodePath" resultMap="BpmExeStack">
+		select *
+		FROM bpm_exe_stack where proc_inst_id_ = #{instId} and node_path_ =
+		#{nodePath}
+	</select>
+
+	<select id="getByBpmTaskByPath" resultMap="BpmExeStack">
+		select * FROM
+		bpm_exe_stack where proc_inst_id_ = #{instId} and node_path_ like
+		#{nodePath}
+	</select>
+
+	<select id="getHisByInstId" resultMap="BpmExeStack">
+		select * FROM
+		bpm_exe_stack_his
+		WHERE
+		proc_inst_id_=#{instId,jdbcType=VARCHAR}
+	</select>
+</mapper>

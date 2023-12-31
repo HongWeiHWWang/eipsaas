@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmProBoDao">
+	<resultMap id="BpmProBo" type="com.hotent.bpm.persistence.model.BpmProBo">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="processId" column="process_id_" jdbcType="VARCHAR"/>
+		<result property="processKey" column="process_key_" jdbcType="VARCHAR"/>
+		<result property="boCode" column="bo_code_" jdbcType="VARCHAR"/>
+		<result property="boName" column="bo_name_" jdbcType="VARCHAR"/>
+		<result property="creatorId" column="creator_id_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="id!=null"> AND ID_  =#{id} </if>
+			<if test="processId!=null"> AND process_id_  =#{processId} </if>
+			<if test="processKey!=null"> AND process_key_  =#{processKey} </if>
+			<if test="boCode!=null"> AND bo_code_  =#{boCode} </if>
+			<if test="boName!=null"> AND bo_name_  =#{boName} </if>
+		</where>
+	</sql>	
+	
+	
+	<delete id="removeByProcess" parameterType="java.util.Map">
+		DELETE FROM bpm_pro_bo   <include refid="dynamicWhere" />
+	</delete>
+	
+	<delete id="removeByBoCode" parameterType="java.lang.String">
+		DELETE FROM bpm_pro_bo   
+		WHERE 
+		bo_code_=#{boCode}
+	</delete>
+	
+	<select id="getByProcess"  resultMap="BpmProBo" parameterType="java.util.Map">
+		SELECT * FROM bpm_pro_bo  <include refid="dynamicWhere" />
+	</select>
+	
+	
+	<select id="getByBoCode"    resultMap="BpmProBo" parameterType="java.lang.String">
+		SELECT * FROM bpm_pro_bo 
+		WHERE 
+		bo_code_=#{boCode}
+	</select>
+	
+</mapper>

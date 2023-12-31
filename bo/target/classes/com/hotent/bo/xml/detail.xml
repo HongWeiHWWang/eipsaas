@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:bodefcfg xmlns:tns="http://www.jee-soft.cn/x5-bo-def"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.jee-soft.cn/x5-bo-def ../xsd/x5-bo-def.xsd ">
+	<tns:name>person</tns:name>
+	<tns:cagetory>com.hotent.test</tns:cagetory>
+	<tns:datatype>json</tns:datatype>
+	
+	<!-- 主model(有且仅有一个) -->
+	<tns:mainmodel name="person" description="个人信息">
+		<tns:attribute name="name" type="string" length="100" description="姓名"></tns:attribute>
+		<tns:attribute name="sex" type="string" length="10" description="性别" default="男"></tns:attribute>
+		<tns:attribute name="born" type="date" description="出生日期"/>
+		<tns:attribute name="numSm" type="number" length="15" decimalLen="3" description="数目"/>
+		<tns:attribute name="myNr" type="clob"  description="内容"></tns:attribute>
+		<tns:list>
+			<!-- 列表类型的属性 -->
+			<tns:attribute name="formername" type="string" length="50" description="曾用名"></tns:attribute>
+			<tns:attribute name="address" type="string"  description="住址"/>
+			<tns:attribute name="num" type="number" length="20" description="号码"/>
+		</tns:list>
+		<!-- 有一个类型是detail的personDetail -->
+		<tns:hasOne name="personDetail" rel="detail"/>
+		<tns:hasOne name="myTestOk" rel="testOk"/>
+		<!-- 有多个类型是marydetail的familyDetail -->
+		<tns:hasMany name="familyDetail" rel="marydetail"/>
+	</tns:mainmodel>
+	
+	<!-- detail的定义 -->
+	<tns:submodel name="detail" description="detail详细信息">
+		<tns:attribute name="rqcj" type="date" description="日期" format="yyyy-MM-dd" />
+		<tns:attribute name="nationality" type="string" length="40" description="国籍" default="中国">
+		</tns:attribute>
+		<tns:hasMany name="myDetail" rel="marydetail"/>
+	</tns:submodel>	
+	
+	<!-- marydetail的定义 -->
+	<tns:submodel name="marydetail" description="marydetail我的详细信息" >
+		<tns:attribute name="marydetaility" type="string" description="marydetail国籍">			
+		</tns:attribute>
+		<tns:list>
+			<!-- 列表类型的属性 -->
+			<tns:attribute name="marydetailname" type="string" length="50" description="marydetail曾用名"/>
+			<tns:attribute name="marydetailaddress" type="string" length="50" description="marydetail住址"/>
+		</tns:list>
+	</tns:submodel>
+	
+	<!-- detail的定义 -->
+	<tns:submodel name="testOk" description="testOk详细信息">
+		<tns:hasOne name="testDetail" rel="detail"/>
+		<tns:attribute name="testrqcj" type="date" description="test日期" />
+		<tns:attribute name="testnationality" type="string" description="test国籍"/>
+	</tns:submodel>	
+	
+</tns:bodefcfg>

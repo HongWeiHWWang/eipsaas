@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmBusLinkDao">
+	<resultMap id="BpmBusLink" type="com.hotent.bpm.persistence.model.BpmBusLink">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="defId" column="def_id_" jdbcType="VARCHAR"/>
+		<result property="procInstId" column="proc_inst_id_" jdbcType="VARCHAR"/>
+		<result property="businesskey" column="businesskey_" jdbcType="NUMERIC"/>
+		<result property="businesskeyStr" column="businesskey_str_" jdbcType="VARCHAR"/>
+		<result property="sysCode" column="SYS_CODE_" jdbcType="VARCHAR"/>
+		<result property="formIdentify" column="form_identify_" jdbcType="VARCHAR"/>
+		<result property="startId" column="start_id_" jdbcType="VARCHAR"/>
+		<result property="startor" column="startor_" jdbcType="VARCHAR"/>
+		<result property="createDate" column="create_date_" jdbcType="TIMESTAMP"/>
+		<result property="startGroupId" column="start_group_id_" jdbcType="VARCHAR"/>
+		<result property="startGroup" column="start_group_" jdbcType="VARCHAR"/>
+		<result property="isMain" column="IS_MAIN_" jdbcType="NUMERIC"/>
+		<result property="boDefCode" column="BO_DEF_CODE_" jdbcType="VARCHAR"/>
+		<result property="saveMode" column="SAVE_MODE_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getByBusinesKey" parameterType="java.util.Map" resultMap="BpmBusLink">
+		SELECT * FROM bpm_bus_link 
+		<where>
+			<choose>
+				<when test="isNumber">
+					and businesskey_=#{businessKey}
+				</when>
+				<otherwise>
+					and businesskey_str_=#{businessKey}
+				</otherwise>
+			</choose>
+			<if test="formIdentity!=null">
+				and form_identify_=#{formIdentity}
+			</if>
+		</where>
+	</select>
+	
+	<delete id="delByBusinesKey" parameterType="java.util.Map">
+		DELETE FROM bpm_bus_link 
+		<where>
+			<choose>
+				<when test="isNumber">
+					and businesskey_=#{businessKey}
+				</when>
+				<otherwise>
+					and businesskey_str_=#{businessKey}
+				</otherwise>
+			</choose>
+			<if test="formIdentity!=null">
+				and form_identify_=#{formIdentity}
+			</if>
+		</where>
+	</delete>
+	
+	
+	
+	
+	<select id="isExsitPartition_mysql" parameterType="java.util.Map" resultType="Long"> 
+		select count(*) from information_schema.partitions  where table_schema = schema() and table_name='BPM_BUS_LINK' and partition_name = #{partitionName}
+	</select>
+	<select id="isExsitPartition_oracle" parameterType="java.util.Map" resultType="Long"> 
+		select count(*) from user_tab_partitions where table_name = 'BPM_BUS_LINK' and partition_name = #{partitionName}
+	</select>
+	 
+	<select id="createPartition_mysql" parameterType="java.util.Map" >
+		alter table BPM_BUS_LINK add partition (partition ${partitionName} values in (#{formIdentify}))
+	</select>
+	<select id="createPartition_oracle" parameterType="java.util.Map" >
+		 ALTER TABLE BPM_BUS_LINK ADD PARTITION ${partitionName} VALUES ( #{formIdentify} ) NOCOMPRESS
+	</select>
+	
+	
+	
+	<select id="getMysqlVersion" resultType="String">
+		select VERSION();
+	</select>
+	
+	<select id="getByInstId" resultMap="BpmBusLink">
+		SELECT * FROM bpm_bus_link where proc_inst_id_=#{procInstId,jdbcType=VARCHAR} and IS_MAIN_=1
+	</select>
+	
+	<select id="getAllByInstId" resultMap="BpmBusLink">
+		SELECT * FROM bpm_bus_link where proc_inst_id_=#{procInstId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getByDefId" resultMap="BpmBusLink">
+		SELECT * FROM bpm_bus_link where def_id_=#{defId,jdbcType=VARCHAR}
+	</select>
+</mapper>

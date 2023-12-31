@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.OrgRoleDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.OrgRole">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="roleId" column="ROLE_ID_" jdbcType="VARCHAR"/>
+		<result property="roleName" column="ROLE_NAME_" jdbcType="VARCHAR"/>
+		<result property="orgId" column="ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="isInherit" column="IS_INHERIT_" jdbcType="NUMERIC"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<parameterMap id="OrgRole" type="com.hotent.uc.model.OrgRole" />
+	
+	<sql id="Base_Column_List">
+		ID_,ROLE_ID_,ROLE_NAME_,ORG_ID_,IS_INHERIT_,UPDATE_TIME_,IS_DELE_,VERSION_
+	</sql>
+	
+	
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BaseResultMap">
+	       SELECT <include refid="Base_Column_List" /> from UC_ORG_ROLE WHERE 1=1  
+	      <if test="ew.paramNameValuePairs.path!=null">
+			and ID_ in (
+			    SELECT  ID_  from UC_ORG_ROLE WHERE  org_id_ in ( select ID_ from UC_ORG where instr(#{ew.paramNameValuePairs.path},PATH_) > 0 ) and IS_INHERIT_ =1
+                UNION   SELECT  ID_  from UC_ORG_ROLE WHERE  org_id_ = ( select ID_ from UC_ORG where PATH_=#{ew.paramNameValuePairs.path}  ) 
+                 )
+		  </if>
+		${ew.customSqlSegment} 
+	</select>
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_ORG_ROLE WHERE IS_DELE_='1' 
+	</delete>
+	
+	<select id="getByOrgIdAndRoleId" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" /> from UC_ORG_ROLE where ROLE_ID_=#{roleId} and ORG_ID_=#{orgId} 
+	</select>
+	
+	<delete id="delByOrgIdAndRoleId" parameterType="java.util.Map">
+		UPDATE UC_ORG_ROLE SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE 1=1 
+		<if test="orgId!=null">
+			and ORG_ID_=#{orgId}
+		</if>
+		<if test="roleId!=null">
+			and ROLE_ID_=#{roleId}
+		</if>
+	</delete>
+	
+</mapper>

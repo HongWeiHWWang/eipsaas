@@ -1,0 +1,42 @@
+spring:
+  profiles:
+    active: test
+  datasource:
+    dynamic:
+      datasource:
+        master:
+          username: eip7
+          password: uCtSapq7vaNhcm9WKFkK2vXwvA9c/ieHF3J6cZZ2doBsYlS9t/v1qUXtWUO4IsSKYoo9m7Tziz727C9mlNhfPQ==
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://172.17.0.4:3306/eip7?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
+          druid:
+            public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAM30rCDBrSUDeLx40at9rKGRRy42f6fRd4Hr8v6J1o6ouObTQUGKUPzuomrcrosf/PjXu8oFHIci4snRK7hW6MUCAwEAAQ==
+#          oracle 连接驱动
+#          driver-class-name: oracle.jdbc.OracleDriver
+#          url: jdbc:oracle:thin:@192.168.1.80:1521:ORCL
+
+#          pgsql 连接驱动
+#          driver-class-name: org.postgresql.Driver
+#          url: jdbc:postgresql://localhost:5432/7.2.2_dev
+  redis:
+    database: 6
+    host: 172.17.0.4
+    port: 6379
+    password: $my12redis34567
+  activemq:
+    broker-url: tcp://172.17.0.4:61616
+    user: admin
+    password: admin@2023!
+
+server:
+  port: 8088
+
+jms:
+  enable: true
+
+redis:
+  enable: false
+
+# 分布式事务
+seata:
+  enabled: false

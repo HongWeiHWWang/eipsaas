@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.hotent</groupId>
+		<artifactId>x7</artifactId>
+		<version>7.2.3</version>
+	</parent>
+	<artifactId>job</artifactId>
+	<name>job</name>
+	<description>job executor</description>
+
+	<dependencies>
+		<!-- Spring boot 测试 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- base 编译和测试时使用 -->
+		<dependency>
+			<groupId>com.hotent</groupId>
+			<artifactId>base</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.hotent</groupId>
+			<artifactId>uc-api-impl</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+		</dependency>
+	</dependencies>
+</project>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bo.persistence.dao.BoAttributeDao">
+	<resultMap id="BoAttribute"
+		type="com.hotent.bo.model.BoAttribute">
+		<id property="id" column="id_" jdbcType="VARCHAR" />
+		<result property="entId" column="ent_id_" jdbcType="VARCHAR" />
+		<result property="name" column="name_" jdbcType="VARCHAR" />
+		<result property="desc" column="desc_" jdbcType="VARCHAR" />
+		<result property="dataType" column="data_type_"
+			jdbcType="VARCHAR" />
+		<result property="defaultValue" column="default_value_"
+			jdbcType="VARCHAR" />
+		<result property="format" column="format_" jdbcType="VARCHAR" />
+		<result property="isRequired" column="is_required_"
+			jdbcType="NUMERIC" />
+		<result property="attrLength" column="attr_length_"
+			jdbcType="NUMERIC" />
+		<result property="decimalLen" column="decimal_len_"
+			jdbcType="NUMERIC" />
+		<result property="fieldName" column="field_name_"
+			jdbcType="VARCHAR" />
+		<result property="status" column="status_" jdbcType="VARCHAR" />
+		<result property="index" column="index_" jdbcType="NUMERIC" />
+	</resultMap>
+
+	<select id="getByEntId" parameterType="java.lang.String" resultMap="BoAttribute">
+		SELECT
+			*
+		FROM
+			form_bo_attr
+		WHERE
+			ENT_ID_ = #{entId}
+	</select>
+
+	<delete id="removeByEntId">
+		delete from form_bo_attr where ENT_ID_ = #{entId}
+	</delete>
+</mapper>

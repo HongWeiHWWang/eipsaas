@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.UserParamsDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.UserParams">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="alias" column="CODE_" jdbcType="VARCHAR"/>
+		<result property="value" column="VALUE_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<parameterMap id="UserParams" type="com.hotent.uc.model.UserParams" />
+	
+	<sql id="Base_Column_List">
+		ID_,USER_ID_,CODE_,VALUE_,UPDATE_TIME_,IS_DELE_,VERSION_
+	</sql>
+	
+	
+
+	<select id="getByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List" />
+		 FROM UC_USER_PARAMS 
+		WHERE 
+		USER_ID_=#{id} AND IS_DELE_!='1'
+	</select>	
+	
+	
+	<select id="getByUserIdAndCode" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List" />
+		 FROM UC_USER_PARAMS
+		where IS_DELE_!='1'
+		<if test="userId!=null">
+			and USER_ID_ = #{userId}
+		</if>
+		<if test="code!=null">
+			and CODE_ = #{code}
+		</if>
+	</select>
+	
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_USER_PARAMS WHERE IS_DELE_='1'
+	</delete>
+	
+	<delete id="removeByUserId" parameterType="java.util.Map">
+		UPDATE UC_USER_PARAMS SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE
+		USER_ID_=#{userId}
+	</delete>
+	
+	<delete id="removeByAlias" parameterType="java.util.Map">
+		UPDATE UC_USER_PARAMS SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE
+		CODE_=#{alias}
+	</delete>
+	
+</mapper>

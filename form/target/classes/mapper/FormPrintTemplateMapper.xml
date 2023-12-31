@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.FormPrintTemplateDao">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hotent.form.model.FormPrintTemplate">
+        <id column="ID_" property="id" />
+        <result column="FILE_ID_" property="fileId" />
+        <result column="FILE_NAME" property="fileName" />
+        <result column="FORM_KEY_" property="formKey" />
+        <result column="DEF_ID_" property="defId" />
+        <result column="FORM_ID_" property="formId" />
+        <result column="PRINT_TYPE_" property="printType" />
+        <result column="IS_MAIN" property="isMain" />
+        <result column="CREATE_BY_" property="createBy" />
+        <result column="CREATE_ORG_ID_" property="createOrgId" />
+        <result column="CREATE_TIME_" property="createTime" />
+        <result column="UPDATE_BY_" property="updateBy" />
+        <result column="UPDATE_TIME_" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID_, FILE_ID_, FILE_NAME, FORM_KEY_, IS_MAIN, CREATE_BY_, CREATE_ORG_ID_, CREATE_TIME_, UPDATE_BY_, UPDATE_TIME_, TENANT_ID_
+    </sql>
+	
+	<select id="getPrintList" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from form_print_template
+		${ew.customSqlSegment}
+		ORDER BY FIELD(PRINT_TYPE_,"word","form"), FIELD(IS_MAIN,"Y","N")
+	</select>
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.oa.persistence.dao.MeetingroomBookDao">
+	<resultMap id="MeetingroomBook" type="com.hotent.oa.model.MeetingroomBook">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="refId" column="REF_ID_" jdbcType="VARCHAR"/>
+		<result property="FMeetingroomId" column="F_MEETINGROOM_ID" jdbcType="VARCHAR"/>
+		<result property="FMeetingId" column="F_MEETING_ID_" jdbcType="VARCHAR"/>
+		<result property="FMeetingName" column="F_MEETING_NAME_" jdbcType="VARCHAR"/>
+		<result property="FHostessId" column="F_HOSTESS_ID_" jdbcType="VARCHAR"/>
+		<result property="FHosstessName" column="F_HOSSTESS_NAME_" jdbcType="VARCHAR"/>
+		<result property="FHosstessPhoto" column="F_HOSSTESS_PHOTO_" jdbcType="VARCHAR"/>
+		<result property="FMeetingroomName" column="F_MEETINGROOM_NAME_" jdbcType="VARCHAR"/>
+		<result property="FAppointmentBegTime" column="F_APPOINTMENT_BEG_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="FAppointmentEndTime" column="F_APPOINTMENT_END_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="FAppointmentStatus" column="F_APPOINTMENT_STATUS_" jdbcType="VARCHAR"/>
+		<result property="FMeetingserviceId" column="F_MEETINGSERVICE_ID_" jdbcType="VARCHAR"/>
+		<result property="FMeetingserviceFee" column="F_MEETINGSERVICE_FEE_" jdbcType="NUMERIC"/>
+		<result property="FMeetingroomFee" column="F_MEETINGROOM_FEE_" jdbcType="NUMERIC"/>
+		<result property="FMeetingTotoalFee" column="F_MEETING_TOTOAL_FEE" jdbcType="NUMERIC"/>
+		<result property="FFormDataRev" column="F_form_data_rev_" jdbcType="NUMERIC"/>
+		<result property="FMeetingMinute" column="F_MEETING_MINUTE" jdbcType="NUMERIC"/>
+		<result property="FMeetingRoomPrice" column="F_MEETING_ROOM_PRICE" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+</mapper>

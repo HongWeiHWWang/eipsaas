@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.runtime.dao.MeetingRoomAppointmentDao">
+	<resultMap id="MeetingRoomAppointment" type="com.hotent.runtime.model.MeetingRoomAppointment">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="meetingroomId" column="MEETINGROOM_ID_" jdbcType="VARCHAR"/>
+		<result property="meetingId" column="MEETING_ID_" jdbcType="VARCHAR"/>
+		<result property="meetingName" column="MEETING_NAME_" jdbcType="VARCHAR"/>
+		<result property="hostessName" column="HOSTESS_NAME_" jdbcType="VARCHAR"/>
+		<result property="appointmentBegTime" column="APPOINTMENT_BEG_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="appointmentEndTime" column="APPOINTMENT_END_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="appointmentStatus" column="APPOINTMENT_STATUS_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+</mapper>

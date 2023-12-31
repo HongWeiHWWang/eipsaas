@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmTaskTurnDao">
+	<resultMap id="BpmTaskTurn" type="com.hotent.bpm.persistence.model.DefaultBpmTaskTurn">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="task_id_" jdbcType="VARCHAR"/>
+		<result property="taskName" column="task_name_" jdbcType="VARCHAR"/>
+		<result property="taskSubject" column="task_subject_" jdbcType="VARCHAR"/>
+		<result property="nodeId" column="node_id_" jdbcType="VARCHAR"/>
+		<result property="procInstId" column="proc_inst_id_" jdbcType="VARCHAR"/>
+		<result property="ownerId" column="owner_id_" jdbcType="VARCHAR"/>
+		<result property="ownerName" column="owner_name_" jdbcType="VARCHAR"/>
+		<result property="assigneeId" column="assignee_id_" jdbcType="VARCHAR"/>
+		<result property="assigneeName" column="assignee_name_" jdbcType="VARCHAR"/>
+		<result property="status" column="status_" jdbcType="VARCHAR"/>
+		<result property="turnType" column="turn_type_" jdbcType="VARCHAR"/>
+		<result property="typeId" column="type_id_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="typeId" column="type_id_" jdbcType="VARCHAR"/>
+		<result property="supportMobile" column="SUPPORT_MOBILE_" jdbcType="NUMERIC"/>
+		<result property="finishTime" column="finish_time_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<insert id="create" parameterType="com.hotent.bpm.persistence.model.DefaultBpmTaskTurn">
+		INSERT INTO bpm_task_turn
+		(id_,task_id_,task_name_,task_subject_,node_id_,proc_inst_id_,owner_id_,owner_name_,assignee_id_,assignee_name_,status_,turn_type_,type_id_,create_time_,finish_time_)
+		VALUES 
+		(#{id,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}, #{taskSubject,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR}, #{procInstId,jdbcType=VARCHAR}, #{ownerId,jdbcType=VARCHAR}, #{ownerName,jdbcType=VARCHAR}, #{assigneeId,jdbcType=VARCHAR}, #{assigneeName,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{turnType,jdbcType=VARCHAR}, #{typeId,jdbcType=VARCHAR},  #{createTime,jdbcType=TIMESTAMP}, #{finishTime,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="BpmTaskTurn">
+		SELECT * FROM bpm_task_turn 
+		WHERE 
+		id_=#{id}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BpmTaskTurn">
+		SELECT * FROM bpm_task_turn 	
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM bpm_task_turn 
+		WHERE
+		id_=#{id}
+	</delete>
+	
+	<select id="getByTaskId"    resultMap="BpmTaskTurn">
+		SELECT * FROM bpm_task_turn 
+		WHERE 
+		task_id_=#{taskId} 
+	</select>
+	
+	<update id="updComplete" parameterType="com.hotent.bpm.persistence.model.DefaultBpmTaskTurn">
+		UPDATE bpm_task_turn SET
+		status_='finish',
+		finish_time_=#{finishTime,jdbcType=TIMESTAMP}
+		WHERE
+		task_id_=#{taskId}
+	</update>
+	
+	<update id="updSubjectByTaskId">
+		UPDATE bpm_task_turn
+		SET TASK_SUBJECT_ = #{subject}
+		WHERE
+			task_id_=#{taskId}
+	</update>
+	
+	<delete id="delByInstList">
+		DELETE FROM bpm_task_turn 
+		WHERE 
+		proc_inst_id_  in
+		<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        </foreach> 
+	</delete>
+	
+	
+	<select id="getMyDelegate" parameterType="java.lang.String" resultMap="BpmTaskTurn">
+		SELECT  DISTINCT a.*,hi.SUPPORT_MOBILE_ FROM bpm_task_turn a
+		LEFT JOIN bpm_task_turnassign b  ON a.id_ = b.task_turn_id_
+		inner join bpm_pro_inst hi on a.proc_inst_id_ = hi.id_
+		<if test="defKey!=''">
+            and hi.proc_def_key_ = #{defKey}
+        </if>
+		${ew.customSqlSegment}
+	</select> 
+
+	<select id="getMyDelegateCount" parameterType="java.lang.String" resultType="java.util.Map">
+		select count(1) as count,type_id_ as typeId from (
+			SELECT DISTINCT a.*,hi.SUPPORT_MOBILE_ FROM bpm_task_turn a
+			LEFT JOIN bpm_task_turnassign b ON a.id_ = b.task_turn_id_
+			inner join bpm_pro_inst hi on a.proc_inst_id_ = hi.id_
+			<where>
+				(owner_id_ = #{userId} OR from_user_id_ = #{userId} )
+			</where>
+			 order by a.create_time_) temp
+		 group by type_id_
+	</select>
+	<select id="getMyDelegateCountByUserId" parameterType="java.lang.String" resultType="java.lang.Long">
+		select count(1) from (
+		SELECT DISTINCT a.*,hi.SUPPORT_MOBILE_ FROM bpm_task_turn a
+		LEFT JOIN bpm_task_turnassign b ON a.id_ = b.task_turn_id_
+		inner join bpm_pro_inst hi on a.proc_inst_id_ = hi.id_
+		where (owner_id_ = #{userId} OR from_user_id_ = #{userId} )) temp
+	</select>
+	
+	<select id="getByTaskIdAndAssigneeId" parameterType="java.util.Map" resultMap="BpmTaskTurn">
+		SELECT * FROM bpm_task_turn 
+			WHERE 1=1
+				<if test="taskId!=null">
+					AND task_id_=#{taskId} 
+				</if>
+				<if test="assigneeId!=null">
+					 AND assignee_id_=#{assigneeId} 
+				</if>	
+	</select>
+
+    <delete id="delByTaskId" parameterType="java.lang.String">
+		DELETE FROM bpm_task_turn
+		WHERE
+		task_id_=#{taskId}
+	</delete>
+	
+</mapper>

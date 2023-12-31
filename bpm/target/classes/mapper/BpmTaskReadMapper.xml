@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmTaskReadDao">
+	<resultMap id="BpmTaskRead" type="com.hotent.bpm.persistence.model.BpmTaskRead">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="procDefId" column="proc_def_id" jdbcType="VARCHAR"/>
+		<result property="procInstId" column="proc_inst_id_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="task_id_" jdbcType="VARCHAR"/>
+		<result property="nodeId" column="node_id_" jdbcType="VARCHAR"/>
+		<result property="readTime" column="read_time_" jdbcType="TIMESTAMP"/>
+		<result property="userId" column="user_id_" jdbcType="VARCHAR"/>
+		<result property="userName" column="user_name_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+	<delete id="delByInstList" >
+		DELETE FROM  bpm_task_read where proc_inst_id_ in 
+			<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        	</foreach> 
+	</delete>
+	
+	
+	
+</mapper>

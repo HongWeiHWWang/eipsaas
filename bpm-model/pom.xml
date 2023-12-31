@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.hotent</groupId>
+		<artifactId>x7</artifactId>
+		<version>7.2.3</version>
+	</parent>
+	<artifactId>bpm-model</artifactId>
+	<name>bpm-model</name>
+	<description>BPM designer &amp; setting</description>
+	<dependencies>
+		<!-- Spring boot 测试 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.hotent</groupId>
+			<artifactId>activiti</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!-- rest-auth-service 获取请求方法的授权信息 portal门户模块请不要依赖 只在 bpm-model bpm-runtime 
+			form,uc中依赖 -->
+		<dependency>
+			<groupId>com.hotent</groupId>
+			<artifactId>rest-auth-service</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+	</dependencies>
+	<!-- 用于生成jar文件
+	<build>
+		<finalName>bpm-model</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.hotent.bpmModel.Application</mainClass>
+					<layout>JAR</layout>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>--> 
+</project>

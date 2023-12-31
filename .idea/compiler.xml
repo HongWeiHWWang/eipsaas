@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="bpm-model" />
+        <module name="mail" />
+        <module name="uc-api-impl" />
+        <module name="poi" />
+        <module name="sys" />
+        <module name="bo" />
+        <module name="uc" />
+        <module name="redis" />
+        <module name="oa" />
+        <module name="file" />
+        <module name="assembly" />
+        <module name="portal" />
+        <module name="table" />
+        <module name="bpm" />
+        <module name="calendar" />
+        <module name="activemq" />
+        <module name="rest-auth-service" />
+        <module name="ueditor" />
+        <module name="uc-api" />
+        <module name="integrate" />
+        <module name="i18n" />
+        <module name="activiti" />
+        <module name="form" />
+        <module name="service" />
+        <module name="job" />
+        <module name="bpm-runtime" />
+        <module name="base" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-encoding utf-8" />
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="activemq" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="activiti" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="assembly" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="base" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="bo" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="bpm" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="bpm-model" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="bpm-runtime" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="calendar" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="file" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="form" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="i18n" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="integrate" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="job" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="mail" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="oa" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="poi" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="portal" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="redis" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="rest-auth-service" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="service" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="sys" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="table" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="uc" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="uc-api" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="uc-api-impl" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="ueditor" options="-extdirs &quot;C:\Program Files\Java\jdk1.8.0_202\jre\lib&quot;" />
+      <module name="x7" options="" />
+    </option>
+  </component>
+</project>

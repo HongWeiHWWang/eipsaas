@@ -1,0 +1,54 @@
+{
+    "alias": "qjdx",
+    "categoryId": "312521421",
+    "categoryName": "默认分类",
+    "deployed": 0,
+    "description": "请假对象",
+    "dsName": "",
+    "isCreateTable": "",
+    "isExternal": "",
+    "status": "normal",
+    "supportDb": true,
+    "ents": [
+        {
+            "desc": "请假主体信息",
+            "index": 0,
+            "name": "qjztxx",
+            "packageId": "",
+            "show": "主实体",
+            "relation": "main",
+            "status": "",
+            "attributeList": [
+                {
+                    "comment": "请假人",
+                    "name": "qjr",
+                    "isRequired": "0",
+                    "dataType": "varchar",
+                    "format": "",
+                    "intLen": "",
+                    "attrLength": 50,
+                    "decimalLen": 0,
+                    "isNew": true,
+                    "defaultValue": "",
+                    "desc": "请假人",
+                    "index": 1
+                },
+                {
+                    "comment": "请假人ID",
+                    "name": "qjrID",
+                    "isRequired": "0",
+                    "dataType": "varchar",
+                    "format": "",
+                    "intLen": "",
+                    "attrLength": 50,
+                    "decimalLen": 0,
+                    "isNew": true,
+                    "defaultValue": "",
+                    "desc": "请假人ID",
+                    "index": 2
+                }
+            ],
+            "isCheck": true
+        }
+    ]
+}

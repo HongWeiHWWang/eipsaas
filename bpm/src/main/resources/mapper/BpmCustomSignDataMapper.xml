@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmCustomSignDataDao">
+	<resultMap id="BpmCustomSignData" type="com.hotent.bpm.persistence.model.BpmCustomSignData">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="type" column="type_" jdbcType="VARCHAR"/>
+		<result property="status" column="status_" jdbcType="VARCHAR"/>
+		<result property="parentId" column="parent_id_" jdbcType="VARCHAR"/>
+		<result property="path" column="path_" jdbcType="VARCHAR"/>
+		<result property="instId" column="inst_id_" jdbcType="VARCHAR"/>
+		<result property="nodeId" column="node_id_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="task_id_" jdbcType="VARCHAR"/>
+		<result property="executor" column="executor" jdbcType="VARCHAR"/>
+		<result property="isRead" column="is_read_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="create" parameterType="com.hotent.bpm.persistence.model.BpmCustomSignData">
+		INSERT INTO bpm_custom_signdata
+		(id_,type_,status_,parent_id_,path_,inst_id_,node_id_,task_id_)
+		VALUES 
+		(#{id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{instId,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="BpmCustomSignData">
+		SELECT * FROM bpm_custom_signdata 
+		WHERE 
+		id_=#{id}
+	</select>
+	
+	<select id="getByTaskIdAndStatus"   parameterType="java.lang.String" resultMap="BpmCustomSignData">
+		SELECT * FROM bpm_custom_signdata 
+		<where>
+			task_id_=#{taskId}
+			<if test="status!=null">
+			and status_ = #{status}
+			</if> 
+		</where>
+	</select>
+	
+	<select id="getByInstIdAndStatus"   parameterType="java.lang.String" resultMap="BpmCustomSignData">
+		SELECT * FROM bpm_custom_signdata 
+		<where>
+			inst_id_=#{instId}
+			<if test="status!=null">
+			and status_ = #{status}
+			</if> 
+		</where>
+	</select>
+	
+	<select id="getByInstIdAndStatusList" resultMap="BpmCustomSignData">
+		SELECT * FROM bpm_custom_signdata
+		<where>
+			inst_id_=#{instId}
+			and status_  in 
+			<foreach collection="statusList" index="index" item="status" open="(" separator="," close=")"> 
+            #{status} 
+        	</foreach>  
+		</where>
+	</select>
+	
+	<select id="getSequentialSonByTaskId" resultMap="BpmCustomSignData">
+		SELECT
+			*
+		FROM
+			bpm_custom_signdata
+		WHERE
+		type_ = 'sequential'
+		AND (status_ = 'approval'
+				OR status_ = 'withdrawApproval' )
+		AND parent_id_ = (
+			SELECT
+				sign.id_
+			FROM
+				bpm_custom_signdata sign
+			WHERE
+				sign.task_id_ =#{taskId}
+		)
+	</select>
+	
+	<select id="getParallelSonByPath" resultMap="BpmCustomSignData">
+		SELECT
+			*
+		FROM
+			bpm_custom_signdata
+		WHERE
+		type_ = 'parallel'
+		AND (status_ = 'approval'
+				OR status_ = 'withdrawApproval' )
+		AND path_ like '${path}%' 
+	</select>
+	
+	<select id="getParallelAllSonByPath" resultMap="BpmCustomSignData">
+		SELECT
+			signdata.*,
+			opinion.QUALFIEDS_ as "executor",
+			opinion.is_read_ as "is_read_"
+		FROM
+			bpm_custom_signdata signdata
+		LEFT JOIN bpm_check_opinion opinion on opinion.task_id_ =  signdata.task_id_ 
+		WHERE
+		signdata.type_ = 'parallel'
+		AND signdata.path_ like '${path}%' 
+		AND signdata.path_ != #{path}
+	</select>
+	
+	<select id="getSignDataByBeforeSignTaskId" resultMap="BpmCustomSignData">
+		SELECT
+			*
+		FROM
+			bpm_custom_signdata
+		WHERE
+			(
+				status_ = 'approval'
+				OR status_ = 'withdrawApproval'
+			)
+		AND inst_id_ = #{instId}
+		AND node_id_ = (
+			SELECT
+				TO_NODE_ID_
+			FROM
+				bpm_exe_stack_relation
+			WHERE
+				TO_NODE_TYPE_ = 'customSignTask'
+			AND FROM_STACK_ID_ = (
+				SELECT
+					STACK_ID_
+				FROM
+					bpm_exe_stack_executor
+				WHERE
+					TASK_ID_ = #{taskId}
+			)
+		)
+	</select>
+	
+	<select id="getAllSignDataByBeforeSignTaskId" resultMap="BpmCustomSignData">
+		SELECT
+			signdata.*,
+			opinion.QUALFIEDS_ as "executor",
+			opinion.is_read_ as "is_read_"
+		FROM
+			bpm_custom_signdata signdata
+		LEFT JOIN bpm_check_opinion opinion on opinion.task_id_ =  signdata.task_id_ 
+		WHERE
+		signdata.inst_id_ = #{instId}
+		AND signdata.node_id_ = (
+			SELECT
+				TO_NODE_ID_
+			FROM
+				bpm_exe_stack_relation
+			WHERE
+				TO_NODE_TYPE_ = 'customSignTask'
+			AND FROM_STACK_ID_ = (
+				SELECT
+					STACK_ID_
+				FROM
+					bpm_exe_stack_executor
+				WHERE
+					TASK_ID_ = #{taskId}
+			)
+		)
+	</select>
+	
+	<update id="updateStatusByInstId" parameterType="java.lang.String">
+		UPDATE bpm_custom_signdata SET
+		status_=#{newStatus,jdbcType=VARCHAR}
+		WHERE
+		inst_id_=#{instId}
+		and status_  in 
+		<foreach collection="statusList" index="index" item="status" open="(" separator="," close=")"> 
+           #{status} 
+       	</foreach>
+	</update>
+	
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BpmCustomSignData">
+		SELECT * FROM bpm_custom_signdata
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+	
+	<update id="updateStatusByTaskId" parameterType="java.lang.String">
+		UPDATE bpm_custom_signdata SET
+		status_=#{newStatus,jdbcType=VARCHAR}
+		<if test="newCreateTaskId!=null">
+		,task_id_=#{newCreateTaskId,jdbcType=VARCHAR}
+		</if>
+		WHERE
+		task_id_=#{taskId,jdbcType=VARCHAR}
+		and status_ in 
+		<foreach collection="oldStatus" index="index" item="status" open="(" separator="," close=")"> 
+           #{status} 
+       	</foreach>
+	</update>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM bpm_custom_signdata 
+		WHERE
+		id_=#{id}
+	</delete>
+	
+	<delete id="removeByInstId" parameterType="java.lang.String">
+		DELETE FROM bpm_custom_signdata 
+		WHERE
+		inst_id_=#{instId}
+	</delete>
+	
+	<select id="getBrotherByTaskId"  resultMap="BpmCustomSignData">
+		SELECT * FROM bpm_custom_signdata 
+		where 
+		 status_ in 
+		<foreach collection="status" index="index" item="val" open="(" separator="," close=")"> 
+           #{val} 
+       	</foreach>
+		  and parent_id_ = ( select b.parent_id_ from bpm_custom_signdata b where b.task_id_ = #{taskId} )
+	</select>
+	
+</mapper>

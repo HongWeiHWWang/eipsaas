@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.FormFieldDao">
+	<resultMap id="BpmFormField" type="com.hotent.form.model.FormField">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="desc" column="desc_" jdbcType="VARCHAR"/>
+		<result property="type" column="type_" jdbcType="VARCHAR"/>
+		<result property="groupId" column="group_id_" jdbcType="VARCHAR"/>
+		<result property="formId" column="form_id_" jdbcType="VARCHAR"/>
+		<result property="boDefId" column="bo_def_id_" jdbcType="VARCHAR"/>
+		<result property="entId" column="ent_id_" jdbcType="VARCHAR"/>
+		<result property="boAttrId" column="bo_attr_id_" jdbcType="VARCHAR"/>
+		<result property="calculation" column="calculation_" jdbcType="VARCHAR"/>
+		<result property="ctrlType" column="ctrl_type_" jdbcType="VARCHAR"/>
+		<result property="validRule" column="valid_rule_" jdbcType="VARCHAR"/>
+		<result property="option" column="option_" jdbcType="VARCHAR"/>
+		<result property="sn" column="sn_" jdbcType="NUMERIC"/>
+		<result property="status" column="status_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap id="BpmFormFieldEnt" type="com.hotent.form.model.FormField"  extends="BpmFormField" >
+		<result property="entName" column="ent_name_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<delete id="delByMainId">
+	    DELETE FROM form_field
+	    WHERE
+	    form_id_=#{formId}
+	</delete>
+	
+	<select id="getByFormId" resultMap="BpmFormField">
+	    SELECT *
+	    FROM form_field
+	    WHERE form_id_=#{formId}
+	</select>
+	
+	
+	<select id="getByboDefId" resultMap="BpmFormField">
+	    SELECT *
+	    FROM form_field
+	    WHERE bo_def_id_=#{boDefId} order by sn_
+	</select>
+	
+	<select id="getByFormIdAndBoDefId" parameterType="java.util.Map" resultMap="BpmFormField">
+	    SELECT ff.*,attr.status_ as status_
+	    FROM form_field ff
+	    LEFT JOIN form_bo_attr attr on attr.id_ = ff.bo_attr_id_
+	    WHERE ff.bo_def_id_=#{boDefId} and ff.form_id_=#{formId} order by ff.sn_
+	</select>
+	
+	<select id="getByGroupId" resultMap="BpmFormField">
+	    SELECT *
+	    FROM form_field
+	    WHERE group_id_=#{groupId} order by sn_
+	</select>
+	
+	<select id="getExtByFormId" resultMap="BpmFormFieldEnt">
+	    SELECT A.name_,B.NAME_ ENT_NAME_,A.desc_,A.sn_
+	    FROM form_field A ,form_bo_ent B
+	    WHERE A.ent_id_=B.id_ and A.form_id_=#{formId} and A.bo_attr_id_ is not null
+	</select>
+	
+	
+	<delete id="removeByAttrId" parameterType="java.lang.String">
+		DELETE FROM form_field
+		WHERE
+		bo_attr_id_=#{attrId}
+	</delete>
+</mapper>

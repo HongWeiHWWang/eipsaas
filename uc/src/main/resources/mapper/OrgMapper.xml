@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.OrgDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.Org">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="parentId" column="PARENT_ID_" jdbcType="VARCHAR"/>
+		<result property="orderNo" column="ORDER_NO_" jdbcType="NUMERIC"/>
+		<result property="code" column="CODE_" jdbcType="VARCHAR"/>
+		<result property="grade" column="GRADE_" jdbcType="VARCHAR"/>
+		<result property="demId" column="DEM_ID_" jdbcType="VARCHAR"/>
+		<result property="path" column="PATH_" jdbcType="VARCHAR"/>
+		<result property="pathName" column="PATH_NAME_" jdbcType="VARCHAR"/>
+		<result property="isMaster" column="IS_MASTER_" jdbcType="NUMERIC"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+        <result property="limitNum" column="LIMIT_NUM_" jdbcType="NUMERIC"/>
+        <result property="nowNum" column="NOW_NUM_" jdbcType="NUMERIC"/>
+        <result property="exceedLimitNum" column="EXCEED_LIMIT_NUM_" jdbcType="NUMERIC"/>
+        <result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<parameterMap id="Org" type="com.hotent.uc.model.Org" />
+	
+	<sql id="Base_Column_List">
+		ID_,NAME_,PARENT_ID_,ORDER_NO_,CODE_,GRADE_,DEM_ID_,PATH_,PATH_NAME_,UPDATE_TIME_,IS_DELE_,VERSION_,LIMIT_NUM_,NOW_NUM_,EXCEED_LIMIT_NUM_,create_by_,create_time_,create_org_id_,update_by_,tenant_id_
+	</sql>
+	
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		select  o.* ,
+( case (select count(*)  from UC_ORG p where p.PARENT_ID_=o.ID_ and p.ID_!=p.PARENT_ID_  AND P.IS_DELE_!='1') when 0 then 0 else 1 end )isIsParent  
+		from  UC_ORG o   
+		where 1=1 and o.ID_ = #{id}  AND o.IS_DELE_!='1'
+	</select>
+		
+	<select id="getByCode"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM UC_ORG 
+		WHERE 
+		CODE_=#{code} AND IS_DELE_!='1'
+	</select>
+	
+	<select id="getOrgListByUserId"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT distinct org.*,orguser.IS_MASTER_ FROM  UC_ORG_USER orguser 
+		inner join UC_ORG org on org.ID_=orguser.ORG_ID_
+		WHERE orguser.USER_ID_=#{userId} AND org.IS_DELE_!='1' AND orguser.IS_DELE_!='1'
+	</select>
+	
+	<select id="getMainOrgListByUser"   parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT distinct org.*,orguser.IS_MASTER_ FROM  UC_ORG_USER orguser 
+		inner join UC_ORG org on org.ID_=orguser.ORG_ID_
+		WHERE orguser.IS_MASTER_=1 and orguser.USER_ID_=#{userId,jdbcType=VARCHAR} AND orguser.IS_DELE_!='1' AND org.IS_DELE_!='1'
+	   <if test="demId!=null">
+			and org.DEM_ID_=#{demId,jdbcType=VARCHAR}
+	   </if>
+	</select>
+	
+	<select id="getByParentId" parameterType="string"  resultMap="BaseResultMap" >
+		select  ID_  ,PARENT_ID_,NAME_, ( case (select count(*)  from UC_ORG p where p.PARENT_ID_=o.ID_ and p.ID_!=p.PARENT_ID_ AND p.IS_DELE_!='1') when 0 then 0 else 1 end )isIsParent  
+		from  UC_ORG o   
+		where PARENT_ID_=#{pid} AND IS_DELE_!='1'  order by ORDER_NO_ asc
+	</select>
+	
+	<select id="getOrgIdMapByUserId" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT DISTINCT
+			org.ID_ AS orgId,
+			orguser.IS_MASTER_ AS isMaster
+		FROM
+			UC_ORG_USER orguser
+		INNER JOIN UC_ORG org ON org.ID_ = orguser.ORG_ID_
+		WHERE
+			orguser.USER_ID_ = #{userId}
+		AND org.IS_DELE_ != '1'
+		AND orguser.IS_DELE_ != '1'
+	</select>
+	
+	<select id="getSubOrgByIds" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT
+			ID_
+		FROM
+			uc_org
+		WHERE
+			PARENT_ID_ IN
+			<foreach collection="parentIds" index="index" item="parentId" open="(" separator="," close=")"> 
+	            #{parentId} 
+	        </foreach>
+		AND IS_DELE_ != '1'
+	</select>
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_ORG  WHERE IS_DELE_='1' 
+	</delete>
+	
+	<select id="getByOrgName" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />
+		from UC_ORG where NAME_ = #{orgName} AND IS_DELE_!='1' 
+	</select>
+	<select id="getByPathName" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />
+		from UC_ORG where PATH_NAME_ = #{pathName} AND IS_DELE_!='1' 
+	</select>
+	
+	<select id="getByParentAndDem" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select  o.*, 
+		( case (select count(*)  from UC_ORG p where p.PARENT_ID_=o.ID_ and p.ID_!=p.PARENT_ID_ AND p.IS_DELE_!='1' ) when 0 then 0 else 1 end ) isIsParent
+		from  UC_ORG o where o.IS_DELE_!='1'
+		<if test="ew.paramNameValuePairs.parentId!=null">
+			and PARENT_ID_ in ${ew.paramNameValuePairs.parentId}
+		</if>
+		<if test="ew.paramNameValuePairs.authSql!=null">
+			${ew.paramNameValuePairs.authSql}
+		</if>
+		<if test="ew.paramNameValuePairs.demId!=null">
+			and o.DEM_ID_ =#{ew.paramNameValuePairs.demId}
+		</if>
+		ORDER BY o.ORDER_NO_
+	</select>
+	
+	<select id="getByDemIdAndSonId" resultMap="BaseResultMap">
+		select  o.* from  UC_ORG o   
+		where o.IS_DELE_!='1' AND o.ID_ =(select og.PARENT_ID_ from UC_ORG og where og.ID_= #{sonId,jdbcType=VARCHAR} AND og.DEM_ID_= #{demId,jdbcType=VARCHAR} AND og.IS_DELE_!='1')
+	</select>
+	
+	<select id="getOrgListByDemId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />
+		from UC_ORG where DEM_ID_ = #{demId} AND IS_DELE_!='1'
+	</select>
+	
+	<select id="getOrgsByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT distinct org.*,orguser.IS_MASTER_ FROM  UC_ORG_USER orguser 
+		inner join UC_ORG org on org.ID_=orguser.ORG_ID_
+		inner join UC_USER u on u.ID_=orguser.USER_ID_
+		WHERE org.IS_DELE_!='1' AND orguser.IS_DELE_!='1' and u.ACCOUNT_=#{account}
+	</select>
+	
+	<select id="justGetOrgsByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT distinct org.*,orguser.IS_MASTER_ FROM  UC_ORG_USER orguser 
+		inner join UC_ORG org on org.ID_=orguser.ORG_ID_
+		inner join UC_USER u on u.ID_=orguser.USER_ID_
+		WHERE org.IS_DELE_!='1' AND orguser.IS_DELE_!='1' and u.ACCOUNT_=#{account} and orguser.POS_ID_ is null
+	</select>
+	
+	<select id="getUserOrg"   parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT distinct org.*,orguser.IS_MASTER_ FROM  UC_ORG_USER orguser 
+		inner join UC_ORG org on org.ID_=orguser.ORG_ID_
+		WHERE org.IS_DELE_!='1' AND orguser.IS_DELE_!='1'
+		 <if test="isMain!=null">
+			and orguser.IS_MASTER_=#{isMain}
+	   </if>
+		<if test="userId!=null">
+			and orguser.USER_ID_=#{userId}
+	   </if>
+	   <if test="orgId!=null">
+			and org.ID_=#{orgId}
+	   </if>
+	   <if test="demId!=null">
+			and org.DEM_ID_=#{demId}
+	   </if>
+	</select>
+	
+	<!-- 关联uc_demension查找组织 -->
+	<select id="getOrgInnerDem" resultMap="BaseResultMap">
+		select  o.*
+		from  UC_ORG o   INNER JOIN uc_demension d ON o.DEM_ID_ = d.ID_ 
+		where o.IS_DELE_!='1' AND d.IS_DELE_!='1'
+		 <if test="demId!=null">
+			and o.DEM_ID_=#{demId}
+	   	</if>
+	   	<if test="code!=null">
+			and o.CODE_=#{code}
+	   	</if>
+	   	<if test="demCode!=null">
+			and d.CODE_=#{demCode}
+	   	</if>
+	</select>
+	
+	<!-- 按用户id组查找组织全路径 -->
+	<select id="getPathNames" parameterType="java.lang.String"  resultType="java.util.Map">
+		 SELECT
+			ucuser.ID_ as "userId",
+			ucuser.FULLNAME_ as "fullName",
+			<!-- ucuser.dutyname as dutyName, -->
+			ucorg.PATH_NAME_ as "pathName"
+		FROM
+			uc_user  ucuser
+		LEFT JOIN uc_org_user  ucorguser ON ucuser.ID_ = ucorguser.USER_ID_
+		AND ucorguser.IS_MASTER_ = '1'
+		AND ucorguser.IS_REL_ACTIVE_ = '1'
+		AND ucorguser.IS_DELE_ = '0'
+		LEFT JOIN uc_org  ucorg ON ucorg.ID_ = ucorguser.ORG_ID_ AND ucorg.IS_DELE_ = '0'
+		WHERE
+			ucuser.ID_ IN 
+			<foreach collection="userIds" index="index" item="userId" open="(" separator="," close=")"> 
+	            #{userId} 
+	        </foreach> 
+	</select>
+	
+	<!--根据用户权限Map获取有权限流程列表  -->
+	<select id="getChildrenIds"  resultType="java.lang.String"  parameterType="java.util.Map" >
+		select o.ID_ from UC_ORG o  where o.ID_ is null
+		   <foreach collection="pathMap" index="key" item="value" open="" separator=" " close=""> 
+				union
+				select ID_ from UC_ORG o
+	 				 where  o.PATH_ like '${value}%'
+             </foreach>
+	</select>
+	
+	<!--根据用户id 查询主组织  -->
+	<select id="getOrgMaster"  resultMap="BaseResultMap"  parameterType="java.lang.String" >
+		SELECT
+			org.*
+		FROM
+			uc_user  uc
+		LEFT JOIN uc_org_user  orguc ON uc.ID_ = orguc.USER_ID_	
+		LEFT JOIN uc_org  org ON orguc.ORG_ID_ = org.ID_
+		WHERE  uc.ACCOUNT_ = #{account} AND orguc.IS_MASTER_ = '1' AND orguc.IS_DELE_ != '1' 
+	</select>
+
+	<select id="getCountByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(1) FROM UC_ORG
+		WHERE CODE_ = #{code}
+	</select>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <xs:schema xmlns="http://www.jee-soft.cn/bpm" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:activiti="http://activiti.org/bpmn"
+    targetNamespace="http://www.jee-soft.cn/bpm" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:import namespace="http://www.omg.org/spec/BPMN/20100524/MODEL" schemaLocation="BPMN20.xsd"/>
+    <xs:import namespace="http://www.omg.org/spec/DD/20100524/DI" schemaLocation="DI.xsd"/>
+    <xs:import namespace="http://www.omg.org/spec/DD/20100524/DC" schemaLocation="DC.xsd"/>
+    <xs:import namespace="http://activiti.org/bpmn" schemaLocation="activiti-bpmn-extensions-5.11.xsd"/>
+    <xs:include schemaLocation="BaseBpmExtend.xsd"></xs:include>
+    
+    <!-- 流程任务类插件 -->
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/task/userAssign" schemaLocation="../../../../../xsd/task/userAssign.xsd"/>
+    <!-- 任务通知插件 -->
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/task/taskNotify" schemaLocation="../../../../../xsd/task/taskNotify.xsd"/>
+    <!-- 流程通知插件 -->
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/execution/procNotify" schemaLocation="../../../../../xsd/execution/procNotify.xsd"/>
+    
+    <!-- 流程抄送插件 -->
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/task/taskCopyTo" schemaLocation="../../../../../xsd/task/taskCopyTo.xsd"/>
+    <!-- 流程脚本节点 -->
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/execution/scriptNode" schemaLocation="../../../../../xsd/execution/scriptNode.xsd"/>
+    <!-- 任务脚本节点 -->
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/execution/taskscript" schemaLocation="../../../../../xsd/task/script.xsd"/>
+    <!-- 消息节点 -->
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/execution/message" schemaLocation="../../../../../xsd/execution/message.xsd"/>
+    <!-- 催办提醒 -->
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/task/reminders" 	schemaLocation="../../../../../xsd/task/reminders.xsd"/>
+   	 <!-- 全局restful接口事件 -->
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/execution/globalRestFuls" 	schemaLocation="../../../../../xsd/execution/globalRestFuls.xsd"/>
+    <!-- 节点restful接口事件 -->
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/execution/restFuls" 	schemaLocation="../../../../../xsd/execution/restFuls.xsd"/>
+   <!--  webService 节点 -->
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/execution/webService" schemaLocation="../../../../../xsd/execution/webService.xsd"/>
+    
+</xs:schema>

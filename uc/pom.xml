@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.hotent</groupId>
+		<artifactId>x7</artifactId>
+		<version>7.2.3</version>
+	</parent>
+	<artifactId>uc</artifactId>
+	<name>uc</name>
+	<description>user center</description>
+	<properties>
+		<cron-utils.version>7.0.1</cron-utils.version>
+		<spring-boot-starter-mobile.version>1.5.9.RELEASE</spring-boot-starter-mobile.version>
+	</properties>
+
+	<dependencies>
+		<!-- Spring boot 测试 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- excel处理相关 -->
+		<dependency>
+			<groupId>com.hotent</groupId>
+			<artifactId>poi</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!-- ad同步 -->
+		<dependency>
+			<groupId>org.springframework.ldap</groupId>
+			<artifactId>spring-ldap-core</artifactId>
+		</dependency>
+		<!-- 定时任务一 -->
+		<dependency>
+			<groupId>com.cronutils</groupId>
+			<artifactId>cron-utils</artifactId>
+			<version>${cron-utils.version}</version>
+		</dependency>
+		<!-- Spring boot 移动端支持 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mobile</artifactId>
+			<version>${spring-boot-starter-mobile.version}</version>
+		</dependency>
+		<!-- rest-auth-service 获取请求方法的授权信息 portal门户模块请不要依赖 只在 bpm-model bpm-runtime 
+			form,uc中依赖 -->
+		<dependency>
+			<groupId>com.hotent</groupId>
+			<artifactId>rest-auth-service</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!-- redis -->
+		<dependency>
+			<groupId>com.hotent</groupId>
+			<artifactId>redis</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<!-- mq -->
+		<dependency>
+			<groupId>com.hotent</groupId>
+			<artifactId>activemq</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!-- 其他模块使用I18nUtil的方法,获取国际化资源 -->
+		<dependency>
+			<groupId>com.hotent</groupId>
+			<artifactId>i18n</artifactId>
+			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.hotent</groupId>
+					<artifactId>uc-api-impl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- service -->
+		<dependency>
+			<groupId>com.hotent</groupId>
+			<artifactId>service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+	
+	<!-- 用于生成jar文件 
+	<build>
+		<finalName>uc</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.hotent.uc.Application</mainClass>
+					<layout>JAR</layout>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>-->
+</project>

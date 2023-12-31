@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.Calendar.dao.CalendarDateTypeDao">
+	<resultMap id="CalendarDateType" type="com.hotent.Calendar.model.CalendarDateType">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="key" column="KEY_" jdbcType="VARCHAR"/>
+		<result property="yearNumber" column="YEAR_NUMBER_" jdbcType="NUMERIC"/>
+		<result property="dateType" column="DATE_TYPE_" jdbcType="VARCHAR"/>
+		<result property="scopeType" column="SCOPE_TYPE_" jdbcType="VARCHAR"/>
+		<result property="weekBegin" column="WEEK_BEGIN_" jdbcType="NUMERIC"/>
+		<result property="weekEnd" column="WEEK_END_" jdbcType="NUMERIC"/>
+		<result property="yearBegin" column="YEAR_BEGIN_" jdbcType="TIMESTAMP"/>
+		<result property="yearEnd" column="YEAR_END_" jdbcType="TIMESTAMP"/>
+		
+	</resultMap>
+	
+	<sql id="columns">
+	ID_,NAME_,KEY_,YEAR_NUMBER_,DATE_TYPE_,SCOPE_TYPE_,WEEK_BEGIN_,WEEK_END_,YEAR_BEGIN_,YEAR_END_
+	</sql>
+	
+	<!-- 得到周日期范围的公休日 -->
+	<select id="getPhByWeekList" resultMap="CalendarDateType">
+		SELECT
+		<include refid="columns"/>
+		FROM portal_cal_date_type
+		where date_type_='PH'
+		and SCOPE_TYPE_='1'
+	</select>
+	
+	<!-- 得到年日期范围的法定假日（如春节 中秋节 寒暑假） -->
+	<select id="getLhByYearList" resultMap="CalendarDateType">
+		SELECT
+		<include refid="columns"/>
+		FROM portal_cal_date_type
+		where date_type_='LH'
+		and SCOPE_TYPE_='2'
+	</select>
+	
+	<!-- 得到年日期范围的公司假日 -->
+	<select id="getChByYearList" resultMap="CalendarDateType">
+		SELECT
+		<include refid="columns"/>
+		FROM portal_cal_date_type
+		where date_type_='CH'
+		and SCOPE_TYPE_='2'
+	</select>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns="http://www.jee-soft.cn/sqlgen"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.jee-soft.cn/sqlgen sqlgen.xsd"
+    filePath="D:\init2.sql" >
+	<resource table="portal_sys_msg_tpl"  pk="id_" parentId="" parentIdVal="0" variables="{'isDefault':'1'}">
+		<sql>SELECT * FROM portal_sys_msg_tpl WHERE is_default_ ='${isDefault}'</sql>
+		<template>
+insert into portal_sys_msg_tpl (id_, name_, key_, type_key_, is_default_,subject_, plain_, html_, create_by_, create_org_id_)
+VALUES ('${ID_}', '${NAME_}', '${KEY_}', '${TYPE_KEY_}', '${IS_DEFAULT_}','${SUBJECT_}', '${PLAIN_}', '${HTML_}', '${CREATE_BY_}', '${CREATE_ORG_ID_}');
+		</template>
+	</resource>
+   
+   <resource table="portal_sys_type_group"  pk="id_" parentId="" parentIdVal="0" variables="{'isDefault':'1'}">
+		<sql>SELECT * FROM portal_sys_type_group  </sql>
+		<template>
+insert into portal_sys_type_group (id_, group_key_, name_, flag_, sn_,type_, create_by_, create_org_id_)
+VALUES ('${ID_}', '${GROUP_KEY_}', '${NAME_}', '${FLAG_}', '${SN_}','${TYPE_}', '${CREATE_BY_}', '${CREATE_ORG_ID_}');
+		</template>
+	</resource>
+
+    <resource table="form_custom_dialog"  pk="id_" parentId="" parentIdVal="0" variables="{'isDefault':'1'}">
+		<sql>SELECT * FROM form_custom_dialog WHERE system_ ='${isDefault}'</sql>
+		<template>
+insert into form_custom_dialog (id_, name_, alias_, style_, obj_name_,need_page_, page_size_, displayfield_, conditionfield_, resultfield_,sortfield_,dsalias_,is_table_,diy_sql_,sql_build_type_,width_,height_,select_num_,system_)
+VALUES ('${ID_}', '${NAME_}', '${ALIAS_}', '${STYLE_}', '${OBJ_NAME_}','${NEED_PAGE_}', '${PAGE_SIZE_}', '${DISPLAYFIELD_}', '${CONDITIONFIELD_}', '${RESULTFIELD_}','${SORTFIELD_}','${DSALIAS_}','${IS_TABLE_}','${DIY_SQL_}','${SQL_BUILD_TYPE_}','${WIDTH_}','${HEIGHT_}','${SELECT_NUM_}','${SYSTEM_}');
+		</template>
+	</resource>
+	
+	
+	  <resource table="bpm_selector_def"  pk="id_" parentId="" parentIdVal="0" variables="{'isDefault':'0'}">
+		<sql>SELECT * FROM bpm_selector_def WHERE is_custom_ ='${isDefault}'</sql>
+		<template>
+insert into bpm_selector_def (id_, name_, alias_, group_field_, buttons_, is_custom_, flag_, method_, conf_key_)
+VALUES ('${ID_}', '${NAME_}', '${ALIAS_}', '${GROUP_FIELD_}', '${BUTTONS_}','${IS_CUSTOM_}', '${FLAG_}', '${METHOD_}', '${CONF_KEY_}');
+		</template>
+	</resource>
+</resources>

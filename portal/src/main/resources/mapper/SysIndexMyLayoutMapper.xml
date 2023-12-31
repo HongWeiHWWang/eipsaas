@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.portal.persistence.dao.SysIndexMyLayoutDao">
+	<resultMap id="SysIndexMyLayout" type="com.hotent.portal.model.SysIndexMyLayout">
+		<id property="id" column="ID" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID" jdbcType="VARCHAR"/>
+		<result property="templateHtml" column="TEMPLATE_HTML" jdbcType="LONGVARCHAR"/>
+		<result property="designHtml" column="DESIGN_HTML" jdbcType="LONGVARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="valid" column="VALID_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<delete id="removeByUserId" parameterType="java.lang.String">
+		DELETE FROM portal_sys_my_layout 
+		WHERE
+		USER_ID=#{userId}
+	</delete>
+	
+	<select id="getByUserId" parameterType="java.lang.String" resultMap="SysIndexMyLayout">
+		SELECT <include refid="columns"/>
+		FROM portal_sys_my_layout
+		WHERE
+		user_id=#{userId}
+	</select>
+	
+	<sql id="columns">
+		id,user_id,template_html,design_html
+	</sql>
+	
+	<select id="updateValid" >
+		UPDATE portal_sys_my_layout SET VALID_ = #{type} WHERE USER_ID=#{userId}
+	</select>
+	
+	<select id="setValid" >
+		UPDATE portal_sys_my_layout SET VALID_ = 1 WHERE ID=#{id}
+	</select>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.portal.persistence.dao.MyScheduleDao">
+	<resultMap id="MySchedule" type="com.hotent.portal.model.MySchedule">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="date" column="DATE_" jdbcType="DATE"/>
+		<result property="startTiem" column="START_TIEM_" jdbcType="VARCHAR"/>
+		<result property="endTime" column="END_TIME_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="note" column="NOTE_" jdbcType="VARCHAR"/>
+	</resultMap>
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmInstFormDao">
+	<resultMap id="BpmInstForm" type="com.hotent.bpm.persistence.model.BpmInstForm">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="defId" column="def_id_" jdbcType="VARCHAR"/>
+		<result property="instId" column="inst_id_" jdbcType="VARCHAR"/>
+		<result property="formValue" column="form_value_" jdbcType="VARCHAR"/>
+		<result property="nodeId" column="node_id_" jdbcType="VARCHAR"/>
+		<result property="formType" column="form_type_" jdbcType="VARCHAR"/>
+		<result property="formCategory" column="form_category_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getNodeForm" parameterType="java.util.Map" resultMap="BpmInstForm">
+		SELECT * FROM bpm_inst_form 
+		<where>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(instId)">
+				inst_id_ = #{instId}
+			</if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(defId)">
+				and def_id_ = #{defId}
+			</if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(nodeId)">
+				and node_id_ = #{nodeId}
+			</if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(formType)">
+				and  form_type_ = #{formType} or form_type_ is null
+			</if>
+		</where>
+		
+	</select>
+	
+	<select id="getGlobalForm" parameterType="java.util.Map" resultMap="BpmInstForm">
+		SELECT * FROM bpm_inst_form 
+		<where>
+				node_id_ is null
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(instId)">
+				and inst_id_ = #{instId}
+			</if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(formType)">
+				and form_type_ = #{formType}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getInstForm" parameterType="java.util.Map" resultMap="BpmInstForm">
+		SELECT * FROM bpm_inst_form 
+		<where>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(instId)">
+				inst_id_ = #{instId} and node_id_ = #{instId}
+			</if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(formType)">
+				and form_type_ = #{formType}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getSubInstanFrom" parameterType="java.util.Map" resultMap="BpmInstForm">
+		SELECT * FROM bpm_inst_form 
+		<where>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(instId)">
+				inst_id_ = #{instId}
+			</if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(formType)">
+				and form_type_ = #{formType}
+			</if>
+			and node_id_ is null
+		</where>
+	</select>
+	
+	<delete id="removeDataByDefId" parameterType="java.lang.String">
+		DELETE FROM bpm_inst_form 
+		WHERE
+		def_id_=#{defId}
+	</delete>
+	
+	<delete id="removeDataByInstId" parameterType="java.lang.String">
+		DELETE FROM bpm_inst_form 
+		WHERE
+		inst_id_=#{instId}
+	</delete>
+	
+	
+</mapper>

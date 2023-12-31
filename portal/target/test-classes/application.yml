@@ -1,0 +1,26 @@
+spring:
+  profiles:
+    active: dev
+    platform: mysql
+  datasource:
+    dynamic:
+      primary: master #设置默认的数据源或者数据源组,默认值即为master
+      datasource:
+        master:
+          username: root
+          password: FdsYQT3wWfD9qCMJ5fte8zJ2eXYbrW+7xBnes4R9Bug+Hlolqdo545c0VPQih7GQ2JCkpFD9y9jH1YRhyuYIyw==
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/saas_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+          druid:
+            validation-query: select 1
+            public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJSDV9Vue5wlQXo3WG/ojo91yyWX4wDdZUuVUZD5XXylOVEhxayiU9jz/FfhPPnbKOMCmwMXYRxOGNKUBKVLkb8CAwEAAQ==
+        slave_1:
+          username: root
+          password: root
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/saas_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+
+logging:
+  level:
+    com.hotent.base.dao: debug
+    com.hotent.base.example.dao: debug

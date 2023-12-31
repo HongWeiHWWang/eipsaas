@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmReminderHistoryDao">
+	<resultMap id="BpmReminderHistory" type="com.hotent.bpm.persistence.model.BpmReminderHistory">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="instId" column="inst_id_" jdbcType="VARCHAR"/>
+		<result property="isntName" column="isnt_name_" jdbcType="VARCHAR"/>
+		<result property="nodeName" column="node_name_" jdbcType="VARCHAR"/>
+		<result property="nodeId" column="node_id_" jdbcType="VARCHAR"/>
+		<result property="executeDate" column="execute_date_" jdbcType="TIMESTAMP"/>
+		<result property="remindType" column="remind_type_" jdbcType="VARCHAR"/>
+		<result property="userId" column="user_id_" jdbcType="VARCHAR"/>
+		<result property="note" column="note_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+</mapper>

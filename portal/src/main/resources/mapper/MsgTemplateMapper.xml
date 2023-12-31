@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.portal.persistence.dao.MsgTemplateDao">
+	<resultMap id="MsgTemplate" type="com.hotent.portal.model.MsgTemplate">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="key" column="key_" jdbcType="VARCHAR"/>
+		<result property="typeKey" column="type_key_" jdbcType="VARCHAR"/>
+		<result property="isDefault" column="is_default_" jdbcType="NUMERIC"/>
+		<result property="subject" column="subject_" jdbcType="VARCHAR"/>
+		<result property="plain" column="plain_" jdbcType="VARCHAR"/>
+		<result property="html" column="html_" jdbcType="LONGVARCHAR"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="update_time_" jdbcType="TIMESTAMP"/>
+	    <result property="smsTemplateNo" column="sms_template_no_" jdbcType="VARCHAR"/>
+		<result property="voiceTemplateNo" column="voice_template_no_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getDefault"   resultMap="MsgTemplate">
+		SELECT * FROM portal_sys_msg_tpl 
+		WHERE 
+		type_key_=#{typeKey}	
+		and
+		is_default_='1'
+		order by id_ desc	
+	</select>	
+	
+	<select id="getByKey"   resultMap="MsgTemplate">
+		SELECT * FROM portal_sys_msg_tpl 
+		WHERE 
+		key_=#{key_}	
+	</select>	
+	
+	<select id="getByIds"  resultMap="MsgTemplate">
+		SELECT * FROM portal_sys_msg_tpl 
+		WHERE 
+		id_ in 
+		<foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</select>
+	
+	<update id="updateDefault" parameterType="java.lang.String">
+		UPDATE portal_sys_msg_tpl SET
+		is_default_=1 WHERE id_=#{id}
+	</update>
+	
+	
+	<update id="updateNotDefaultByType" parameterType="java.lang.String">
+		UPDATE portal_sys_msg_tpl SET
+		is_default_=0 WHERE type_key_ = #{key}
+	</update>
+	
+	<delete id="delByTypeKey" parameterType="java.lang.String">
+		DELETE FROM portal_sys_msg_tpl 
+		WHERE
+		type_key_ in
+		<foreach collection="typeKeyList" index="index" item="typeKey" open="(" close=")" separator=",">
+			#{typeKey}
+		</foreach>
+	</delete>
+	
+	<select id="isExistByKeyAndTypeKey"  resultMap="MsgTemplate">
+		SELECT * FROM portal_sys_msg_tpl 
+		WHERE 
+		type_key_=#{typeKey} and key_=#{key}
+	</select>
+	
+	<update id="setDefault" parameterType="java.lang.String">
+		UPDATE portal_sys_msg_tpl SET
+		is_default_=1 WHERE id_=#{id}
+	</update>
+	
+	<update id="setNotDefaultByType" parameterType="java.lang.String">
+		UPDATE portal_sys_msg_tpl SET
+		is_default_=0 WHERE type_key_ = #{key}
+	</update>
+
+	<update id="setNotDefaultById" parameterType="java.lang.String">
+		UPDATE portal_sys_msg_tpl SET
+		is_default_=0 WHERE id_=#{id}
+	</update>
+	
+</mapper>

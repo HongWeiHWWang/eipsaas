@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.sys.persistence.dao.SysCategoryDao">
+	<resultMap id="SysCategory" type="com.hotent.sys.persistence.model.SysCategory">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="groupKey" column="group_key_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="flag" column="flag_" jdbcType="NUMERIC"/>
+		<result property="sn" column="sn_" jdbcType="NUMERIC"/>
+		<result property="type" column="type_" jdbcType="NUMERIC"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="update_time_" jdbcType="TIMESTAMP"/>
+		
+	</resultMap>
+	
+	<select id="getByKey"   parameterType="java.lang.String" resultMap="SysCategory">
+		SELECT * FROM portal_sys_type_group 
+		WHERE 
+		group_key_=#{key}
+	</select>
+	
+	<select id="isKeyExist" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from portal_sys_type_group where lower(group_key_)=#{groupKey} 
+		<if test="id!=null"> AND id_ !=#{id} </if>
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,367 @@
+spring:
+  application:
+    name: eip
+  autoconfigure:
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  profiles:
+    active: dev
+    title: "@@project.name@@"
+    description: "Hotent EIP X7"
+    version: "7.2.3"
+  datasource:
+    dynamic:
+      primary: master #设置默认的数据源或者数据源组,默认值即为master
+      seata: false
+      datasource:
+        master:
+          druid:
+            # druid mysql 验证语句
+            validation-query: select 1
+            # druid oracle 验证语句
+            #validation-query: select 1 from dual
+            testWhileIdle: true
+            testOnBorrow: true
+            testOnReturn: true
+  http:
+    encoding:
+      enabled: true
+      force: true
+      charset: UTF-8
+    messages:
+      encoding: UTF-8
+  servlet:
+    multipart:
+      maxFileSize: 1024MB
+      maxRequestSize: 1024MB
+  freemarker:
+    template-loader-path: classpath:/templates/ #模板加载路径 按需配置
+    charset: UTF-8
+  redis:
+    timeout: 2000
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+  jms:
+    pub-sub-domain: true
+    cache:
+      enabled: false
+  activemq:
+    in-memory: false
+    pool:
+      enabled: false
+    packages:
+      trust-all: true
+      trusted: com.hotent.activemq.model,com.hotent.base.jms,java.util,java.lang #信任所有的包
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+  banner:
+    charset: UTF-8
+
+
+# 服务端端口
+server:
+  port: 8088
+  address: 0.0.0.0
+  sessionTimeout: 30
+  undertow:
+    io-threads: 2
+    worker-threads: 30
+    max-http-post-size: 8192
+  compression:
+    enabled: true
+    mime-types: "text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json"
+    min-response-size: 1024
+  servlet:
+    session:
+      timeout: 30
+    context-path: /
+
+# 是否启用队列，默认的队列名和订阅名
+jms:
+  enable: true
+  queue:
+    name: eipQueue_tt
+  topic:
+    name: eipTopic_tt
+
+# 指定可跨域的域名
+cross:
+  allowOrigin:
+
+# 配置打印SQL语句
+logging:
+  config: classpath:config/logback-spring.xml
+  level:
+    com.hotent.uc.dao: debug
+management:
+  # 忽略ldap的健康检查
+  health:
+    LDAP.enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health,info,cert
+  server:
+    add-application-context-header: false
+
+info:
+  app:
+    encoding: "UTF-8"
+    java:
+      source: "1.8.0_202"
+      target: "1.8.0_202"
+
+mybatis-plus:
+  configuration:
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+
+mybatis:
+  typeAliasesPackage: com.hotent.base.entity
+  mapperLocations: classpath*:mapper/*.xml
+  typeHandlersPackage: com.hotent.base.typehandle
+
+# token生成配置
+jwt:
+  header: Authorization
+  secret: mySecret
+  single: false # 单用户登录
+  expiration: 86400 # 单位秒
+  route:
+    authentication:
+      path: auth
+      refresh: refresh
+
+# 系统中发送邮件的账号
+mail:
+  host: smtp.email.com
+  port: 25
+  ssl: false
+  nickName: "eip7管理员"
+  username: username@email.com
+  password: password
+
+system:
+# 系统ID生成种子
+  id:
+    # 数据中心ID，取值范围为0-31
+    datacenterId: 1
+    # 服务器ID，取值范围为0-31
+    workerId: 1
+  # 默认的附件上传目录，会被系统属性中配置覆盖
+  attachment:
+    type: folder
+    path: /home/eip/attachment
+  bpm:
+    engineName: eip7
+  # 多租户
+  saas:
+    # 是否开启多租户模式，注意：非租户模式和租户模式下数据有差异性，切换后可能导致数据异常
+    enable: true
+    # 忽略租户隔离的物理表名
+    ignoreTables: 
+
+# 附件在线预览
+file:
+  file.dir: /home/eip/conver/
+  office.home: /opt/openoffice4
+  simText: txt,html,xml,java,properties,sql
+  media: mp3,mp4,flv,rmvb,wmv
+  converted.file.charset: utf-8
+
+# 单点登录配置
+sso:
+  enable: true
+  mode: jwt # jwt cas oauth
+  cas:
+    #url: http://www.hotent.org:7080/cas #CAS服务地址
+    url: http://locahost:7080/cas
+  oauth:
+    #url: http://192.168.1.211:8093 #oauth2服务地址
+    url: http://localhost:8093
+    loginPath: /oauth/authorize
+    tokenPath: /oauth/token
+    checkPath: /oauth/check_token
+    clientId: eip7
+    secret: flossy
+
+# 系统基础地址
+#base.domain: http://www.hotent.xyz:8088
+base.domain: http://localhost:8088
+
+# 分布式事务
+seata:
+  enabled: false
+  application-id: ${spring.application.name}
+  tx-service-group: ${spring.application.name}
+  enable-auto-data-source-proxy: true
+  use-jdk-proxy: false
+  excludes-for-auto-proxying: firstClassNameForExclude,secondClassNameForExclude
+  client:
+    rm:
+      async-commit-buffer-limit: 1000
+      report-retry-count: 5
+      table-meta-check-enable: false
+      report-success-enable: false
+      saga-branch-register-enable: false
+      lock:
+        retry-interval: 10
+        retry-times: 30
+        retry-policy-branch-rollback-on-conflict: true
+    tm:
+      degrade-check: false
+      degrade-check-period: 2000
+      degrade-check-allow-times: 10
+      commit-retry-count: 5
+      rollback-retry-count: 5
+    undo:
+      data-validation: true
+      log-serialization: jackson
+      log-table: undo_log
+      only-care-update-columns: true
+    log:
+      exceptionRate: 100
+  service:
+    vgroup-mapping:
+      portal-eureka: SEATA-SERVER
+      uc-eureka: SEATA-SERVER
+      form-eureka: SEATA-SERVER
+      bpm-model-eureka: SEATA-SERVER
+      bpm-runtime-eureka: SEATA-SERVER
+    grouplist:
+      default: 192.168.1.21:8091
+    enable-degrade: false
+    disable-global-transaction: false
+  transport:
+    shutdown:
+      wait: 3
+    thread-factory:
+      boss-thread-prefix: NettyBoss
+      worker-thread-prefix: NettyServerNIOWorker
+      server-executor-thread-prefix: NettyServerBizHandler
+      share-boss-worker: false
+      client-selector-thread-prefix: NettyClientSelector
+      client-selector-thread-size: 1
+      client-worker-thread-prefix: NettyClientWorkerThread
+      worker-thread-size: default
+      boss-thread-size: 1
+    type: TCP
+    server: NIO
+    heartbeat: true
+    serialization: seata
+    compressor: none
+    enable-client-batch-send-request: true
+  config:
+    type: file
+    consul:
+      server-addr: 127.0.0.1:8500
+    apollo:
+      #apollo-meta: http://192.168.1.204:8801
+      apollo-meta: http://localhost:8801
+      app-id: seata-server
+      namespace: application
+    etcd3:
+      server-addr: http://localhost:2379
+    nacos:
+      namespace:
+      serverAddr: 127.0.0.1:8848
+      group: SEATA_GROUP
+      userName: ""
+      password: ""
+    zk:
+      server-addr: 127.0.0.1:2181
+      session-timeout: 6000
+      connect-timeout: 2000
+      username: ""
+      password: ""
+  registry:
+    type: eureka
+    consul:
+      server-addr: 127.0.0.1:8500
+    etcd3:
+      serverAddr: http://localhost:2379
+    eureka:
+      weight: 1
+      service-url: ${eureka.client.service-url.defaultZone}
+    nacos:
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+      namespace:
+      userName: ""
+      password: ""
+    redis:
+      server-addr: localhost:6379
+      db: 0
+      password:
+      timeout: 0
+    sofa:
+      server-addr: 127.0.0.1:9603
+      region: DEFAULT_ZONE
+      datacenter: DefaultDataCenter
+      group: SEATA_GROUP
+      addressWaitTime: 3000
+      application: default
+    zk:
+      server-addr: 127.0.0.1:2181
+      session-timeout: 6000
+      connect-timeout: 2000
+      username: ""
+      password: ""
+
+# 注册中心
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+  instance:
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
+    # 注册到eureka时使用ip地址
+    prefer-ip-address: true
+    # eureka会自动识别每个微服务的ip地址，如果需要指定ip则配置该属性
+    # ip-address: 127.0.0.1
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+# feign配置
+feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 50000
+        readTimeout: 50000
+        loggerLevel: full
+
+# 断路器配置
+hystrix:
+  metrics:
+    enabled: true
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE # THREAD  SEMAPHORE
+          semaphore:
+            maxConcurrentRequests: 200 # 默认情况下下面两个值都是10，也就是超过10个的并发会直接进入fallback方法，不会去真正请求
+          thread:
+            timeoutInMilliseconds: 50000 #缺省为1000
+      fallback:
+        isolation:
+          semaphore:
+            maxConcurrentRequests: 200 # 默认情况下下面两个值都是10，也就是超过10个的并发会直接进入fallback方法，不会去真正请求
+
+# 负载均衡配置
+ribbon:
+  eureka:
+    enabled: true
+
+#Swagger
+#Swagger-Enable: true

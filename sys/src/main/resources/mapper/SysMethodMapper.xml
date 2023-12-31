@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.sys.persistence.dao.SysMethodDao">
+	<resultMap id="SysMethod" type="com.hotent.sys.persistence.model.SysMethod">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="menuAlias" column="MENU_ALIAS_" jdbcType="VARCHAR"/>
+		<result property="alias" column="ALIAS_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="requestUrl" column="REQUEST_URL_" jdbcType="VARCHAR"/>
+		<result property="path" column="PATH_" jdbcType="VARCHAR"/>
+		<result property="roleAlias" column="ROLE_ALIAS_" jdbcType="VARCHAR"/>
+		
+	</resultMap>
+	
+	<delete id="removeByMenuId" parameterType="java.lang.String">
+		DELETE FROM portal_sys_method 
+		WHERE
+		MENU_ALIAS_ in ( SELECT b.ALIAS_ FROM portal_sys_menu b WHERE b.ID_ = #{menuId} )
+	</delete>
+	
+	<select id="getByMenuAlias"   parameterType="java.lang.String" resultMap="SysMethod">
+		SELECT * FROM portal_sys_method 
+		WHERE 
+		MENU_ALIAS_ = #{menuAlias}
+	</select>
+	
+	<select id="isExistByAlias"   parameterType="java.lang.String"  resultType="int">
+		SELECT count(1) FROM portal_sys_method 
+		WHERE 
+		ALIAS_=#{alias}
+	</select>
+	
+	<select  id="getAllMethodByRoleAlias"   parameterType="java.lang.String"  resultType="map">
+		select  sysMethod.id_ "id",sysMethod.name_ "name",sysMethod.ALIAS_ "alias", 0 as "isParent",
+		(SELECT count(tmpB.id_) FROM portal_sys_role_auth tmpB WHERE tmpB.method_alias_ = sysMethod.ALIAS_ AND tmpB.ROLE_ALIAS_ = #{roleAlias} ) "isSelected",
+		(SELECT  tmpB.DATA_PERMISSION_ FROM portal_sys_role_auth tmpB WHERE tmpB.method_alias_ = sysMethod.ALIAS_ AND tmpB.ROLE_ALIAS_ = #{roleAlias} ) "dataPermission",
+		'method' as "type",
+		sysMethod.MENU_ALIAS_ "menuAlias",
+		sysMethod.REQUEST_URL_ "requestUrl"
+		from portal_sys_method sysMethod LEFT JOIN portal_sys_menu sysMenu on sysMethod.MENU_ALIAS_ = sysMenu.ALIAS_
+	</select>
+	
+	<select id="getRoleMethods"  parameterType="java.lang.String" resultMap="SysMethod">
+		select method.*,roleAuth.ROLE_ALIAS_  from portal_sys_method  method INNER JOIN portal_sys_role_auth roleAuth on method.ALIAS_ = roleAuth.METHOD_ALIAS_ 
+		${ew.customSqlSegment}
+	</select>
+	
+</mapper>

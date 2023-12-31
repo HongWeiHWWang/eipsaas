@@ -1,0 +1,32 @@
+spring:
+  profiles:
+    active: dev
+    base: com.hotent.ucApi.controller
+    title: "uc-api-impl"
+    description: "uc-api-impl"
+    version: "7.2.3"
+    platform: mysql
+    
+# Server settings (ServerProperties)
+server:
+  port: 8086
+  address: 0.0.0.0
+  sessionTimeout: 30
+  contextPath: /
+  session:
+    timeout: 30
+
+#
+#ldap:
+#  url: ldap://mdc.999.com.cn:389
+#  base: dc=999,dc=com,dc=cn
+#  userDn: mulorgadmin@999.com.cn
+#  userPwd: Abcd999!
+#  pooled: true
+#
+#soap:
+#  url: http://esbtest.999.com.cn:80/oa/v1/org/get
+#  name: multiplyorg
+#  password: 999multiplyorg
+#  demCode: hrxz
+#  jobCode: yg

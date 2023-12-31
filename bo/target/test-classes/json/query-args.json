@@ -1,0 +1,14 @@
+{
+  "pageBean": {
+    "page": 1,
+    "pageSize": 1
+  },
+  "querys": [
+    {
+      "operation": "EQUAL",
+      "property": "alias",
+      "relation": "AND",
+      "value": "person"
+    }
+  ]
+}

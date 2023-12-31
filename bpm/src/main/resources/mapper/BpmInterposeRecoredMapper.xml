@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmInterposeRecoredDao">
+	<resultMap id="BpmInterposeRecored" type="com.hotent.bpm.persistence.model.BpmInterposeRecored">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="procDefId" column="PROC_DEF_ID_" jdbcType="VARCHAR"/>
+		<result property="procInstId" column="PROC_INST_ID_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="TASK_ID_" jdbcType="VARCHAR"/>
+		<result property="taskName" column="TASK_NAME_" jdbcType="VARCHAR"/>
+		<result property="auditor" column="AUDITOR_" jdbcType="VARCHAR"/>
+		<result property="auditorName" column="AUDITOR_NAME_" jdbcType="VARCHAR"/>
+		<result property="opinion" column="OPINION_" jdbcType="VARCHAR"/>
+		<result property="status" column="STATUS_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="completeTime" column="COMPLETE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="durMs" column="DUR_MS_" jdbcType="NUMERIC"/>
+		<result property="files" column="FILES_" jdbcType="VARCHAR"/>
+		<result property="isDone" column="IS_DONE_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+</mapper>

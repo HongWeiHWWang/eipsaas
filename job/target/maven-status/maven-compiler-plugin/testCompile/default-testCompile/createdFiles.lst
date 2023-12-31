@@ -1,0 +1,4 @@
+com\hotent\job\persistence\manager\JobDetailsManagerTest.class
+com\hotent\job\persistence\manager\SchedulerServiceTest.class
+com\hotent\job\JobTestCase.class
+com\hotent\job\persistence\manager\SysJobLogManagerTest.class

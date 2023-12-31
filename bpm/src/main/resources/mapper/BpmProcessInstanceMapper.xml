@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmProcessInstanceDao">
+	<resultMap id="BpmProcessInstance" type="com.hotent.bpm.persistence.model.DefaultBpmProcessInstance">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="subject" column="subject_" jdbcType="VARCHAR"/>
+		<result property="procDefId" column="proc_def_id_" jdbcType="VARCHAR"/>
+		<result property="bpmnDefId" column="bpmn_def_id_" jdbcType="VARCHAR"/>
+		<result property="procDefKey" column="proc_def_key_" jdbcType="VARCHAR"/>
+		<result property="procDefName" column="proc_def_name_" jdbcType="VARCHAR"/>
+		<result property="bizKey" column="biz_key_" jdbcType="VARCHAR"/>
+		<result property="sysCode" column="sys_code_" jdbcType="VARCHAR"/>
+		<result property="formKey" column="form_key_" jdbcType="VARCHAR"/>
+		<result property="status" column="status_" jdbcType="VARCHAR"/>
+		<result property="endTime" column="end_time_" jdbcType="TIMESTAMP"/>
+		<result property="duration" column="duration_" jdbcType="NUMERIC"/>
+		<result property="typeId" column="type_id_" jdbcType="VARCHAR"/>
+		<result property="resultType" column="result_type_" jdbcType="VARCHAR"/>
+		<result property="bpmnInstId" column="bpmn_inst_id_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="creator" column="creator_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="update_time_" jdbcType="TIMESTAMP"/>
+		<result property="isFormmal" column="is_formmal_" jdbcType="VARCHAR"/>
+		<result property="parentInstId" column="parent_inst_id_" jdbcType="VARCHAR"/>
+		<result property="isForbidden" column="IS_FORBIDDEN_" jdbcType="NUMERIC"/>
+		<result property="dataMode" column="DATA_MODE_" jdbcType="VARCHAR"/>
+		<result property="supportMobile" column="SUPPORT_MOBILE_" jdbcType="NUMERIC"/>
+		<result property="superNodeId" column="super_node_id_" jdbcType="VARCHAR"/>
+		<result property="taskName" column="task_name_" jdbcType="VARCHAR"/>
+        <result property="isDele" column="IS_DELE_" jdbcType="NUMERIC"/>
+        <result property="urgentState" column="URGENT_STATE_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="columns">
+	    wfInst.id_ "id",wfInst.subject_ "subject",wfInst.proc_def_id_ "procDefId",wfInst.bpmn_def_id_ "bpmnDefId",
+		wfInst.proc_def_key_ "procDefKey",wfInst.proc_def_name_ "procDefName",wfInst.biz_key_  "bizKey",wfInst.sys_code_  "sysCode",wfInst.form_key_ "formKey",
+		wfInst.status_ "status",wfInst.end_time_ "endTime",wfInst.duration_ "duration",wfInst.result_type_ "resultType",
+		wfInst.bpmn_inst_id_ "bpmnInstId",wfInst.create_by_ "createBy",wfInst.creator_ "creator",wfInst.create_time_ "createTime",
+		wfInst.create_org_id_ "createOrgId",wfInst.update_by_ "updateBy",wfInst.update_time_ "updateTime",wfInst.is_formmal_ "isFormmal",
+		wfInst.parent_inst_id_ "parentInstId",wfInst.IS_FORBIDDEN_ "isForbidden",wfInst.DATA_MODE_ "dataMode",wfInst.SUPPORT_MOBILE_ "supportMobile",
+		wfInst.super_node_id_ "superNodeId",wfInst.IS_DELE_ "isDele",wfInst.URGENT_STATE_ "urgentState"
+	</sql>
+	
+	<insert id="create" parameterType="com.hotent.bpm.persistence.model.DefaultBpmProcessInstance">
+		INSERT INTO bpm_pro_inst
+		(id_,subject_,proc_def_id_,bpmn_def_id_,
+		proc_def_key_,proc_def_name_,biz_key_,sys_code_,form_key_,
+		status_,end_time_,duration_,type_id_,
+		result_type_,bpmn_inst_id_,create_by_,creator_,create_time_,
+		create_org_id_,update_by_,update_time_,
+		is_formmal_,parent_inst_id_,IS_FORBIDDEN_,DATA_MODE_,SUPPORT_MOBILE_,super_node_id_,URGENT_STATE_)
+		VALUES 
+		(#{id,jdbcType=VARCHAR}, #{subject,jdbcType=VARCHAR}, #{procDefId,jdbcType=VARCHAR}, #{bpmnDefId,jdbcType=VARCHAR},
+		 #{procDefKey,jdbcType=VARCHAR}, #{procDefName,jdbcType=VARCHAR}, #{bizKey,jdbcType=VARCHAR}, #{sysCode,jdbcType=VARCHAR}, #{formKey,jdbcType=VARCHAR}, 
+		 #{status,jdbcType=VARCHAR}, #{endTime,jdbcType=TIMESTAMP}, #{duration,jdbcType=NUMERIC}, #{typeId,jdbcType=VARCHAR}, 
+		 #{resultType,jdbcType=VARCHAR}, #{bpmnInstId,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR},#{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+		  #{createOrgId,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+		  #{isFormmal,jdbcType=VARCHAR}, #{parentInstId,jdbcType=VARCHAR}, #{isForbidden,jdbcType=NUMERIC},
+		 #{dataMode,jdbcType=VARCHAR} ,#{supportMobile,jdbcType=NUMERIC}, #{superNodeId,jdbcType=VARCHAR}, #{urgentState,jdbcType=VARCHAR})
+	</insert>
+	
+	<insert id="createHistory" parameterType="com.hotent.bpm.persistence.model.DefaultBpmProcessInstance">
+		INSERT INTO bpm_pro_inst_hi
+		(id_,subject_,proc_def_id_,bpmn_def_id_,
+		proc_def_key_,proc_def_name_,biz_key_,sys_code_,form_key_,
+		status_,end_time_,duration_,type_id_,
+		result_type_,bpmn_inst_id_,create_by_,creator_,create_time_,
+		create_org_id_,update_by_,update_time_,
+		is_formmal_,parent_inst_id_,IS_FORBIDDEN_,DATA_MODE_,SUPPORT_MOBILE_,super_node_id_)
+		VALUES 
+		(#{id,jdbcType=VARCHAR}, #{subject,jdbcType=VARCHAR}, #{procDefId,jdbcType=VARCHAR}, #{bpmnDefId,jdbcType=VARCHAR},
+		 #{procDefKey,jdbcType=VARCHAR}, #{procDefName,jdbcType=VARCHAR}, #{bizKey,jdbcType=VARCHAR}, #{sysCode,jdbcType=VARCHAR}, #{formKey,jdbcType=VARCHAR}, 
+		 #{status,jdbcType=VARCHAR}, #{endTime,jdbcType=TIMESTAMP}, #{duration,jdbcType=NUMERIC}, #{typeId,jdbcType=VARCHAR}, 
+		 #{resultType,jdbcType=VARCHAR}, #{bpmnInstId,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR},#{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+		  #{createOrgId,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+		  #{isFormmal,jdbcType=VARCHAR}, #{parentInstId,jdbcType=VARCHAR}, #{isForbidden,jdbcType=NUMERIC},
+		 #{dataMode,jdbcType=VARCHAR} ,#{supportMobile,jdbcType=NUMERIC}, #{superNodeId,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="BpmProcessInstance">
+		SELECT * FROM bpm_pro_inst 
+		WHERE 
+		id_=#{id}
+	</select>
+	
+	<select id="getBpmnInstId"   parameterType="java.lang.String" resultMap="BpmProcessInstance">
+		SELECT * FROM bpm_pro_inst 
+		WHERE 
+		bpmn_inst_id_=#{bpmnInstId}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BpmProcessInstance">
+		SELECT * FROM bpm_pro_inst
+		<where>
+			
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+			<!-- 按用户授权过滤用户的流程 ：isAdmin为空时不需要按权限查询，否则按流程的分管授权情况查询-->
+			<if test="isAdmin==0">
+			 	<choose>  
+			        <when test="userRightMap!=null">  
+			           AND ID_ in(
+							SELECT DISTINCT ID_ from bpm_pro_inst where ID_ is NULL 
+							   <foreach collection="userRightMap" index="key" item="value" open="" separator=" " close=""> 
+									union
+									select ID_ from bpm_pro_inst WHERE PROC_DEF_KEY_=#{key}
+									<if test="value!=null">
+										AND CREATE_ORG_ID_ IN(${value})
+									</if>
+					             </foreach>
+						)
+			        </when>
+			        <otherwise>  
+			            AND 1 = 0
+			        </otherwise>  
+		        </choose>		
+			</if>
+			
+		</where>
+		
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY create_time_ DESC
+		</if>
+	</select>
+	
+	<select id="getListByRightMap" parameterType="java.util.Map" resultMap="BpmProcessInstance">
+		SELECT DISTINCT * from bpm_pro_inst where ID_ is NULL 
+		   <foreach collection="userRightMap" index="key" item="value" open="" separator=" " close=""> 
+				union
+				select * from bpm_pro_inst WHERE PROC_DEF_KEY_=#{key}
+				<if test="value!=null">
+					AND CREATE_ORG_ID_ IN(${value})
+				</if>
+	      	</foreach>
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM bpm_pro_inst 
+		WHERE
+		id_=#{id}
+	</delete>
+	
+	<!-- HISTORY -->
+	<select id="getHistory"   parameterType="java.lang.String" resultMap="BpmProcessInstance">
+		SELECT * FROM bpm_pro_inst_hi 
+		WHERE 
+		id_=#{id} 
+	</select>	
+	
+		<select id="getHistoryByBpmnInstId"   parameterType="java.lang.String" resultMap="BpmProcessInstance">
+		SELECT * FROM bpm_pro_inst_hi 
+		WHERE 
+		BPMN_INST_ID_=#{id}
+	</select>	
+	
+	
+	<update id="updateHistory" parameterType="com.hotent.bpm.persistence.model.DefaultBpmProcessInstance">
+		UPDATE bpm_pro_inst_hi SET
+		subject_=#{subject,jdbcType=VARCHAR},
+		proc_def_id_=#{procDefId,jdbcType=VARCHAR},
+		bpmn_def_id_=#{bpmnDefId,jdbcType=VARCHAR},
+		proc_def_key_=#{procDefKey,jdbcType=VARCHAR},
+		proc_def_name_=#{procDefName,jdbcType=VARCHAR},
+		biz_key_=#{bizKey,jdbcType=VARCHAR},
+		sys_code_=#{sysCode,jdbcType=VARCHAR},
+		form_key_=#{formKey,jdbcType=VARCHAR},
+		status_=#{status,jdbcType=VARCHAR},
+		end_time_=#{endTime,jdbcType=TIMESTAMP},
+		duration_=#{duration,jdbcType=NUMERIC},
+		type_id_=#{typeId,jdbcType=VARCHAR},
+		result_type_=#{resultType,jdbcType=VARCHAR},
+		bpmn_inst_id_=#{bpmnInstId,jdbcType=VARCHAR},
+		create_by_=#{createBy,jdbcType=VARCHAR},
+		creator_=#{creator,jdbcType=VARCHAR},
+		create_time_=#{createTime,jdbcType=TIMESTAMP},
+		create_org_id_=#{createOrgId,jdbcType=VARCHAR},
+		update_by_=#{updateBy,jdbcType=VARCHAR},
+		update_time_=#{updateTime,jdbcType=TIMESTAMP},
+		is_formmal_=#{isFormmal,jdbcType=VARCHAR},
+		parent_inst_id_=#{parentInstId,jdbcType=VARCHAR},
+		IS_FORBIDDEN_=#{isForbidden,jdbcType=NUMERIC},
+		DATA_MODE_=#{dataMode,jdbcType=VARCHAR},
+		SUPPORT_MOBILE_=#{supportMobile,jdbcType=NUMERIC},
+		super_node_id_=#{superNodeId,jdbcType=VARCHAR},
+		WHERE
+		id_=#{id}
+	</update>
+	
+	<select id="getByUserId"  parameterType="java.lang.String" resultMap="BpmProcessInstance">
+		select * from bpm_pro_inst where create_by_=#{htqf.userId}
+			<if test="htqf.subject!=null">
+				and subject_ like #{htqf.subject}
+			</if>
+			<if test="htqf.procDefName!=null">
+				and proc_def_name_ like #{htqf.procDefName}
+			</if>
+			<if test="htqf.creator!=null">
+				and creator_ like #{htqf.creator}
+			</if>
+			<if test="htqf.status!=null">
+				and status_ like #{htqf.status}
+			</if>
+			<if test="htqf.typeId!=null">
+				and type_id_ = #{htqf.typeId}
+			</if>
+		 order by create_time_ desc
+	</select>
+	
+	<update id="updateStatusByInstanceId" >
+		update bpm_pro_inst set status_=#{status} where id_=#{processInstanceId}
+	</update>
+	
+	<update id="updateStatusByBpmnInstanceId" >
+		update bpm_pro_inst set status_=#{status} where bpmn_inst_id_=#{bpmnInstId}
+	</update>
+	
+	<select id="getByUserIdGroupList" resultMap="BpmProcessInstance">
+		select * from (
+			select pro.* from bpm_task t right join bpm_pro_inst pro  on pro.bpmn_inst_id_=t.bpmn_inst_id_ where t.assignee_id_=#{userId}
+			union select pro.* from bpm_task t right join bpm_pro_inst pro on pro.bpmn_inst_id_=t.bpmn_inst_id_ right join bpm_task_candidate tc on t.proc_inst_id_=tc.act_inst_id_ where t.assignee_id_='0' and tc.executor_=#{userId} and tc.type_='user' 
+			<foreach collection="groupList" index="index" item="group" open="" separator=" " close="">
+				union select pro.* from bpm_task t right join bpm_pro_inst pro on pro.bpmn_inst_id_=t.bpmn_inst_id_ right join bpm_task_candidate tc on t.proc_inst_id_=tc.act_inst_id_ where t.assignee_id_='0' and tc.executor_=#{group.groupId} and tc.type_=#{group.dimKey}
+			</foreach>
+		 ) tmp
+		order by create_time_ desc
+	</select>
+	
+	<select id="getByAttendUserId" resultMap="BpmProcessInstance">
+		select distinct ist.* from bpm_pro_inst ist 
+			LEFT JOIN bpm_check_opinion cp  on ist.id_ = cp.proc_inst_id_ 
+	    	where cp.auditor_ =#{userId} 
+			<if test="subject!=null">
+				and ist.subject_ like #{subject}
+			</if>
+			<if test="procDefName!=null">
+				and ist.proc_def_name_ like #{procDefName}
+			</if>
+			<if test="creator!=null">
+				and ist.creator_ like #{creator}
+			</if>
+			<if test="status!=null">
+				and ist.status_ like #{status}
+			</if>
+			<if test="typeId!=null">
+				and ist.type_id_ = #{typeId}
+			</if>
+		<if test="orderBySql==null">
+			ORDER BY ist.create_time_ desc
+		</if>
+		
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql} 
+		</if>
+		
+	</select>
+	
+	<select id="getBpmnByParentIdAndSuperNodeId" parameterType="java.util.Map" resultMap="BpmProcessInstance">
+		select *  FROM bpm_pro_inst 
+		WHERE parent_inst_id_= #{parentInstId} and super_node_id_= #{superNodeId} 
+	</select>
+	
+		<select id="getHiBpmnByParentIdAndSuperNodeId" parameterType="java.util.Map" resultMap="BpmProcessInstance">
+		select *  FROM bpm_pro_inst_hi 
+		WHERE parent_inst_id_= #{parentInstId} and super_node_id_= #{superNodeId} 
+	</select>
+	
+	
+	<select id="getBpmnByInstList" resultType="java.lang.String">
+		select bpmn_inst_id_  FROM bpm_pro_inst 
+		WHERE id_ in
+		<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        </foreach> 
+      	order by create_time_ desc
+	</select>
+	
+	<select id="getListByBpmnDefKey" resultMap="BpmProcessInstance">
+		select * from bpm_pro_inst where proc_def_key_=#{defKey}
+	</select>
+
+	<select id="getMyRequestCount" parameterType="java.util.Map" resultType="java.util.Map">
+		select count(*) as count,type_id_ as typeId from bpm_pro_inst where IS_DELE_!=1 and create_by_=#{userId}
+		group by type_id_
+		order by create_time_ desc
+	</select>
+	<select id="getMyRequestCountByUserId" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(*) from bpm_pro_inst where IS_DELE_!=1 and create_by_=#{userId}
+	</select>
+
+	<!-- 获取流程字段信息 -->
+	<select id="getFlowFieldList" resultType="java.util.Map">
+		select t1.ID_ as proc_inst_id_,t1.subject_,t1.proc_def_name_,t1.status_,t1.create_time_,t1.end_time_,t1.is_forbidden_,t1.creator_,t1.is_dele_,t2.businesskey_str_ as id_ from bpm_pro_inst t1 inner join bpm_bus_link t2 on t1.id_=t2.proc_inst_id_
+		${ew.customSqlSegment}
+	</select>
+	<!-- 获取我的办结 -->
+	<select id="getMyCompletedByUserId" resultMap="BpmProcessInstance">
+		select * from bpm_pro_inst where status_ in ('end','manualend') and create_by_=#{htqf.userId}
+		<if test="htqf.whereSql!=null">
+			 and ${htqf.whereSql}
+		</if>
+		<if test="htqf.orderBySql!=null">
+			ORDER BY ${htqf.orderBySql}
+		</if>
+		<if test="htqf.orderBySql==null">
+			 order by create_time_ desc
+		</if>
+	</select>
+	<!-- 获取我的草稿 -->
+	<select id="getDraftsByUserId" resultMap="BpmProcessInstance">
+		select * from bpm_pro_inst where status_='draft' and create_by_=#{htqf.userId}
+		<if test="htqf.whereSql!=null">
+				and ${htqf.whereSql}
+		</if>
+		<if test="htqf.orderBySql!=null">
+			ORDER BY ${htqf.orderBySql}
+		</if>
+		<if test="htqf.orderBySql==null">
+			 order by create_time_ desc
+		</if>
+	</select>
+	
+	<!-- 获取已办事宜 -->
+	<select id="getHandledByUserId" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		<include refid="columns" />
+		,opinion.auditor_ "auditor",opinion.auditor_name_ "auditorName", opinion.task_name_ "taskName",opinion.status_ "opinionStatus", opinion.sign_type_ "signType", opinion.skip_type_ "skipType", opinion.task_key_ "taskKey"
+		,due.due_time_ "dueTaskTime", due.EXPIRATION_DATE_ "dueExpDate", due.date_type_ "dueDateType",due.status_ "dueStatus", (due.due_time_ - due.remaining_time_) "dueUseTaskTime",  opinion.task_id_ "taskId"
+		,opinion.create_time_ "taskCreateTime",opinion.complete_time_ "taskCompleteTime",opinion.form_data_ "formData",opinion.parent_task_id_ "parentTaskId"
+		FROM  bpm_pro_inst wfInst 
+		INNER JOIN bpm_check_opinion opinion ON wfInst.id_ = opinion.proc_inst_id_
+		LEFT JOIN bpm_task_due_time due ON opinion.task_id_=due.task_id_
+		WHERE
+		    wfInst.status_ !='draft' 
+		AND wfInst.IS_DELE_!=1
+		AND (
+		    opinion.auditor_ = #{ew.paramNameValuePairs.userId} or opinion.agent_leader_id_=#{ew.paramNameValuePairs.userId}
+		)
+		AND opinion.status_ != 'signLineRetracted' 
+		AND opinion.status_ != 'signRecoverCancel'
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.customSqlSegment)">
+			AND
+			${@com.hotent.base.ognl.Ognl@withOutWhere(ew.customSqlSegment)}
+    	</if>
+		order by opinion.complete_time_ desc
+	</select>
+	
+	<!-- 获取已办的实例 -->
+	<select id="getDoneInstList" resultType="java.util.Map">
+		select <include refid="columns" /> ,opinion.auditor_ "auditor",opinion.auditor_name_ "auditorName",opinion.complete_time_ "completeTime"
+		FROM bpm_pro_inst wfInst 
+		LEFT JOIN bpm_check_opinion opinion ON wfInst.id_ = opinion.proc_inst_id_
+		WHERE
+		    (auditor_ = #{ew.paramNameValuePairs.userId} or agent_leader_id_=#{ew.paramNameValuePairs.userId})
+		AND opinion.status_ NOT IN (
+			'skip',
+			'copyto',
+			'copyto_reply',
+			'start_commu',
+			'lockTask'
+		)
+		AND wfInst.status_ != 'draft'
+		AND wfInst.IS_DELE_ != 1
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.customSqlSegment)">
+	    	AND 
+	        ${@com.hotent.base.ognl.Ognl@withOutWhere(ew.customSqlSegment)}
+	    </if>
+	    GROUP BY wfInst.id_
+	    ORDER BY opinion.complete_time_ desc
+	</select>
+	
+	<!-- 获取已办的实例（MySQL） -->
+	<select id="getDoneInstList" databaseId="mysql" resultType="java.util.Map">
+		select <include refid="columns" /> ,
+		(
+		    SELECT
+		        COMPLETE_TIME_
+		    FROM
+		        bpm_check_opinion
+		    WHERE
+		        PROC_INST_ID_ = wfInst.ID_
+		    AND (auditor_ = #{ew.paramNameValuePairs.userId} or agent_leader_id_=#{ew.paramNameValuePairs.userId})
+		    AND status_ NOT IN (
+		        'skip',
+		        'copyto',
+		        'copyto_reply',
+		        'start_commu',
+		        'lockTask'
+		    )
+		    ORDER BY
+		        COMPLETE_TIME_ DESC
+		    LIMIT 1
+		) AS completeTime
+		FROM bpm_pro_inst wfInst 
+		WHERE
+		EXISTS (
+		    SELECT
+		        COMPLETE_TIME_
+		    FROM
+		        bpm_check_opinion
+		    WHERE
+		         PROC_INST_ID_ = wfInst.ID_
+		    AND (auditor_ = #{ew.paramNameValuePairs.userId} or agent_leader_id_=#{ew.paramNameValuePairs.userId})
+		    AND status_ NOT IN (
+		        'skip',
+		        'copyto',
+		        'copyto_reply',
+		        'start_commu',
+		        'lockTask'
+		    )
+		    LIMIT 1
+		)
+		AND wfInst.status_ != 'draft'
+		AND wfInst.IS_DELE_ != 1
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.customSqlSegment)">
+		    AND 
+		    ${@com.hotent.base.ognl.Ognl@withOutWhere(ew.customSqlSegment)}
+		</if>
+		ORDER BY CREATE_TIME_ desc
+	</select>
+	
+	<!-- 获取已办的实例（Oracle） -->
+	<select id="getDoneInstList" databaseId="oracle" resultType="java.util.Map">
+		select <include refid="columns" /> ,
+		(
+		    SELECT
+		        COMPLETE_TIME_
+		    FROM
+		        bpm_check_opinion
+		    WHERE
+		        PROC_INST_ID_ = wfInst.ID_
+		    AND (auditor_ = #{ew.paramNameValuePairs.userId} or agent_leader_id_=#{ew.paramNameValuePairs.userId})
+		    AND status_ NOT IN (
+		        'skip',
+		        'copyto',
+		        'copyto_reply',
+		        'start_commu',
+		        'lockTask'
+		    )
+		    AND ROWNUM = 1
+		    ORDER BY
+		        COMPLETE_TIME_ DESC
+		) AS completeTime
+		FROM bpm_pro_inst wfInst 
+		WHERE
+		EXISTS (
+		    SELECT
+		        COMPLETE_TIME_
+		    FROM
+		        bpm_check_opinion
+		    WHERE
+		         PROC_INST_ID_ = wfInst.ID_
+		    AND (auditor_ = #{ew.paramNameValuePairs.userId} or agent_leader_id_=#{ew.paramNameValuePairs.userId})
+		    AND status_ NOT IN (
+		        'skip',
+		        'copyto',
+		        'copyto_reply',
+		        'start_commu',
+		        'lockTask'
+		    )
+		    AND ROWNUM = 1
+		)
+		AND wfInst.status_ != 'draft'
+		AND wfInst.IS_DELE_ != 1
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.customSqlSegment)">
+		    AND 
+		    ${@com.hotent.base.ognl.Ognl@withOutWhere(ew.customSqlSegment)}
+		</if>
+		ORDER BY CREATE_TIME_ desc
+	</select>
+	
+	<!-- 获取已办的实例（SQLServer） -->
+	<select id="getDoneInstList" databaseId="sqlserver" resultType="java.util.Map">
+		select <include refid="columns" /> ,
+		(
+		    SELECT
+		    TOP 1
+		        COMPLETE_TIME_
+		    FROM
+		        bpm_check_opinion
+		    WHERE
+		        PROC_INST_ID_ = wfInst.ID_
+		    AND (auditor_ = #{ew.paramNameValuePairs.userId} or agent_leader_id_=#{ew.paramNameValuePairs.userId})
+		    AND status_ NOT IN (
+		        'skip',
+		        'copyto',
+		        'copyto_reply',
+		        'start_commu',
+		        'lockTask'
+		    )
+		    ORDER BY
+		        COMPLETE_TIME_ DESC
+		) AS completeTime
+		FROM bpm_pro_inst wfInst 
+		WHERE
+		EXISTS (
+		    SELECT
+		    TOP 1
+		        COMPLETE_TIME_
+		    FROM
+		        bpm_check_opinion
+		    WHERE
+		         PROC_INST_ID_ = wfInst.ID_
+		    AND (auditor_ = #{ew.paramNameValuePairs.userId} or agent_leader_id_=#{ew.paramNameValuePairs.userId})
+		    AND status_ NOT IN (
+		        'skip',
+		        'copyto',
+		        'copyto_reply',
+		        'start_commu',
+		        'lockTask'
+		    )
+		)
+		AND wfInst.status_ != 'draft'
+		AND wfInst.IS_DELE_ != 1
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.customSqlSegment)">
+		    AND 
+		    ${@com.hotent.base.ognl.Ognl@withOutWhere(ew.customSqlSegment)}
+		</if>
+		ORDER BY CREATE_TIME_ desc
+	</select>
+
+	<select id="getDoneInstCount" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT count(0) as count,wfInst.type_id_ as typeId FROM
+		bpm_pro_inst wfInst
+		INNER JOIN (
+		SELECT
+		auditor_,
+		auditor_name_,
+		PROC_INST_ID_,
+		MAX( COMPLETE_TIME_ ) COMPLETE_TIME_
+		FROM
+		bpm_check_opinion
+		WHERE
+		( auditor_ = #{ew.paramNameValuePairs.userId} OR agent_leader_id_ = #{ew.paramNameValuePairs.userId} )
+		AND status_ NOT IN ( 'skip', 'copyto', 'copyto_reply', 'start_commu' )
+		GROUP BY
+		PROC_INST_ID_
+		) opinion ON
+		<![CDATA[ wfInst.status_ <> 'draft' and wfInst.IS_DELE_!=1 and wfInst.id_ = opinion.proc_inst_id_ ]]>
+		GROUP BY TYPE_ID_
+	</select>
+	<select id="getDoneInstCountByUserId" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(0)
+		FROM bpm_pro_inst wfInst 
+		LEFT JOIN bpm_check_opinion opinion ON wfInst.id_ = opinion.proc_inst_id_
+		WHERE
+		    (opinion.auditor_ = #{userId} or agent_leader_id_=#{userId})
+		AND opinion.status_ NOT IN (
+			'skip',
+			'copyto',
+			'copyto_reply',
+			'start_commu',
+			'lockTask'
+		)
+		AND wfInst.status_ != 'draft'
+		AND wfInst.IS_DELE_ != 1
+	</select>
+	
+	<!-- 获取办结事宜-->
+	<select id="getCompletedByUserId" resultMap="BpmProcessInstance">
+			<![CDATA[
+	select DISTINCT wfInst.*,opinion.auditor_,opinion.auditor_name_ 
+	from bpm_pro_inst wfInst INNER JOIN bpm_check_opinion opinion on wfInst.id_=opinion.proc_inst_id_
+     ]]>
+		${ew.customSqlSegment}
+	</select>
+
+    <select id="getTestListByBpmnDefKey" resultMap="BpmProcessInstance">
+		select * from bpm_pro_inst where proc_def_key_=#{defKey} and is_formmal_ = 'N';
+	</select>
+
+	<update id="updForbiddenByDefKey" >
+		update bpm_pro_inst set IS_FORBIDDEN_=#{isForbidden,jdbcType=NUMERIC} where proc_def_key_=#{defKey}
+	</update>
+	
+	<update id="updForbiddenByInstId" >
+		update bpm_pro_inst set IS_FORBIDDEN_=#{isForbidden,jdbcType=NUMERIC} where id_=#{id}
+	</update>
+	
+	
+	<select id="getByDefKeyFormal" resultMap="BpmProcessInstance">
+		select * from bpm_pro_inst where proc_def_key_=#{defKey} and is_formmal_=#{formal} 
+	</select>
+	
+	
+	<select id="getByParentId" resultMap="BpmProcessInstance">
+		select * from bpm_pro_inst where parent_inst_id_=#{parentInstId,jdbcType=VARCHAR} 
+	</select>
+	
+	<select id="getListByDefId" resultMap="BpmProcessInstance">
+		select * from bpm_pro_inst where proc_def_id_=#{procDefId,jdbcType=VARCHAR} 
+	</select>
+	
+	<select id="getByBusinessKey"   parameterType="java.lang.String" resultMap="BpmProcessInstance">
+		SELECT * FROM bpm_pro_inst 
+		WHERE 
+		biz_key_=#{businessKey} 
+	</select>
+	
+	<!-- 获取历史会议-->
+	<select id="getMyHandledMeeting" parameterType="java.util.Map"  resultMap="BpmProcessInstance">
+		select DISTINCT wfInst.*
+		from bpm_pro_inst wfInst INNER JOIN bpm_check_opinion opinion on wfInst.id_=opinion.proc_inst_id_
+		<![CDATA[ where wfInst.status_<>'draft']]>
+		<if test="htqf.whereSql!=null">
+				and ${htqf.whereSql}
+		</if>
+ 
+		<if test="htqf.orderBySql!=null">
+			ORDER BY ${htqf.orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			 order by wfInst.create_time_ desc
+		</if>
+	</select>
+
+    <select id="queryByuserId" parameterType="java.util.Map" resultMap="BpmProcessInstance">
+        SELECT * FROM (SELECT DISTINCT * FROM bpm_pro_inst
+        WHERE ID_ in (SELECT PROC_INST_ID_ FROM bpm_task where OWNER_ID_ = #{ew.paramNameValuePairs.userId})
+        or ID_ IN (SELECT PROC_INST_ID_ FROM bpm_task_notice where OWNER_ID_ = #{ew.paramNameValuePairs.userId} or ASSIGNEE_ID_ = #{ew.paramNameValuePairs.userId})
+        or ID_ IN (SELECT PROC_INST_ID_ FROM bpm_check_opinion where QUALFIEDS_ like concat('%\"',#{ew.paramNameValuePairs.userId},'\"%') )
+        AND STATUS_ != 'end' AND STATUS_ != 'manualend' ORDER BY create_time_ DESC) text
+        ${ew.customSqlSegment}
+    </select>
+
+ <select id="getById" resultMap="BpmProcessInstance">
+		select * from (SELECT * FROM bpm_pro_inst
+		WHERE
+		(id_ IN (SELECT PROC_INST_ID_ FROM bpm_check_opinion
+				WHERE auditor_ = #{ew.paramNameValuePairs.auditor} )
+		OR id_ IN (SELECT PROC_INST_ID_ FROM bpm_check_opinion_hi
+				WHERE auditor_ = #{ew.paramNameValuePairs.auditor} ))
+		AND status_ = 'end') temp
+		${ew.customSqlSegment}
+    </select>
+
+    <update id="isDeleInst" >
+		update bpm_pro_inst set IS_DELE_=#{isDele} where ID_=#{instId}
+	</update>
+
+    <update id="isDeleOpinion" >
+		update bpm_check_opinion set IS_DELE_=#{isDele} where PROC_INST_ID_=#{instId}
+	</update>
+
+    <update id="isDeleNotice" >
+		update bpm_task_notice set IS_DELE_=#{isDele} where PROC_INST_ID_=#{instId}
+	</update>
+
+    <update id="isDeleTask" >
+		update bpm_task set IS_DELE_=#{isDele} where PROC_INST_ID_=#{instId}
+	</update>
+
+    <select id="getBpmTaskIdByInstId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT TASK_ID_ FROM bpm_task WHERE PROC_INST_ID_ = #{instId}
+    </select>
+
+    <delete id="deleteNotice" parameterType="java.lang.String">
+        DELETE FROM bpm_task_notice WHERE PROC_INST_ID_=#{instId}
+    </delete>
+
+    <select id="getNodeIdByInstId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT TASK_KEY_ FROM bpm_check_opinion WHERE PROC_INST_ID_ = #{instId} ORDER BY CREATE_TIME_ desc
+    </select>
+
+
+</mapper>

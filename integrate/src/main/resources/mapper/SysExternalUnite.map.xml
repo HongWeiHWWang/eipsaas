@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.system.persistence.dao.SysExternalUniteDao">
+	<resultMap id="SysExternalUnite" type="com.hotent.system.model.SysExternalUnite">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="corpName" column="CORP_NAME_" jdbcType="VARCHAR"/>
+		<result property="corpId" column="CORP_ID_" jdbcType="VARCHAR"/>
+		<result property="corpSecret" column="CORP_SECRET_" jdbcType="VARCHAR"/>
+		<result property="type" column="TYPE_" jdbcType="VARCHAR"/>
+		<result property="baseUrl" column="BASE_URL_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="agentId" column="AGENT_ID_" jdbcType="VARCHAR"/>
+		<result property="menuName" column="MENU_NAME_" jdbcType="VARCHAR"/>
+		<result property="agentKey" column="AGENT_KEY_" jdbcType="VARCHAR"/>
+		<result property="agentSecret" column="AGENT_SECRET_" jdbcType="VARCHAR"/>
+		<result property="menuUrl" column="MENU_URL_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+		
+		<result property="tempMsgId" column="TEMP_MSG_ID_" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<select id="isTypeExists" parameterType="java.util.Map" resultMap="SysExternalUnite">
+		SELECT * FROM portal_sys_external_unite
+		WHERE
+		TYPE_ = #{type}
+		<if test="id!=null">
+			and ID_ != #{id}
+		</if>
+	</select>
+	<select id="getOneByType" parameterType="java.lang.String" resultMap="SysExternalUnite">
+		SELECT * FROM portal_sys_external_unite
+		WHERE
+		TYPE_ = #{type}
+	</select>
+
+</mapper>

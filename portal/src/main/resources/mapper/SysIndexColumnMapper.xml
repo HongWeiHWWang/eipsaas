@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.hotent.portal.persistence.dao.SysIndexColumnDao">
+	<resultMap id="SysIndexColumn" type="com.hotent.portal.model.SysIndexColumn">
+		<id property="id" column="ID" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+		<result property="alias" column="ALIAS" jdbcType="VARCHAR"/>
+		<result property="catalog" column="CATALOG" jdbcType="VARCHAR"/>
+		<result property="colType" column="COL_TYPE" jdbcType="NUMERIC"/>
+		<result property="dataMode" column="DATA_MODE" jdbcType="NUMERIC"/>
+		<result property="requestType" column="REQUEST_TYPE" jdbcType="VARCHAR"/>
+		<result property="dataFrom" column="DATA_FROM" jdbcType="VARCHAR"/>
+		<result property="dataParam" column="DATA_PARAM" jdbcType="VARCHAR"/>
+		<result property="dsAlias" column="DS_ALIAS" jdbcType="VARCHAR"/>
+		<result property="dsName" column="DS_NAME" jdbcType="VARCHAR"/>
+		<result property="colHeight" column="COL_HEIGHT" jdbcType="NUMERIC"/>
+		<result property="colUrl" column="COL_URL" jdbcType="VARCHAR"/>
+		<result property="templateHtml" column="TEMPLATE_HTML" jdbcType="LONGVARCHAR"/>
+		<result property="isPublic" column="IS_PUBLIC" jdbcType="NUMERIC"/>
+		<result property="orgId" column="ORG_ID" jdbcType="NUMERIC"/>
+		<result property="supportRefesh" column="SUPPORT_REFESH" jdbcType="NUMERIC"/>
+		<result property="refeshTime" column="REFESH_TIME" jdbcType="NUMERIC"/>
+		<result property="showEffect" column="SHOW_EFFECT" jdbcType="NUMERIC"/>
+		<result property="memo" column="MEMO" jdbcType="VARCHAR"/>
+		<result property="needPage" column="NEEDPAGE" jdbcType="NUMERIC"/>
+		<result property="catalogName" column="CATALOG_NAME" jdbcType="VARCHAR"/>
+		<result property="creator" column="CREATOR" jdbcType="VARCHAR"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="tenantId" column="tenant_id_" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="columns">
+		ID,NAME,ALIAS,CATALOG,COL_TYPE,DATA_MODE,REQUEST_TYPE,DATA_FROM,DATA_PARAM,DS_ALIAS,DS_NAME,COL_HEIGHT,COL_URL,TEMPLATE_HTML,IS_PUBLIC,ORG_ID,SUPPORT_REFESH,REFESH_TIME,SHOW_EFFECT,MEMO,NEEDPAGE,CATALOG_NAME,CREATOR,CREATE_BY_,CREATE_ORG_ID_,CREATE_TIME_,UPDATE_BY_,UPDATE_TIME_,tenant_id_
+	</sql>
+	
+	<delete id="delById" parameterType="java.lang.String">
+		DELETE FROM portal_sys_column 
+		WHERE
+		ID=#{id}
+	</delete>
+	
+	<select id="getByColumnAlias" parameterType="java.lang.String" resultMap="SysIndexColumn">
+		SELECT <include refid="columns"/>
+		FROM portal_sys_column
+		WHERE
+		ALIAS=#{alias}
+	</select>
+	
+	<select id="batchGetByColumnAliases" parameterType="java.util.Map" resultMap="SysIndexColumn">
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(hasRightsColIds)">
+			SELECT <include refid="columns"/>,
+			CASE WHEN ID IN (${hasRightsColIds}) THEN true ELSE false END as displayRights
+			FROM portal_sys_column
+			WHERE
+			ALIAS in
+			<foreach collection="aliases"  item="alias" separator="," open="(" close=")">
+				#{alias}
+			</foreach>
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isEmpty(hasRightsColIds)">
+			SELECT <include refid="columns"/>, false as displayRights
+			FROM portal_sys_column
+			WHERE
+			ALIAS in
+			<foreach collection="aliases"  item="alias" separator="," open="(" close=")">
+				#{alias}
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="getCounts" resultType="Integer">
+    	 SELECT count(id) FROM portal_sys_column
+    </select>	
+	
+	<select id="isExistAlias" resultType="Integer" parameterType="java.util.Map">
+	  SELECT count(*) amount FROM portal_sys_column where alias=#{alias}
+	  <if test="@com.hotent.base.ognl.Ognl@isNotEmpty(id)">  AND id &lt;> #{id}  </if>
+	</select>
+
+	<select id="getAllByLayoutType" resultMap="SysIndexColumn" parameterType="java.util.Map">
+	  SELECT <include refid="columns"/> FROM portal_sys_column where IS_PUBLIC=#{isPublic}
+	</select>
+
+	<select id="getByUserIdFilter" resultMap="SysIndexColumn"  parameterType="java.util.Map" >
+		select <include refid="columns"/> from portal_sys_column  where ID in(
+			select t.id from (
+				<foreach collection="relationMap" index="key"  item="ent" separator="union">
+					<if test="@com.hotent.base.ognl.Ognl@notEquals(key,'auth_org')">
+					   select r.id from portal_sys_column r,portal_sys_auth_user rig where rig.AUTHORIZE_ID_=r.id and rig.RIGHT_TYPE_=#{key}  and rig.OBJ_TYPE_=#{objType}
+					   <if test="@com.hotent.base.ognl.Ognl@isNotEmpty(isPublic)"> 
+						   and IS_PUBLIC = #{isPublic}
+						</if>
+					   <if test="@com.hotent.base.ognl.Ognl@notEquals(key,'everyone') and @com.hotent.base.ognl.Ognl@isNotEmpty(ent)">
+						        and rig.OWNER_ID_ in 
+								<foreach collection="ent"  item="id" separator="," open="(" close=")">
+									#{id}
+								</foreach>
+						</if>
+					</if> 
+					<if test="@com.hotent.base.ognl.Ognl@equals(key,'auth_org')"> 
+					    select id from portal_sys_column where ORG_ID in 
+						<foreach collection="ent"  item="id" separator="," open="(" close=")">
+							#{id}
+						</foreach>
+					</if>
+				</foreach>
+			) t 
+		)  
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(tenantIds)"> 
+			and tenant_id_ in 
+			<foreach collection="tenantIds" item="tid" open="(" close=")" separator=",">
+				#{tid}
+			</foreach>
+		</if>
+		order by CREATE_TIME_ desc
+	</select>
+</mapper>

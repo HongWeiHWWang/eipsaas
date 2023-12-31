@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+说明 
+name  消息类型的显示名称
+key   消息类型的唯一标识
+display 是否显示在消息类型的选择中，0表示不显示，1表示显示，
+			例如“在写消息时，有时需要选择消息类型，0就不会显示在消息类型的选择中”
+reply  是否可以有回复，0表示不能回复，1表示可以回复
+			例如“在写消息时，有时需要选择是否能回复的，0不能回复，1表示能回复”
+其中系统消息（info），流程消息（flow），以及公共消息（bulletin）是不能修改的
+-->
+<msg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="config.xsd">
+	<message>
+	    <!-- 不能修改 start-->
+	    <msgtype name="系统消息" key="info" display="0" public="0" reply="0"/>
+	    <msgtype name="流程消息" key="flow" display="0" public="0" reply="1"/>
+	    <msgtype name="公告消息" key="bulletin" display="1" public="1" reply="0"/>
+	     <!-- 不能修改end -->
+	    <msgtype name="个人消息" key="privated" display="1" reply="1" public="0"/>
+	     
+	</message>
+</msg>

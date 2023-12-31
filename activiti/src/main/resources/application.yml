@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: dev
+    base: com.hotent.activiti.controller
+    title: "@@project.name@@"
+    description: "@@project.description@@"
+    version: "@@project.version@@"
+    platform: mysql
+    
+# Server settings (ServerProperties)
+server:
+  port: 8085
+  address: 0.0.0.0
+  sessionTimeout: 30
+  contextPath: /
+  session:
+    timeout: 30

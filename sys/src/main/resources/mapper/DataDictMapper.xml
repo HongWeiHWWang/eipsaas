@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.sys.persistence.dao.DataDictDao">
+	<resultMap id="DataDict" type="com.hotent.sys.persistence.model.DataDict">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="typeId" column="type_id_" jdbcType="VARCHAR"/>
+		<result property="key" column="key_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="parentId" column="parent_id_" jdbcType="VARCHAR"/>
+		<result property="sn" column="sn_" jdbcType="NUMERIC"/>
+		
+	</resultMap>
+	
+	<select id="getByTypeId" parameterType="java.util.Map" resultMap="DataDict">
+		SELECT * FROM portal_sys_dic
+		WHERE type_id_  = #{typeId} ORDER BY SN_
+	</select>
+	
+	<select id="getByDictKey" parameterType="java.util.Map" resultMap="DataDict">
+		SELECT * FROM portal_sys_dic
+		WHERE type_id_  = #{typeId} AND key_ = #{key}
+	</select>
+	
+	<select id="getByParentId" parameterType="java.lang.String" resultMap="DataDict">
+		SELECT * FROM portal_sys_dic
+		WHERE parent_id_ = #{parentId} ORDER BY SN_
+	</select>
+	
+	<update id="updSn" parameterType="Map">
+		update portal_sys_dic set sn_=#{sn} 
+		WHERE
+		id_=#{dicId}
+	</update>
+	
+	<delete id="delByDictTypeId" parameterType="java.lang.String">
+		DELETE FROM portal_sys_dic 
+		WHERE
+		type_id_ = #{dictTypeId}
+	</delete>
+	
+	
+</mapper>

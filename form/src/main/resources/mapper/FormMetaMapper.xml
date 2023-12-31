@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.FormMetaDao">
+	<resultMap id="BpmFormDef" type="com.hotent.form.model.FormMeta">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="key" column="key_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="desc" column="desc_" jdbcType="VARCHAR"/>
+		<result property="type" column="type_" jdbcType="VARCHAR"/>
+		<result property="typeId" column="type_id_" jdbcType="VARCHAR"/>
+		<result property="expand" column="expand_" jdbcType="VARCHAR"/>
+		<result property="opinionConf" column="opinion_conf_" jdbcType="VARCHAR"/>
+		<result property="ganged" column="ganged_" jdbcType="VARCHAR"/>
+		<result property="macroAlias" column="macroAlias_" jdbcType="VARCHAR"/>
+		<result property="mainAlias" column="mainAlias_" jdbcType="VARCHAR"/>
+		<result property="subEntity" column="subEntity_" jdbcType="VARCHAR"/>
+        <result property="rev" column="rev_" jdbcType="NUMERIC"/>
+        <result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+        <result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+        <result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<insert id="createBpmFormBo" parameterType="java.util.Map">
+		INSERT INTO form_bo_relation
+		(id_,form_id_,bo_def_id_)
+		VALUES 
+		(#{id,jdbcType=VARCHAR}, #{formId,jdbcType=VARCHAR}, #{boDefId,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="deleteBpmFormBo" parameterType="java.lang.String">
+		DELETE FROM form_bo_relation
+		WHERE
+		form_id_=#{formId}
+	</delete>
+	
+	<select id="getByKey"   parameterType="java.lang.String" resultMap="BpmFormDef">
+		SELECT * FROM form_meta
+		WHERE 
+		key_=#{formKey}
+	</select>
+	
+    <select id="getFormDefByRev" parameterType="java.util.Map" resultMap="BpmFormDef">
+		SELECT * FROM form_meta WHERE id_=#{id} and REV_=#{rev}
+	</select>
+	
+	<select id="getBODefIdByFormId" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT bo_def_id_ FROM form_bo_relation
+		WHERE 
+		form_id_=#{formId}
+	</select>
+
+	<select id="getBODefByFormId" parameterType="java.lang.String" resultMap="BpmFormDef">
+		SELECT re.BO_DEF_ID_ "id_",def.description_ "desc_" FROM form_bo_relation re
+		LEFT JOIN form_bo_def def ON def.ID_ = re.BO_DEF_ID_
+		WHERE re.FORM_ID_ = #{formId}
+	</select>
+	
+	<select id="getBOCodeByFormId" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT B.alias_ FROM form_bo_relation A,form_bo_def B
+		WHERE A.bo_def_id_=B.id_ and form_id_=#{formId}
+	</select>
+	
+	<select id="getByBODefId" parameterType="java.lang.String" resultMap="BpmFormDef">
+		select * from form_meta where id_ in(
+		 	SELECT form_id_ FROM form_bo_relation
+		 	WHERE bo_def_id_=#{BODefId} 
+		)
+	</select>
+	
+	<update id="updateOpinionConf" parameterType="java.util.Map">
+		UPDATE form_meta SET
+		opinion_conf_=#{opinionJson}
+		WHERE id_=#{id}
+	</update>
+	
+	<select id="getEntInfoByFormId" parameterType="java.lang.String" resultType="java.util.HashMap">
+		select b.type_,c.desc_,c.name_,d.alias_,d.description_  from form_bo_relation  A,form_bo_ent_relation B,form_bo_ent C, form_bo_def D where
+			A.bo_def_id_=b.bo_defid_ and b.ref_ent_id_=c.id_ and b.bo_defid_ = d.id_
+			and A.form_id_=#{formId}
+		order by d.alias_,b.type_ 
+	</select>
+	
+	
+	<select id="getByEntName" parameterType="java.lang.String" resultMap="BpmFormDef">
+		select  f.id_,f.key_,f.name_,f.type_,f.type_id_,f.create_by_,f.create_time_,f.create_org_id_
+		from form_meta f, form_bo_ent ent, form_bo_ent_relation rel,form_bo_relation fbo
+			where ent.id_=rel.ref_ent_id_ and rel.bo_defid_=fbo.bo_def_id_ 
+			and fbo.form_id_=f.id_
+			and ent.name_=#{entName}
+	</select>
+	
+	<select id="getMetaKeyByFormKey" parameterType="java.lang.String" resultType="java.lang.String">
+		select distinct b.key_ from form_definition a ,form_meta b where a.def_id_=b.id_ and a.form_key_=#{formKey}
+	</select>
+	
+	<select id="getByEntId" parameterType="java.lang.String" resultMap="BpmFormDef">
+		SELECT a.* from form_meta a,form_bo_relation b ,form_bo_ent_relation c where c.REF_ENT_ID_=#{entId}
+			and c.BO_DEFID_=b.bo_def_id_ and a.id_=b.form_id_
+	</select>
+</mapper>

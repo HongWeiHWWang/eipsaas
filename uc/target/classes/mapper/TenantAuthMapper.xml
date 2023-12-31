@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.TenantAuthDao">
+	<resultMap id="TenantAuth" type="com.hotent.uc.model.TenantAuth">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="typeId" column="TYPE_ID_" jdbcType="VARCHAR"/>
+		<result property="tenantId" column="TENANT_ID_" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="userName" column="USER_NAME_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+		<result property="account" column="ACCOUNT_" jdbcType="TIMESTAMP"/>
+		<result property="email" column="EMAIL_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<select id="getByTypeAndTenantId" parameterType="java.lang.String" resultMap="TenantAuth">
+		SELECT * FROM UC_TENANT_AUTH WHERE 1=1
+		<if test="typeId!=null">
+			AND TYPE_ID_=#{typeId,jdbcType=VARCHAR}
+		</if>
+		<if test="tenantId!=null">
+			AND TENANT_ID_=#{tenantId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="getByUserId" parameterType="java.lang.String" resultMap="TenantAuth">
+		SELECT * FROM UC_TENANT_AUTH WHERE USER_ID_=#{userId,jdbcType=VARCHAR}
+		<if test="typeId!=null">
+			AND TYPE_ID_=#{typeId,jdbcType=VARCHAR}
+		</if>
+		<if test="tenantId!=null">
+			AND TENANT_ID_=#{tenantId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="queryByTypeAndTenantId" parameterType="java.util.Map" resultMap="TenantAuth">
+		SELECT DISTINCT auth.ID_,auth.TYPE_ID_,auth.TENANT_ID_,auth.USER_ID_,auth.USER_NAME_,auth.CREATE_TIME_,
+		auth.CREATE_BY_,auth.CREATE_ORG_ID_,auth.UPDATE_TIME_,auth.UPDATE_BY_,user.ACCOUNT_,user.EMAIL_
+		FROM UC_TENANT_AUTH auth LEFT JOIN UC_USER user ON auth.USER_ID_ = user.ID_
+		${ew.customSqlSegment}
+	</select>
+	
+	<delete id="deleteByTypeId" parameterType="java.lang.String">
+		DELETE FROM UC_TENANT_AUTH 
+		WHERE
+		TYPE_ID_=#{typeId,jdbcType=VARCHAR}
+	</delete>
+
+    <delete id="delByUserId" parameterType="java.lang.String">
+		DELETE FROM UC_TENANT_AUTH
+		WHERE
+		USER_ID_=#{userId,jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="deleteByTenantId" parameterType="java.lang.String">
+		DELETE FROM UC_TENANT_AUTH 
+		WHERE
+		TENANT_ID_=#{tenantId,jdbcType=VARCHAR}
+	</delete>
+	
+	
+</mapper>

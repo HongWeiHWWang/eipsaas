@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.FormDataTemplateDao">
+	<resultMap id="BpmDataTemplate" type="com.hotent.form.model.FormDataTemplate">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="boDefId" column="BO_DEF_ID_" jdbcType="VARCHAR"/>
+		<result property="boDefAlias" column="BO_DEF_AlIAS_" jdbcType="VARCHAR"/>
+		<result property="formKey" column="FORM_KEY_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="alias" column="ALIAS_" jdbcType="VARCHAR"/>
+		<result property="style" column="STYLE_" jdbcType="NUMERIC"/>
+		<result property="needPage" column="NEED_PAGE_" jdbcType="NUMERIC"/>
+		<result property="pageSize" column="PAGE_SIZE_" jdbcType="NUMERIC"/>
+		<result property="templateAlias" column="TEMPLATE_ALIAS_" jdbcType="VARCHAR"/>
+		<result property="templateHtml" column="TEMPLATE_HTML_" jdbcType="LONGVARCHAR"/>
+		<result property="displayField" column="DISPLAY_FIELD_" jdbcType="LONGVARCHAR"/>
+		<result property="sortField" column="SORT_FIELD_" jdbcType="LONGVARCHAR"/>
+		<result property="conditionField" column="CONDITION_FIELD_" jdbcType="LONGVARCHAR"/>
+		<result property="manageField" column="MANAGE_FIELD_" jdbcType="VARCHAR"/>
+		<result property="filterField" column="FILTER_FIELD_" jdbcType="LONGVARCHAR"/>
+		<result property="varField" column="VAR_FIELD_" jdbcType="VARCHAR"/>
+		<result property="filterType" column="FILTER_TYPE_" jdbcType="NUMERIC"/>
+		<result property="source" column="SOURCE_" jdbcType="NUMERIC"/>
+		<result property="defId" column="DEF_ID_" jdbcType="VARCHAR"/>
+		<result property="subject" column="SUBJECT_" jdbcType="VARCHAR"/>
+		<result property="isQuery" column="IS_QUERY_" jdbcType="NUMERIC"/>
+		<result property="isFilter" column="IS_FILTER_" jdbcType="NUMERIC"/>
+		<result property="exportField" column="EXPORT_FIELD_" jdbcType="LONGVARCHAR"/>
+		<result property="printField" column="PRINT_FIELD_" jdbcType="LONGVARCHAR"/>
+		<result property="formField" column="FORM_FIELD_" jdbcType="LONGVARCHAR"/>
+		<result property="typeId" column="TYPE_ID_" jdbcType="VARCHAR"/>
+		<result property="typeName" column="TYPE_NAME_" jdbcType="VARCHAR"/>
+		<result property="mobileFormAlias" column="MOBILE_FORM_ALIAS_" jdbcType="VARCHAR"/>
+        <result property="mobileFormName" column="MOBILE_FORM_NAME_" jdbcType="VARCHAR"/>
+		<result property="treeField" column="TREE_FIELD_" jdbcType="LONGVARCHAR"/>
+		<result property="filteringField" column="FILTERING_FIELD_" jdbcType="LONGVARCHAR"/>
+	</resultMap>
+
+	<select id="getByFormKey"   parameterType="java.lang.String" resultMap="BpmDataTemplate">
+		SELECT * FROM form_data_template WHERE FORM_KEY_=#{formKey}
+	</select>
+
+	<select id="getByAlias"   parameterType="java.lang.String" resultMap="BpmDataTemplate">
+		SELECT * FROM form_data_template WHERE ALIAS_=#{alias}
+	</select>
+
+	<select id="getCountByAlias" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(*) from form_data_template
+		WHERE
+		ALIAS_ = #{alias}
+	</select>
+
+	<delete id="removeByFormKey" parameterType="java.lang.String">
+		DELETE FROM form_data_template
+		WHERE
+		FORM_KEY_=#{formKey}
+	</delete>
+
+	<select id="getAllFormKeys" resultType="java.lang.String">
+		SELECT FORM_KEY_ from form_data_template
+	</select>
+</mapper>

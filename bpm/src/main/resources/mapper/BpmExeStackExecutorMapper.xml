@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmExeStackExecutorDao">
+	<resultMap id="BpmExeStackExecutor" type="com.hotent.bpm.persistence.model.BpmExeStackExecutor">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="stackId" column="STACK_ID_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="TASK_ID_" jdbcType="VARCHAR"/>
+		<result property="assigneeId" column="ASSIGNEE_ID_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="endTime" column="END_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="status" column="STATUS_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<update id="updateByTaskId">
+		UPDATE bpm_exe_stack_executor SET
+		TASK_ID_=#{newTaskId,jdbcType=VARCHAR},
+		ASSIGNEE_ID_=#{assigneeId,jdbcType=VARCHAR},
+		END_TIME_=null,
+		STATUS_=0
+		WHERE
+		TASK_ID_=#{taskId}
+	</update>
+
+	<select id="getByTaskId"   parameterType="java.lang.String" resultMap="BpmExeStackExecutor">
+		SELECT * FROM bpm_exe_stack_executor 
+		WHERE 
+		TASK_ID_=#{taskId}
+	</select>
+	
+	<select id="getByStackId"   parameterType="java.lang.String" resultMap="BpmExeStackExecutor">
+		SELECT * FROM bpm_exe_stack_executor 
+		WHERE 
+		STACK_ID_=#{stackId}
+	</select>
+	
+	<delete id="deleteByStackId" parameterType="java.lang.String">
+		DELETE FROM bpm_exe_stack_executor 
+		WHERE
+		STACK_ID_=#{stackId}
+	</delete>
+	
+	<delete id="deleteByStackIds" parameterType="java.util.Map">
+		DELETE FROM bpm_exe_stack_executor 
+		WHERE STACK_ID_ in
+		<foreach open="("  close=")" collection="stackIds" item="stackId" separator=",">#{stackId}</foreach>
+	</delete>
+	
+</mapper>

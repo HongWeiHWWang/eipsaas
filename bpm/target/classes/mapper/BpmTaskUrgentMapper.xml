@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmTaskUrgentDao">
+	<resultMap id="BpmTaskUrgent" type="com.hotent.bpm.persistence.model.BpmTaskUrgent">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="TASK_ID_" jdbcType="VARCHAR"/>
+		<result property="nodeName" column="NODE_NAME_" jdbcType="VARCHAR"/>
+		<result property="instId" column="INST_ID_" jdbcType="VARCHAR"/>
+		<result property="subject" column="SUBJECT_" jdbcType="VARCHAR"/>
+		<result property="content" column="CONTENT_" jdbcType="LONGVARCHAR"/>
+		<result property="urgrntDate" column="URGRNT_DATE_" jdbcType="TIMESTAMP"/>
+		<result property="promoterId" column="PROMOTER_ID_" jdbcType="VARCHAR"/>
+        <result property="promoter" column="PROMOTER_" jdbcType="VARCHAR"/>
+        <result property="appointeeId" column="APPOINTEE_ID_" jdbcType="VARCHAR"/>
+		<result property="appointee" column="APPOINTEE_" jdbcType="VARCHAR"/>
+		<result property="type" column="TYPE_" jdbcType="VARCHAR"/>
+		<result property="appointeeSecretaryConf" column="APPOINTEE_SECRETARY_CONF_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+</mapper>

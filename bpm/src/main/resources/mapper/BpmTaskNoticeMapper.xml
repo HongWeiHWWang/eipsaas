@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmTaskNoticeDao">
+	<resultMap id="BpmTaskNotice" type="com.hotent.bpm.persistence.model.BpmTaskNotice">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="subject" column="SUBJECT_" jdbcType="VARCHAR"/>
+		<result property="procInstId" column="PROC_INST_ID_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="TASK_ID_" jdbcType="VARCHAR"/>
+		<result property="execId" column="EXEC_ID_" jdbcType="VARCHAR"/>
+		<result property="nodeId" column="NODE_ID_" jdbcType="VARCHAR"/>
+		<result property="procDefId" column="PROC_DEF_ID_" jdbcType="VARCHAR"/>
+		<result property="procDefKey" column="PROC_DEF_KEY_" jdbcType="VARCHAR"/>
+		<result property="procDefName" column="PROC_DEF_NAME_" jdbcType="VARCHAR"/>
+		<result property="ownerId" column="OWNER_ID_" jdbcType="VARCHAR"/>
+		<result property="ownerName" column="OWNER_NAME_" jdbcType="VARCHAR"/>
+		<result property="assigneeId" column="ASSIGNEE_ID_" jdbcType="VARCHAR"/>
+		<result property="assigneeName" column="ASSIGNEE_NAME_" jdbcType="VARCHAR"/>
+		<result property="status" column="STATUS_" jdbcType="VARCHAR"/>
+		<result property="priority" column="PRIORITY_" jdbcType="NUMERIC"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="dueTime" column="DUE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="suspendState" column="SUSPEND_STATE_" jdbcType="NUMERIC"/>
+		<result property="parentId" column="PARENT_ID_" jdbcType="VARCHAR"/>
+		<result property="bpmnInstId" column="BPMN_INST_ID_" jdbcType="VARCHAR"/>
+		<result property="bpmnDefId" column="BPMN_DEF_ID_" jdbcType="VARCHAR"/>
+		<result property="typeId" column="TYPE_ID_" jdbcType="VARCHAR"/>
+		<result property="supportMobile" column="SUPPORT_MOBILE_" jdbcType="NUMERIC"/>
+        <result property="isRead" column="IS_READ_" jdbcType="NUMERIC"/>
+        <result property="isRevoke" column="IS_REVOKE_" jdbcType="NUMERIC"/>
+	</resultMap>
+
+	<select id="getNoticeTodoReadCount" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT count(1) as count,inst.type_id_ as typeId FROM bpm_task_notice notice
+		INNER JOIN bpm_pro_inst inst on notice.PROC_INST_ID_ = inst.ID_ and inst.IS_DELE_ !='1'
+		${ew.customSqlSegment}
+		group by inst.type_id_
+	</select>
+
+    <delete id="delBpmTaskNoticeByDefId" parameterType="java.lang.String">
+		DELETE FROM bpm_task_notice
+		WHERE
+		PROC_DEF_ID_=#{defId}
+	</delete>
+
+    <delete id="delBpmTaskNoticeByInstId" parameterType="java.lang.String">
+		DELETE FROM bpm_task_notice
+		WHERE
+		PROC_INST_ID_=#{instId}
+	</delete>
+
+    <select id="getBpmTaskNoticeByTaskId" parameterType="java.lang.String" resultMap="BpmTaskNotice">
+        SELECT * FROM bpm_task_notice where TASK_ID_=#{taskId} and STATUS_='COPYTO'
+    </select>
+
+    <select id="getBpmTaskNoticeByInstId" parameterType="java.lang.String" resultMap="BpmTaskNotice">
+        SELECT * FROM bpm_task_notice where PROC_INST_ID_=#{instId} and STATUS_='COPYTO'
+    </select>
+    
+    <update id="updateAssignee" parameterType="java.util.Map" >
+        UPDATE bpm_task_notice SET assignee_id_= #{assigneeId,jdbcType=VARCHAR},assignee_name_= #{assigneeName,jdbcType=VARCHAR} WHERE assignee_id_= #{userId,jdbcType=VARCHAR}
+        <if test="instIds!=null">
+            AND proc_inst_id_ in <foreach collection="instIds" index="index" item="instId" open="(" separator="," close=")">
+            #{instId}
+        </foreach>
+        </if>
+    </update>
+    
+    <update id="updateOwner" parameterType="java.util.Map" >
+        UPDATE bpm_task_notice SET owner_id_= #{ownerId,jdbcType=VARCHAR},owner_name_= #{ownerName,jdbcType=VARCHAR} WHERE owner_id_= #{userId,jdbcType=VARCHAR}
+        <if test="instIds!=null">
+            AND proc_inst_id_ in <foreach collection="instIds" index="index" item="instId" open="(" separator="," close=")">
+            #{instId}
+        </foreach>
+        </if>
+    </update>
+    
+    <select id="customQuery" parameterType="java.util.Map" resultMap="BpmTaskNotice">
+		SELECT bpm_task_notice.* FROM bpm_task_notice  INNER JOIN bpm_pro_inst on bpm_task_notice.PROC_INST_ID_ = bpm_pro_inst.ID_ and  bpm_pro_inst.IS_DELE_ !='1'
+		${ew.customSqlSegment}
+	</select>
+    
+
+</mapper>

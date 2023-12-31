@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns="http://www.jee-soft.cn/sqlgen"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.jee-soft.cn/sqlgen sqlgen.xsd"
+    filePath="D:\init.sql" >
+	
+	 <resource table="portal_sys_type_group" pk="id_">
+	 	<sql>
+	 		SELECT * from portal_sys_type_group
+	 	</sql>
+	 	<template>
+	 		insert into portal_sys_type_group (id_,group_key_,name_,flag_,sn_,type_) 
+	 		values ('${ID_}','${GROUP_KEY_}','${NAME_}','${FLAG_}','${SN_}','${TYPE_}');
+	 	</template>
+	 </resource>
+	 
+	 <resource table="bpm_selector_def" pk="id_">
+	 	<sql>
+	 		select * from bpm_selector_def
+	 	</sql>
+	 	<template>
+	 		insert into bpm_selector_def (id_, name_, alias_, group_field_, buttons_, is_custom_, flag_, method_, conf_key_)
+	 		values ('${ID_}', '${NAME_}', '${ALIAS_}', '${GROUP_FIELD_}', '${BUTTONS_}', '${IS_CUSTOM_}', '${FLAG_}', '${METHOD_}', '${CONF_KEY_}');
+	 	</template>
+	 </resource>
+	 
+	 <resource table="portal_sys_msg_tpl" pk="id_">
+	 	<sql>
+	 		select * from portal_sys_msg_tpl
+	 	</sql>
+	 	<template>
+	 		INSERT INTO portal_sys_msg_tpl (id_, name_, key_, type_key_, is_default_, subject_, plain_, html_)
+	 		values ('${ID_}', '${NAME_}', '${KEY_}', '${TYPE_KEY_}', ${IS_DEFAULT_}, '${SUBJECT_}', '${PLAIN_}', '${HTML_}');
+	 	</template>
+	 </resource>
+	 
+	 <resource table="portal_sys_properties" pk="id">
+	 	<sql>
+	 		select * from portal_sys_properties
+	 	</sql>
+	 	<template>
+			INSERT INTO portal_sys_properties (id,name,alias,group_,value,encrypt,description)
+			VALUES ('${ID}', '${NAME}', '${ALIAS}', '${GROUP_}', '${VALUE}', ${ENCRYPT}, '${DESCRIPTION}');
+		</template>
+	 </resource>
+	 
+	<resource table="form_custom_dialog" pk="id_">
+		<sql>
+			select * from form_custom_dialog
+		</sql>
+		<template>
+			insert into form_custom_dialog (id_,name_,alias_,style_,obj_name_,need_page_,page_size_,displayfield_,conditionfield_,resultfield_,sortfield_,dsalias_,is_table_,diy_sql_,sql_build_type_,width_,height_,select_num_,system_)
+			values ('${ID_}','${NAME_}','${ALIAS_}','${STYLE_}','${OBJ_NAME_}',${NEED_PAGE_},${PAGE_SIZE_},'${DISPLAYFIELD_}','${CONDITIONFIELD_}','${RESULTFIELD_}','${SORTFIELD_}','${DSALIAS_}',${IS_TABLE_},'${DIY_SQL_}','${SQL_BUILD_TYPE_}',${WIDTH_?c},${HEIGHT_?c},${SELECT_NUM_},${SYSTEM_});
+		</template>
+	</resource>
+	
+	<resource table="sys_script" pk="ID_">
+		<sql>select * from  SYS_SCRIPT</sql>
+		<template>
+			INSERT INTO SYS_SCRIPT(ID_,NAME_,SCRIPT_,CATEGORY_,MEMO_)
+			values ('${ID_}','${NAME_}','${SCRIPT_}','${CATEGORY_}','${MEMO_}');
+		</template>
+	</resource>
+	
+	
+
+	<resource table="base_sys_resource" pk="ID_"  parentId="PARENT_ID_" parentIdVal="0" 
+	variables="{'SYSTEMID':'1'}">
+		<sql>SELECT * FROM  base_sys_resource where SYSTEM_ID_ ='${SYSTEMID}' AND PARENT_ID_='${PARENT_ID_}' ORDER BY SN_</sql>
+		<template>
+		<![CDATA[INSERT INTO base_sys_resource (ID_,SYSTEM_ID_,ALIAS_,NAME_,default_url_,ENABLE_MENU_,HAS_CHILDREN_,OPENED_,ICON_,NEW_WINDOW_,SN_,PARENT_ID_)
+		VALUES  ('${ID_}', '${SYSTEM_ID_}', '${ALIAS_}', '${NAME_}', '${DEFAULT_URL_}', ${ENABLE_MENU_}, ${HAS_CHILDREN_}, ${OPENED_}, '${ICON_}', ${NEW_WINDOW_}, '<#if (SN_)??>${SN_?c}<#else>0</#if>','${PARENT_ID_}');]]>
+		</template>
+	</resource>
+
+
+</resources>

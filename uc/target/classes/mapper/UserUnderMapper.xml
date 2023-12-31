@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.UserUnderDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.UserUnder">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="underUserId" column="UNDER_USER_ID_" jdbcType="VARCHAR"/>
+		<result property="underUserName" column="UNDER_USER_NAME_" jdbcType="VARCHAR"/>
+		<result property="orgId" column="ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<parameterMap id="UserUnder" type="com.hotent.uc.model.UserUnder" />
+	
+	<sql id="Base_Column_List">
+		ID_,USER_ID_,UNDER_USER_ID_,UNDER_USER_NAME_,ORG_ID_,UPDATE_TIME_,IS_DELE_,VERSION_
+	</sql>
+
+	<delete id="removePhysical" >
+		DELETE FROM UC_USER_UNDER WHERE IS_DELE_='1' 
+	</delete>
+	
+	<select id="getUserUnder" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from (select * from UC_USER_UNDER 
+		where 1=1
+			<if test="ew.paramNameValuePairs.userId != null">
+			AND USER_ID_ = #{ew.paramNameValuePairs.userId}
+		</if>
+		<if test="ew.paramNameValuePairs.orgId!=null">
+			AND ORG_ID_ = #{ew.paramNameValuePairs.orgId}
+		</if>
+		<if test="ew.paramNameValuePairs.underUserId!=null">
+			AND UNDER_USER_ID_ = #{ew.paramNameValuePairs.underUserId}
+		</if>
+		<if test="ew.paramNameValuePairs.underUserName!=null">
+			AND UNDER_USER_NAME_ like #{ew.paramNameValuePairs.underUserName}
+		</if>
+		<if test="ew.paramNameValuePairs.noUserId!=null">
+			AND USER_ID_ != #{ew.paramNameValuePairs.noUserId}
+		</if>
+		)tmp
+		
+		${ew.customSqlSegment} 
+	</select>
+	
+	<select id="getUserUnderNOPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from UC_USER_UNDER where IS_DELE_!='1'
+		<if test="htqf.userId != null">
+			AND USER_ID_ = #{htqf.userId}
+		</if>
+		<if test="htqf.orgId!=null">
+			AND ORG_ID_ = #{htqf.orgId}
+		</if>
+		<if test="htqf.underUserId!=null">
+			AND UNDER_USER_ID_ = #{htqf.underUserId}
+		</if>
+		<if test="htqf.underUserName!=null">
+			AND UNDER_USER_NAME_ like #{htqf.underUserName}
+		</if>
+		<if test="htqf.noUserId!=null">
+			AND USER_ID_ != #{htqf.noUserId}
+		</if>
+		<if test="htqf.whereSql!=null">
+			AND	${htqf.whereSql}
+		</if>
+	</select>
+	
+	<delete id="delByOrgId" parameterType="java.util.Map">
+		UPDATE UC_USER_UNDER SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP} where ORG_ID_ = #{orgId}
+	</delete>
+	
+	<delete id="delByUpIdAndUderId" parameterType="java.util.Map">
+		UPDATE UC_USER_UNDER SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP} where USER_ID_ = #{upUserId} and UNDER_USER_ID_ = #{underUserId}
+	</delete>
+	
+	<delete id="delByUserIdAndOrgId" parameterType="java.util.Map">
+		UPDATE UC_USER_UNDER SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP} where ORG_ID_ = #{orgId} and USER_ID_ = #{userId}
+	</delete>
+	
+</mapper>

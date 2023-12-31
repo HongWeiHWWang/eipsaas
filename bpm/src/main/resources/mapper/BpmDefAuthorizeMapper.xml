@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmDefAuthorizeDao">
+	<resultMap id="BpmDefAuthorize" type="com.hotent.bpm.persistence.model.BpmDefAuthorize">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="authorizeDesc" column="AUTHORIZE_DESC_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="creator" column="CREATOR_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="multiple" column="MULTI_PLE" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="columns">
+		ID_,AUTHORIZE_DESC_,CREATE_BY_,CREATOR_,CREATE_TIME_,MULTI_PLE
+	</sql>
+	
+	<sql id="dynamicWhere">
+		<where>
+			
+			<if test="id!=null"> 
+				AND ID_  =#{id} 
+			</if>
+			
+			<if test="authorizeTypes!=null"> 
+				AND ID_ in (SELECT AUTHORIZE_ID_ FROM BPM_DEF_AUTH_TYPE WHERE AUTHORIZE_TYPE_ like #{authorizeTypes} )
+			</if>
+			
+			<if test="authorizeDesc!=null"> 
+			    AND AUTHORIZE_DESC_ LIKE #{authorizeDesc}  
+			</if>
+			<if test="ownerName!=null">
+			    <if test="defName==null">
+			   		AND ID_ in (SELECT AUTHORIZE_ID_ FROM BPM_DEF_USER WHERE OWNER_NAME_ LIKE #{ownerName} )
+				</if>
+			</if>
+			<if test="defName!=null">
+			    <if test="ownerName==null">
+				    AND ID_ in (SELECT AUTHORIZE_ID_ FROM BPM_DEF_ACT WHERE DEF_NAME_ LIKE #{defName} )
+				</if>
+			</if>
+			<if test="ownerName!=null">
+			    <if test="defName!=null">
+				    AND ID_ in (
+				                  SELECT U.AUTHORIZE_ID_ FROM BPM_DEF_USER U,BPM_DEF_ACT A 
+				                  		WHERE U.AUTHORIZE_ID_=A.AUTHORIZE_ID_ AND U.OWNER_NAME_ LIKE #{ownerName} AND A.DEF_NAME_ LIKE #{defName}
+									         )
+				</if>
+			</if>
+			<if test="multiple!=null"> 
+				AND MULTI_PLE  =#{multiple} 
+			</if>
+		</where>
+	</sql>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BpmDefAuthorize">
+		SELECT <include refid="columns"/> FROM BPM_DEF_AUTHORIZE
+		<!-- <where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where> -->
+		<include refid="dynamicWhere" />
+		
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY ID_ DESC
+		</if>
+	</select>
+	
+	
+
+</mapper>

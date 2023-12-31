@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmTaskReminderDao">
+	<resultMap id="BpmTaskReminder" type="com.hotent.bpm.persistence.model.BpmTaskReminder">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="task_id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="relDate" column="rel_date_" jdbcType="TIMESTAMP"/>
+		<result property="dueAction" column="due_action_" jdbcType="VARCHAR"/>
+		<result property="dueScript" column="due_script_" jdbcType="VARCHAR"/>
+		<result property="dueDate" column="due_date_" jdbcType="TIMESTAMP"/>
+		<result property="isSendMsg" column="is_send_msg_" jdbcType="NUMERIC"/>
+		<result property="msgSendDate" column="msg_send_date_" jdbcType="TIMESTAMP"/>
+		<result property="msgInterval" column="msg_interval_" jdbcType="NUMERIC"/>
+		<result property="msgCount" column="msg_count_" jdbcType="NUMERIC"/>
+		<result property="msgType" column="msg_type_" jdbcType="VARCHAR"/>
+		<result property="htmlMsg" column="html_msg_" jdbcType="VARCHAR"/>
+		<result property="plainMsg" column="plain_msg_" jdbcType="VARCHAR"/>
+		<result property="warningset" column="warningSet_" jdbcType="VARCHAR"/>
+		<result property="triggerDate" column="trigger_date_" jdbcType="TIMESTAMP"/>
+		<result property="sendPerson" column="send_Person_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<delete id="deleteByTaskId" parameterType="java.lang.String">
+		DELETE FROM bpm_task_reminder
+		WHERE
+		task_id_=#{taskId}
+	</delete>
+	
+	<select id="getTriggerReminders"  parameterType="java.lang.String" resultMap="BpmTaskReminder">
+		SELECT * FROM bpm_task_reminder 
+		WHERE 1=1
+		<if test="timeSql!=null">
+			AND ${timeSql}
+		</if>
+		
+	</select>
+	
+</mapper>

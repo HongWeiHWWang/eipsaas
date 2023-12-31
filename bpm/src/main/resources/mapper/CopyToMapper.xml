@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.CopyToDao">
+	<resultMap id="CopyTo" type="com.hotent.bpm.persistence.model.CopyTo">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="instId" column="inst_id_" jdbcType="VARCHAR"/>
+		<result property="bpmnInstId" column="bpmn_inst_id_" jdbcType="VARCHAR"/>
+		<result property="nodeId" column="node_id_" jdbcType="VARCHAR"/>
+	
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="opinion" column="opinion_" jdbcType="VARCHAR"/>
+		<result property="subject" column="subject_" jdbcType="VARCHAR"/>
+	
+		<result property="type" column="type_" jdbcType="VARCHAR"/>
+		<result property="startorId" column="startor_id_" jdbcType="VARCHAR"/>
+		<result property="startor" column="startor_" jdbcType="VARCHAR"/>
+		<result property="typeId" column="type_id_" jdbcType="VARCHAR"/>
+		
+		<result property="recever" column="recever" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap id="CopyToExt" extends="CopyTo" type="com.hotent.bpm.persistence.model.CopyTo">
+	
+		<result property="isRead" column="is_read_" jdbcType="NUMERIC"/>
+		<result property="bId" column="bId" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<delete id="delByInstList" >
+		DELETE FROM  bpm_pro_cpto where inst_id_ in 
+			<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        	</foreach> 
+	</delete>
+	
+	
+	<select id="getByUserId"   parameterType="java.lang.String" resultMap="CopyTo">
+		SELECT * FROM bpm_pro_cpto 
+		WHERE startor_id_=#{startorId}
+		<if test="subject !=null">
+			and a.subject_ like #{subject}
+		</if>
+	</select>
+
+	
+	<select id="getReceiverCopyTo" parameterType="java.util.Map" resultMap="CopyToExt" >
+		<if test="map.support_mobile_ ==null">
+			SELECT DISTINCT a.*, b.ID_ bId,b.IS_READ_ FROM bpm_pro_cpto a,bpm_cpto_receiver b
+		</if>
+		<if test="map.support_mobile_ !=null">
+			SELECT DISTINCT a.*, b.ID_ bId,b.IS_READ_ FROM ( 
+			SELECT DISTINCT a.* FROM bpm_pro_cpto a   
+			left join bpm_pro_inst inst 
+			on  a.INST_ID_ = inst.id_ 
+			left join bpm_pro_inst_hi instHi 
+			on  a.INST_ID_ = instHi.id_  
+			where  a.INST_ID_ = inst.id_
+			and inst.SUPPORT_MOBILE_ = #{map.support_mobile_} ) a ,bpm_cpto_receiver b 
+		</if>
+		where a.id_=b.CPTO_ID_ and b.RECEIVER_ID_=#{map.userId} 
+
+		<if test="map.isRead!=null">
+			and b.IS_READ_ = #{map.isRead}
+		</if>
+		<if test="map.createTimeStart!=null">
+			and a.create_time_ >=#{map.createTimeStart}
+		</if>
+		<if test="map.createTimeEnd_DG!=null">
+			and a.create_time_ &lt;=#{map.createTimeEnd_DG}
+		</if>
+		
+		<if test="map.subject!=null">
+			and a.subject_ like #{map.subject}
+		</if>
+		
+		<if test="map.typeId!=null">
+			and a.type_id_ = #{map.typeId}
+		</if>
+		
+		<if test="map.type!=null">
+			and a.type_ = #{map.type}
+		</if>
+		
+		<if test="map.startorId!=null">
+			and a.startor_id_=#{map.startorId}
+		</if>
+			
+		order by a.create_time_ desc
+		
+	</select>
+	
+	<select id="getMyCopyTo" parameterType="java.util.Map" resultMap="CopyTo" >
+		SELECT pc.* , cr.RECEIVER_ recever FROM bpm_pro_cpto pc ,bpm_cpto_receiver cr  where pc.startor_id_=#{map.userId} 
+		AND cr.CPTO_ID_ = pc.ID_
+		<if test="map.createTimeStart!=null">
+			and pc.create_time_ >=#{map.createTimeStart}
+		</if>
+		<if test="map.createTimeEnd_DG!=null">
+			and pc.create_time_ &lt;=#{map.createTimeEnd_DG}
+		</if>
+		
+		<if test="map.subject!=null">
+			and pc.subject_ like #{map.subject}
+		</if>
+		
+		<if test="map.typeId!=null">
+			and pc.type_id_ = #{map.typeId}
+		</if>
+		
+		<if test="map.type!=null">
+			and pc.type_ = #{map.type}
+		</if>
+		
+		<choose>
+			<when test="map.orderBySql==null">
+				order by pc.create_time_ desc
+			</when>
+			<otherwise>
+				ORDER BY ${map.orderBySql}
+			</otherwise>
+		</choose>
+		
+	</select>
+	
+	
+	
+	
+</mapper>

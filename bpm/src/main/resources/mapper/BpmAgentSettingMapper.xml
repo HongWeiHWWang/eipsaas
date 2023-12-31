@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmAgentSettingDao">
+	<resultMap id="BpmAgentSetting" type="com.hotent.bpm.persistence.model.BpmAgentSetting">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="subject" column="subject_" jdbcType="VARCHAR"/>
+		<result property="authId" column="auth_id_" jdbcType="VARCHAR"/>
+		<result property="authName" column="auth_name_" jdbcType="VARCHAR"/>
+		<result property="startDate" column="start_date_" jdbcType="TIMESTAMP"/>
+		<result property="endDate" column="end_date_" jdbcType="TIMESTAMP"/>
+		<result property="isEnabled" column="is_enabled_" jdbcType="VARCHAR"/>
+		<result property="agentId" column="agent_id_" jdbcType="VARCHAR"/>
+		<result property="agent" column="agent_" jdbcType="VARCHAR"/>
+		<result property="flowKey" column="flow_key_" jdbcType="VARCHAR"/>
+		<result property="type" column="type_" jdbcType="NUMERIC"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="update_time_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+
+	<select id="getSettingByFlowAndAuthidAndDate" parameterType="java.util.Map" resultMap="BpmAgentSetting">
+		<![CDATA[
+		SELECT S.* FROM bpm_agent_setting S 
+		WHERE
+		S.auth_id_ = #{authid} AND
+		S.is_enabled_ = 'Y' AND      
+       	 (
+            S.start_date_ <= #{date,jdbcType=TIMESTAMP}
+            AND 
+            S.end_date_ >= #{date,jdbcType=TIMESTAMP}
+      	
+        )
+        AND 
+        (
+        	S.TYPE_=1
+        	or
+        	(	
+        		S.TYPE_=2
+        		AND 
+        		S.id_ IN 
+	       		(
+	        	 SELECT setting_id_ FROM bpm_agent_def  DEF WHERE DEF.flow_key_ = #{flowkey}
+	       		)
+        	)
+        	or
+        	(
+        		S.TYPE_=3    		
+	       		AND
+		       	(
+		       		S.flow_key_ = #{flowkey}
+		       	)
+		    )
+        )
+       ]]>
+	</select>
+	
+	<select id="getByAuthAndDate" parameterType="java.util.Map"  resultType="java.lang.Integer">
+		<![CDATA[
+		SELECT count(*) FROM bpm_agent_setting S 
+		WHERE S.auth_id_ = #{authid} AND  S.type_=1 and
+		S.is_enabled_ = 'Y' AND     
+       	 (
+       	 	(s.start_date_>=#{startDate,jdbcType=TIMESTAMP} and s.start_date_<=#{endDate,jdbcType=TIMESTAMP})
+       	 	or
+       	 	(s.end_date_>=#{startDate,jdbcType=TIMESTAMP} and s.end_date_<=#{endDate,jdbcType=TIMESTAMP})
+       	 	or
+       	 	(s.end_date_>=#{endDate,jdbcType=TIMESTAMP} and s.start_date_<=#{startDate,jdbcType=TIMESTAMP})
+       	 	or
+       	 	(s.end_date_<=#{endDate,jdbcType=TIMESTAMP} and s.start_date_>=#{startDate,jdbcType=TIMESTAMP})
+        )
+         
+		]]>
+		<if test="settingId!=null">
+			and S.id_&lt;>#{settingId}
+		</if>  
+	</select>
+	
+	
+	<select id="getByAuthDateFlowKey" resultType="java.lang.Integer">
+		<![CDATA[
+		SELECT count(*) FROM bpm_agent_setting a ,bpm_agent_def b
+		WHERE a.auth_id_ = #{authid} AND
+		a.is_enabled_ = 'Y' AND     
+       	 (
+       	 	(a.start_date_>=#{startDate,jdbcType=TIMESTAMP} and a.start_date_<=#{endDate,jdbcType=TIMESTAMP})
+       	 	or
+       	 	(a.end_date_>=#{startDate,jdbcType=TIMESTAMP} and a.end_date_<=#{endDate,jdbcType=TIMESTAMP})
+       	 	or
+       	 	(a.end_date_>=#{endDate,jdbcType=TIMESTAMP} and a.start_date_<=#{startDate,jdbcType=TIMESTAMP})
+       	 	or
+       	 	(a.end_date_<=#{endDate,jdbcType=TIMESTAMP} and a.start_date_>=#{startDate,jdbcType=TIMESTAMP})
+        )
+        and a.id_=b.setting_id_ and b.flow_key_=#{flowKey}
+        
+		]]>
+		<if test="settingId!=null">
+			and a.id_&lt;>#{settingId}
+		</if>   
+	</select>
+	
+	
+	
+	
+	<select id="getForCondition" resultType="java.lang.Integer">
+		<![CDATA[
+		SELECT count(*) FROM bpm_agent_setting S 
+		WHERE S.auth_id_ = #{authid} AND  S.type_=3 and
+		S.is_enabled_ = 'Y' AND     
+       	 (
+       	 	(s.start_date_>=#{startDate,jdbcType=TIMESTAMP} and s.start_date_<=#{endDate,jdbcType=TIMESTAMP})
+       	 	or
+       	 	(s.end_date_>=#{startDate,jdbcType=TIMESTAMP} and s.end_date_<=#{endDate,jdbcType=TIMESTAMP})
+       	 	or
+       	 	(s.end_date_>=#{endDate,jdbcType=TIMESTAMP} and s.start_date_<=#{startDate,jdbcType=TIMESTAMP})
+       	 	or
+       	 	(s.end_date_<=#{endDate,jdbcType=TIMESTAMP} and s.start_date_>=#{startDate,jdbcType=TIMESTAMP})
+        )
+        and s.flow_key_=#{flowKey}
+		]]>
+		<if test="settingId!=null">
+			and s.id_&lt;>#{settingId}
+		</if>
+		
+	</select>
+	
+	
+	
+</mapper>

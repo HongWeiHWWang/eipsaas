@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.OrgUserDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.OrgUser">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="orgId" column="ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="isMaster" column="IS_MASTER_" jdbcType="NUMERIC"/>
+		<result property="isCharge" column="IS_CHARGE_" jdbcType="NUMERIC"/>
+		<result property="relId" column="POS_ID_" jdbcType="VARCHAR"/>
+		<result property="startDate" column="START_DATE_" jdbcType="TIMESTAMP"/>
+		<result property="endDate" column="END_DATE_" jdbcType="TIMESTAMP"/>
+		<result property="isRelActive" column="IS_REL_ACTIVE_" jdbcType="NUMERIC"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="orgCode" column="ORG_CODE_" jdbcType="VARCHAR"/>
+		<result property="posCode" column="POS_CODE_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<parameterMap id="OrgUser" type="com.hotent.uc.model.OrgUser" />
+	
+	<sql id="Base_Column_List">
+		ID_,ORG_ID_,USER_ID_,IS_MASTER_,IS_CHARGE_,POS_ID_,START_DATE_,END_DATE_,IS_REL_ACTIVE_,UPDATE_TIME_,IS_DELE_,VERSION_
+	</sql>
+	
+	
+	
+	<select id="getByParms" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_ORG_USER 
+		WHERE IS_DELE_!='1'
+		<if test="orgId!=null">
+			and ORG_ID_=#{orgId}
+		</if>
+		<if test="userId!=null">
+			and USER_ID_=#{userId}
+		</if>
+		<if test="relId!=null">
+			and POS_ID_=#{relId}
+		</if>
+		<if test="relIdNull!=null">
+			and POS_ID_  is null
+		</if>
+		<if test="isMaster!=null">
+			and IS_MASTER_=#{isMaster}
+		</if>
+		<if test="isCharge!=null">
+			and IS_CHARGE_=#{isCharge}
+		</if>
+	</select>
+	
+	<select id="queryParms" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_ORG_USER 
+		WHERE 1=1
+		<if test="orgId!=null">
+			and ORG_ID_=#{orgId}
+		</if>
+		<if test="userId!=null">
+			and USER_ID_=#{userId}
+		</if>
+		<if test="relId!=null">
+			and POS_ID_=#{relId}
+		</if>
+		<if test="relIdNull!=null">
+			and POS_ID_  is null
+		</if>
+		<if test="isMaster!=null">
+			and IS_MASTER_=#{isMaster}
+		</if>
+		<if test="isCharge!=null">
+			and IS_CHARGE_=#{isCharge}
+		</if>
+	</select>
+	
+	<select id="getByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select a.*, b.CODE_ ORG_CODE_, c.CODE_ POS_CODE_ from UC_ORG_USER a 
+		inner join UC_ORG b      on a.ORG_ID_=b.ID_
+		left join UC_ORG_POST c on a.POS_ID_=c.ID_
+		inner join UC_USER u     on a.USER_ID_=u.ID_ 
+		where u.ACCOUNT_=#{account}
+	</select>
+	
+	
+	
+	<update id="updateUserPost"  parameterType="java.util.Map">
+		UPDATE UC_ORG_USER SET,UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+        POS_ID_=#{relId,jdbcType=VARCHAR}
+		WHERE
+		ID_=#{id}
+	</update>
+	
+	<!-- 设置用户的主岗位-->
+	<update id="updateUserMasterOrg" parameterType="java.util.Map" >
+      update UC_ORG_USER set IS_MASTER_=1,UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}  where ID_=#{id}   
+	</update>
+	
+	<!--取消用户所有主岗位-->
+	<update id="cancelUserMasterOrg" parameterType="java.util.Map" >
+	<![CDATA[
+	  update UC_ORG_USER set IS_MASTER_=0,UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP} where USER_ID_=#{userId}  and ORG_ID_ in (select distinct(ID_) from UC_ORG where DEM_ID_=#{demId})
+	]]>
+	</update>
+
+    <!--根据用户ID取消用户主部门-->
+    <update id="cancelUserMasterOrgByUserId" parameterType="java.util.Map" >
+	  update UC_ORG_USER set IS_MASTER_=0,UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP} where USER_ID_=#{userId}
+	</update>
+	
+	<!-- 将部门的主负责人取消， 设置为负责人  -->
+	<update id="cancleMainCharge" parameterType="java.util.Map" >
+	<![CDATA[
+	  update UC_ORG_USER set IS_CHARGE_=1,UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP} where IS_CHARGE_=2 and ORG_ID_=#{orgId} 
+	]]>
+	</update>
+	
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_ORG_USER WHERE IS_DELE_='1' 
+	</delete>
+	
+	<delete id="removeByOrgIdUserId" parameterType="java.util.Map">
+		UPDATE UC_ORG_USER SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE
+		USER_ID_=#{userId} and ORG_ID_ =#{orgId}
+	</delete>
+	<delete id="removeByUserId" parameterType="java.util.Map">
+		UPDATE UC_ORG_USER SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE
+		USER_ID_=#{userId}
+	</delete>
+	
+	<delete id="delByOrgId" parameterType="java.util.Map">
+		UPDATE UC_ORG_USER SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP} where ORG_ID_ = #{orgId}
+	</delete>
+	
+	<select id="getUserByGroup" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT u.ID_ "userId",u.MOBILE_ "mobile",u.WEIXIN_ "weixin",u.EMAIL_ "email", u.FULLNAME_ "fullName",u.ACCOUNT_ "account", 
+		u.CREATE_TIME_ "createTime",u.SEX_ "sex",u.STATUS_ "status",orguser.ID_ "orgUserId", org.ID_ "orgId", org.NAME_ "orgName" ,org.CODE_ "orgCode",
+			orguser.IS_MASTER_ "isMaster",orguser.IS_CHARGE_ "isCharge",rel.POS_NAME_ "relName",rel.ID_ as "relId",orguser.IS_REL_ACTIVE_ "isRelActive",
+			orguser.POS_ID_ "relId",rel.CODE_ "postCode",orguser.START_DATE_ "startDate",orguser.END_DATE_ "endDate",orguser.UPDATE_TIME_ "orgUserUpdateTime"
+			  FROM  UC_USER u LEFT JOIN  UC_ORG_USER orguser 
+			on u.ID_=orguser.USER_ID_
+		 LEFT JOIN UC_ORG org on org.ID_=orguser.ORG_ID_ LEFT JOIN UC_ORG_POST rel ON orguser.POS_ID_=rel.ID_ 
+		
+		${ew.customSqlSegment} 
+        <if test="ew.paramNameValuePairs.group!=null">
+            GROUP BY u.ID_
+        </if>
+	</select>
+
+    <select id="getUserNumByOrgId" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT u.ID_ "userId" FROM  UC_USER u LEFT JOIN  UC_ORG_USER orguser on u.ID_=orguser.USER_ID_
+		 LEFT JOIN UC_ORG org on org.ID_=orguser.ORG_ID_ LEFT JOIN UC_ORG_POST rel ON orguser.POS_ID_=rel.ID_
+		 WHERE u.IS_DELE_!='1' AND orguser.IS_DELE_!='1' AND org.IS_DELE_!='1'
+        <if test="orgId!=null">
+            and org.ID_ = #{orgId}
+        </if>
+        <if test="group!=null">
+            GROUP BY u.ID_
+        </if>
+    </select>
+
+	<select id="getUserNumByOrgCode" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT u.ID_ "userId" FROM  UC_USER u LEFT JOIN  UC_ORG_USER orguser on u.ID_=orguser.USER_ID_
+		LEFT JOIN UC_ORG org on org.ID_=orguser.ORG_ID_ LEFT JOIN UC_ORG_POST rel ON orguser.POS_ID_=rel.ID_
+		WHERE u.IS_DELE_!='1' AND orguser.IS_DELE_!='1' AND org.IS_DELE_!='1'
+		<if test="orgCode!=null">
+			and org.CODE_ = #{orgCode}
+		</if>
+		<if test="group!=null">
+			GROUP BY u.ID_
+		</if>
+	</select>
+
+	<select id="getChargesByOrgId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_ORG_USER 
+		WHERE IS_DELE_!='1' 
+		<if test="orgId!=null">
+			and ORG_ID_=#{orgId}
+		</if>
+		<if test="isMain!=null">
+			and IS_CHARGE_=#{isMain}
+		</if>
+		<if test="isMain==null">
+			and IS_CHARGE_!='0'
+		</if>
+	</select>
+	
+	<select id="getOrgUserMaster"  parameterType="java.util.Map"  resultMap="BaseResultMap">
+		SELECT userOrg.* FROM UC_ORG_USER userOrg left join UC_ORG org on userOrg.ORG_ID_=ORG.ID_
+		WHERE IS_MASTER_=1 AND userOrg.IS_DELE_!='1' 
+		<if test="userId!=null">
+			and userOrg.USER_ID_=#{userId}
+		</if>
+		<if test="demId!=null">
+			and org.DEM_ID_=#{demId}
+		</if>
+	</select>
+	
+	<select id="getMainPostOrOrgByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT
+			userOrg.*
+		FROM
+			UC_ORG_USER userOrg
+		LEFT JOIN UC_ORG org ON userOrg.ORG_ID_ = ORG.ID_
+		LEFT JOIN uc_demension ud ON org.DEM_ID_ = ud.ID_
+		WHERE
+			IS_MASTER_ = 1
+		AND userOrg.IS_DELE_ != '1'
+		AND userOrg.USER_ID_ = #{userId}
+		ORDER BY
+			userOrg.POS_ID_ DESC,
+			ud.IS_DEFAULT_ DESC
+	</select>
+	
+	<select id="getByOrgCodeAndroleCode" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_ORG_USER 
+		WHERE IS_DELE_!='1' AND (ORG_ID_ in(select ID_ FROM uc_org where CODE_=#{orgCode} AND IS_DELE_!='1' )
+		OR USER_ID_ in(select USER_ID_ FROM uc_user_role where ROLE_ID_ in(select ID_ from uc_role where CODE_=#{roleCode} AND IS_DELE_!='1' )) AND IS_DELE_!='1' )
+	</select>
+	
+	<select id="getByPostCodeAndOrgCode" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT a.* FROM UC_ORG_USER a LEFT JOIN uc_org b on a.ORG_ID_= b.ID_ LEFT JOIN uc_org_post c on a.POS_ID_=c.ID_
+		where b.CODE_=#{orgCode} and c.CODE_=#{postCode} AND a.IS_DELE_!='1' AND b.IS_DELE_!='1' AND c.IS_DELE_!='1' 
+	</select>
+	
+		<!--检查岗位是否在设置的有效期内-->
+	<update id="checkIsInActiveTime" parameterType="java.util.Map" >
+		<![CDATA[
+		 UPDATE UC_ORG_USER set is_rel_active_=0 ,UPDATE_TIME_ = #{startDate}  where is_rel_active_ !=0 and ( START_DATE_  >#{startDate} or END_DATE_<#{endDate})  
+		]]>
+	</update>
+	
+	
+	<select id="getOrgUserData" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT u.FULLNAME_ "fullName",u.ACCOUNT_ "account",u.USER_NUMBER_ "userNumber",u.ID_ "userId",u.MOBILE_ "mobile",u.WEIXIN_ "weixin",u.EMAIL_ "email",org.ID_ "orgId", org.NAME_ "orgName" ,org.CODE_ "orgCode",org.path_ "orgPath",org.path_name_ "orgPathName",  
+		u.CREATE_TIME_ "createTime",u.SEX_ "sex",u.STATUS_ "status",orguser.ID_ "orgUserId", 
+			orguser.IS_MASTER_ "isMaster",orguser.IS_CHARGE_ "isCharge",rel.POS_NAME_ "relName",orguser.IS_REL_ACTIVE_ "isRelActive",
+			orguser.POS_ID_ "relId",rel.CODE_ "postCode"
+			  FROM  UC_USER u LEFT JOIN  UC_ORG_USER orguser 
+			on u.ID_=orguser.USER_ID_
+		 LEFT JOIN UC_ORG org on org.ID_=orguser.ORG_ID_ LEFT JOIN UC_ORG_POST rel ON orguser.POS_ID_=rel.ID_ 
+		 WHERE u.IS_DELE_!='1' AND orguser.IS_DELE_!='1' AND org.IS_DELE_!='1'
+		<if test="ew.paramNameValuePairs.whereSql!=null">
+			and ${ew.paramNameValuePairs.whereSql}
+		</if>
+		<if test="ew.paramNameValuePairs.orgId!=null">
+			and org.ID_ = #{ew.paramNameValuePairs.orgId}
+		</if>
+	</select>
+	
+	<select id="getUserOrgPage" parameterType="java.util.Map" resultType="java.util.HashMap">
+		select * from (SELECT distinct org.NAME_ as "orgName",org.CODE_ as "orgCode",org.ID_ as "orgId",orguser.IS_MASTER_ as "isMaster",orguser.ID_ as "orgUserId",	orguser.POS_ID_ as "posId",uop.pos_name_ as "posName",uop.code_ as "posCode",
+		ud.DEM_NAME_ as "demName",u.ACCOUNT_ as "account",u.FULLNAME_ as "userName",orguser.IS_CHARGE_ "isCharge",u.STATUS_ "status",(case when uop.id_ is null then '0' else uop.id_ end) as 'uopId' FROM  UC_ORG_USER orguser
+		inner join UC_ORG org on org.ID_=orguser.ORG_ID_
+		inner join UC_USER u on u.ID_=orguser.USER_ID_
+		inner join uc_demension ud on org.DEM_ID_ = ud.ID_
+		left join uc_org_post uop on uop.ID_ = orguser.POS_ID_
+		WHERE org.IS_DELE_!='1' AND orguser.IS_DELE_!='1' ) relTable
+		${ew.customSqlSegment} 
+	</select>
+
+    <update id="deleteOrgById" parameterType="java.util.Map">
+		update uc_org_user SET IS_DELE_='1' WHERE ORG_ID_=#{orgId} AND USER_ID_=#{userId} AND POS_ID_ IS NULL
+	</update>
+	
+	<update id="updateUserOrgByPostId" parameterType="java.util.Map">
+		update uc_org_user SET ORG_ID_=#{orgId} where  POS_ID_ = #{postId}
+	</update>
+
+
+	<select id="getUserByGroupList" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT count(*) as "count",GROUP_CONCAT(orguser.IS_MASTER_) "isMaster", u.id_ as "userId"
+		FROM UC_ORG_USER orguser
+		INNER JOIN UC_ORG org
+		ON org.ID_=orguser.ORG_ID_
+		INNER JOIN UC_USER u
+		ON u.ID_=orguser.USER_ID_
+		INNER JOIN uc_demension ud
+		ON org.DEM_ID_ = ud.ID_
+		LEFT JOIN uc_org_post uop
+		ON uop.ID_ = orguser.POS_ID_ and org.ID_ = orguser.ORG_ID_
+
+		${ew.customSqlSegment}
+	</select>
+	
+	
+	<select id="getUserByGroupList" databaseId="pg" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT count(*) as "count",string_agg(orguser.IS_MASTER_::VARCHAR, ',') "isMaster", u.id_ as "userId"
+		FROM UC_ORG_USER orguser
+		INNER JOIN UC_ORG org
+		ON org.ID_=orguser.ORG_ID_
+		INNER JOIN UC_USER u
+		ON u.ID_=orguser.USER_ID_
+		INNER JOIN uc_demension ud
+		ON org.DEM_ID_ = ud.ID_
+		LEFT JOIN uc_org_post uop
+		ON uop.ID_ = orguser.POS_ID_ and org.ID_ = orguser.ORG_ID_
+
+		${ew.customSqlSegment}
+	</select>
+	<select id="getUserByGroupList" parameterType="java.util.Map" resultType="java.util.HashMap" databaseId="oracle">
+		SELECT count(*) as "count",to_char(WM_CONCAT(orguser.IS_MASTER_)) "isMaster", u.id_ as "userId"
+		FROM UC_ORG_USER orguser
+		INNER JOIN UC_ORG org
+		ON org.ID_=orguser.ORG_ID_
+		INNER JOIN UC_USER u
+		ON u.ID_=orguser.USER_ID_
+		INNER JOIN uc_demension ud
+		ON org.DEM_ID_ = ud.ID_
+		LEFT JOIN uc_org_post uop
+		ON uop.ID_ = orguser.POS_ID_ and org.ID_ = orguser.ORG_ID_
+
+		${ew.customSqlSegment}
+	</select>
+</mapper>

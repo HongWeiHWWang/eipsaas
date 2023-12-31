@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.sys.persistence.dao.SysTypeDao">
+	<resultMap id="SysType" type="com.hotent.sys.persistence.model.SysType">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="typeGroupKey" column="type_group_key_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="typeKey" column="type_key_" jdbcType="VARCHAR"/>
+		<result property="struType" column="stru_type_" jdbcType="NUMERIC"/>
+		<result property="parentId" column="parent_id_" jdbcType="VARCHAR"/>
+		<result property="depth" column="depth_" jdbcType="NUMERIC"/>
+		<result property="path" column="path_" jdbcType="VARCHAR"/>
+		<result property="isLeaf" column="is_leaf_" jdbcType="VARCHAR"/>
+		<result property="ownerId" column="owner_id_" jdbcType="VARCHAR"/>
+		<result property="sn" column="sn_" jdbcType="NUMERIC"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="update_time_" jdbcType="TIMESTAMP"/>
+		<result property="icon" column="ICON_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getByKey"   parameterType="java.lang.String" resultMap="SysType">
+		SELECT * FROM portal_sys_type 
+		WHERE 
+		type_key_=#{typeKey}
+	</select>
+	
+	<select id="getByParentId" parameterType="java.util.Map" resultMap="SysType">
+		select t.*, (select count(*) from portal_sys_type a where a.parent_id_=t.id_) childNodes  
+		from portal_sys_type t  
+		where parent_id_=#{parentId}
+		order by sn_
+	</select>
+	
+	<select id="getByGroupKey" parameterType="java.util.Map" resultMap="SysType">
+		select t.* ,(select count(*) from portal_sys_type a where a.parent_id_=t.id_) childNodes 
+		 from portal_sys_type t  
+		where t.type_group_key_= #{groupKey}
+		order by t.sn_
+	</select>
+	
+	<select id="getByPath" parameterType="java.util.Map" resultMap="SysType">
+		select t.* 
+		 from portal_sys_type t  
+		where t.path_ LIKE '${path}%' 
+		and t.path_ != #{path} 
+		order by t.sn_
+	</select>
+	
+	<select id="isKeyExist" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT count(*) FROM portal_sys_type where type_key_ = #{typeKey,jdbcType=VARCHAR} and type_group_key_=#{typeGroupKey,jdbcType=VARCHAR}
+		<if test="id!=null"> AND id_&lt;>#{id}</if>
+	</select>
+	
+	<select id="getPrivByPartId" parameterType="java.util.Map" resultMap="SysType">
+		select t.* 
+		from portal_sys_type t  
+		where t.parent_id_= #{parentId} and (t.owner_id_= 0 or t.owner_id_ = #{userId})
+		order by t.sn_
+	</select>
+	
+	<select id="getTypesByParentId" parameterType="java.util.Map" resultMap="SysType">
+		select * 
+		from portal_sys_type   
+		where type_group_key_ = #{groupKey} 
+		and parent_id_ = #{parentId}
+	</select>
+	
+	<select id="getByTypeKeyAndGroupKey" parameterType="java.util.Map" resultMap="SysType">
+		select * 
+		from portal_sys_type   
+		where type_group_key_ = #{groupKey} 
+		and type_key_ = #{typeKey}
+	</select>
+	
+	<select id="getByTypeKey" parameterType="java.lang.String" resultMap="SysType">
+		select * 
+		from portal_sys_type   
+		where type_key_ = #{typeKey}
+	</select>
+	
+	<update id="updSn" parameterType="java.util.Map">
+		UPDATE portal_sys_type SET sn_=#{sn}  WHERE id_=#{typeId}
+	</update>
+	
+</mapper>

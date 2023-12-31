@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.runtime.dao.BpmTaskSignSequenceDao">
+	<resultMap id="BpmTaskSignSequence" type="com.hotent.runtime.model.BpmTaskSignSequence">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="instanceId" column="INSTANCE_ID_" jdbcType="VARCHAR"/>
+		<result property="nodeId" column="NODE_ID_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="TASK_ID_" jdbcType="VARCHAR"/>
+		<result property="nextTaskId" column="NEXT_TASK_ID_" jdbcType="VARCHAR"/>
+		<result property="parentId" column="PARENT_ID_" jdbcType="VARCHAR"/>
+		<result property="status" column="STATUS_" jdbcType="VARCHAR"/>
+		<result property="path" column="PATH_" jdbcType="VARCHAR"/>
+		<result property="seq" column="SEQ_" jdbcType="NUMERIC"/>
+		<result property="executor" column="EXECUTOR_" jdbcType="VARCHAR"/>
+		<result property="isRead" column="IS_READ_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<select id="getByTaskId" parameterType="java.lang.String" resultMap="BpmTaskSignSequence">
+		SELECT * FROM bpm_task_sign_sequence 
+		WHERE 
+		TASK_ID_=#{id}
+	</select>
+	
+	<select id="getByStatusAndPath" parameterType="java.lang.String" resultMap="BpmTaskSignSequence">
+		SELECT * FROM bpm_task_sign_sequence 
+		WHERE 
+		PATH_=#{path} and STATUS_=#{status}
+		ORDER BY SEQ_ ASC
+	</select>
+	<select id="getInApprovalByInstNodeId" parameterType="java.lang.String" resultMap="BpmTaskSignSequence">
+		SELECT sequence.*
+		,(select IS_READ_ from bpm_check_opinion opinion where  opinion.TASK_ID_=sequence.TASK_ID_ and opinion.STATUS_ = 'awaiting_check' ) IS_READ_
+		FROM bpm_task_sign_sequence sequence
+		WHERE 
+		 sequence.STATUS_='inApproval' and sequence.INSTANCE_ID_ = #{instanceId} and sequence.PATH_ like  '${rootTaskId}%' and sequence.NODE_ID_ = #{nodeId}
+	</select>
+	
+	<update id="updateStatus" parameterType="java.lang.String">
+		UPDATE bpm_task_sign_sequence SET
+		STATUS_=#{statusb,jdbcType=VARCHAR}
+		WHERE
+		INSTANCE_ID_=#{procInstId} and PATH_ like  '${rootTaskId}%'  and STATUS_=#{statusa}
+	</update>
+	
+	<update id="updateStatusByPath" parameterType="java.lang.String">
+		UPDATE bpm_task_sign_sequence SET
+		STATUS_=#{statusb,jdbcType=VARCHAR}
+		WHERE
+		PATH_=#{path} and STATUS_=#{statusa}
+	</update>
+	
+	<delete id="removeByPath" parameterType="java.lang.String">
+		DELETE FROM bpm_task_sign_sequence 
+		WHERE 
+		PATH_  LIKE '${path}%'
+	</delete>
+	
+	<delete id="removeByInstNodeId" parameterType="java.lang.String">
+		DELETE FROM bpm_task_sign_sequence 
+		<where>
+			INSTANCE_ID_ = #{instanceId} and PATH_ like '${rootTaskId}%'
+			<if test="nodeId !=null ">
+				 and NODE_ID_ = #{nodeId}
+			</if>
+		</where>
+	</delete>
+	
+	
+	
+	
+</mapper>

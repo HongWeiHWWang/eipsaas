@@ -1,0 +1,9 @@
+com\hotent\activemq\model\JmsTableTypeFiledDetail.class
+com\hotent\activemq\model\JmsMessage.class
+com\hotent\activemq\model\JmsSysTypeChangeMessage.class
+com\hotent\activemq\Application.class
+com\hotent\activemq\producer\DefaultJmsProducer.class
+com\hotent\activemq\model\JmsTableTypeConf.class
+com\hotent\activemq\exception\JmsExceptionListener.class
+com\hotent\activemq\consumer\JmsSysTypeChangeConsumer.class
+com\hotent\activemq\config\ActiveMQJmsConfig.class

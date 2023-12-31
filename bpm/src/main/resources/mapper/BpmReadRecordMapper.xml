@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.hotent.bpm.persistence.dao.BpmReadRecordDao">
+	<resultMap id="BpmReadRecord"
+		type="com.hotent.bpm.persistence.model.BpmReadRecord">
+		<id property="id" column="id_" jdbcType="VARCHAR" />
+		<result property="procDefId" column="proc_def_id_"
+			jdbcType="VARCHAR" />
+		<result property="supInstId" column="sup_inst_id_"
+			jdbcType="VARCHAR" />
+		<result property="procInstId" column="proc_inst_id_"
+			jdbcType="VARCHAR" />
+		<result property="taskId" column="task_id_" jdbcType="VARCHAR" />
+		<result property="taskKey" column="task_key_"
+			jdbcType="VARCHAR" />
+		<result property="taskName" column="task_name_"
+			jdbcType="VARCHAR" />
+		<result property="reader" column="reader_" jdbcType="VARCHAR" />
+		<result property="readerName" column="reader_name_"
+			jdbcType="VARCHAR" />
+		<result property="readTime" column="read_time_"
+			jdbcType="TIMESTAMP" />
+		<result property="orgId" column="org_id_" jdbcType="VARCHAR" />
+		<result property="orgPath" column="org_path_"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="archiveHistory" parameterType="java.lang.String">
+		insert into
+		bpm_read_record_hi
+		(id_,proc_def_id_,sup_inst_id_,proc_inst_id_,task_id_,task_key_,task_name_,token_,qualfieds_,qualfied_names_,auditor_,auditor_name_,opinion_,status_,form_def_id_,form_name_,create_time_,assign_time_,complete_time_,dur_ms_,files_,interpose_,org_id_,org_path_)
+		select
+		id_,proc_def_id_,sup_inst_id_,proc_inst_id_,task_id_,task_key_,task_name_,token_,qualfieds_,qualfied_names_,auditor_,auditor_name_,opinion_,status_,form_def_id_,form_name_,create_time_,assign_time_,complete_time_,dur_ms_,files_,interpose_,org_id_,org_path_
+		from bpm_read_record where proc_inst_id_=#{procInstId}
+	</insert>
+
+	<select id="selectPage" resultMap="BpmReadRecord">
+        <if test="ew.paramNameValuePairs.distinct!=null and ew.paramNameValuePairs.dbType=='mysql'">
+            select id_,proc_def_id_,sup_inst_id_,proc_inst_id_,task_id_,task_key_,
+            task_name_,reader_,reader_name_,org_id_,org_path_,max(read_time_) as
+            read_time_
+            from bpm_read_record
+            ${ew.customSqlSegment}
+        </if>
+        <if test="ew.paramNameValuePairs.distinct==null and ew.paramNameValuePairs.dbType=='mysql'">
+            select id_,proc_def_id_,sup_inst_id_,proc_inst_id_,task_id_,task_key_,
+            task_name_,reader_,reader_name_,org_id_,org_path_,read_time_
+            from bpm_read_record
+            ${ew.customSqlSegment}
+        </if>
+
+        <if test="ew.paramNameValuePairs.distinct!=null and ew.paramNameValuePairs.dbType=='oracle'">
+            SELECT test.* FROM (SELECT
+            id_,proc_def_id_,sup_inst_id_,proc_inst_id_,task_id_,
+            task_key_,task_name_,reader_,reader_name_,org_id_,org_path_,read_time_,
+            row_number() over(partition by reader_ order by read_time_ desc) as
+            row_flg
+            FROM bpm_read_record
+            ${ew.customSqlSegment}
+            ) test
+            where test.row_flg = '1'
+        </if>
+        <if test="ew.paramNameValuePairs.distinct==null and ew.paramNameValuePairs.dbType=='oracle'">
+            select
+            id_,proc_def_id_,sup_inst_id_,proc_inst_id_,task_id_,task_key_,
+            task_name_,reader_,reader_name_,org_id_,org_path_,read_time_
+            from bpm_read_record
+            ${ew.customSqlSegment}
+        </if>
+        <if test="ew.paramNameValuePairs.distinct!=null and ew.paramNameValuePairs.dbType=='mysql'">
+            GROUP BY reader_
+        </if>
+        ORDER BY read_time_ desc
+	</select>
+
+	<select id="getByTaskId" parameterType="java.util.Map"
+		resultMap="BpmReadRecord">
+		SELECT * FROM bpm_read_record
+		WHERE
+		task_id_=#{taskId}
+	</select>
+
+	<select id="getByTaskIds" parameterType="java.util.Map"
+		resultMap="BpmReadRecord">
+		SELECT * FROM bpm_read_record
+		WHERE
+		task_id_ in
+		<foreach collection="taskIds" index="index" item="taskId"
+			open="(" separator="," close=")">
+			#{taskId}
+		</foreach>
+	</select>
+
+
+	<select id="getByTaskIdandrecord" parameterType="java.util.Map"
+		resultMap="BpmReadRecord">
+		SELECT * FROM bpm_read_record
+		WHERE
+		task_id_=#{taskId}
+		<if test="reader!=null">
+			and reader_ in
+			<foreach collection="reader" index="index" item="readerId"
+				open="(" separator="," close=")">
+				#{readerId}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="getByinstidandrecord" parameterType="java.util.Map"
+		resultMap="BpmReadRecord">
+		SELECT
+		*
+		FROM
+		bpm_read_record
+		WHERE
+		PROC_INST_ID_ = #{instId}
+		AND TASK_ID_ != ''
+		AND READER_ != #{reader}
+	</select>
+
+	<select id="getByTaskIdAction" parameterType="java.util.Map"
+		resultMap="BpmReadRecord">
+		SELECT * FROM bpm_read_record
+		WHERE
+		task_id_=#{taskId}
+	</select>
+
+
+	<select id="queryByProcInstId" parameterType="java.lang.String"
+		resultMap="BpmReadRecord">
+		SELECT * FROM bpm_read_record
+		WHERE
+		proc_inst_id_=#{procInstId}
+	</select>
+
+	<select id="getBySupInstId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select distinct t.proc_inst_id_ FROM bpm_read_record t
+		WHERE t.sup_inst_id_=#{procInstId}
+	</select>
+
+	<select id="getSupInstByInstId" resultType="java.lang.String">
+		select distinct
+		t.sup_inst_id_
+		FROM bpm_read_record t WHERE t.proc_inst_id_=#{procInstId} and
+		sup_inst_id_!='0'
+	</select>
+
+
+	<select id="getByInstIds" parameterType="java.lang.String"
+		resultMap="BpmReadRecord">
+		SELECT * FROM bpm_read_record
+		WHERE proc_inst_id_ in
+		<foreach collection="list" index="index" item="instId"
+			open="(" separator="," close=")">
+			#{instId}
+		</foreach>
+		order by read_time_ desc
+	</select>
+
+
+	<delete id="delByInstList">
+		DELETE FROM bpm_read_record WHERE proc_inst_id_ in
+		<foreach collection="list" index="index" item="instId"
+			open="(" separator="," close=")">
+			#{instId}
+		</foreach>
+	</delete>
+
+
+	<select id="getByInstNodeId" parameterType="java.util.Map"
+		resultMap="BpmReadRecord">
+		SELECT * FROM bpm_read_record
+		WHERE proc_inst_id_ = #{instId}
+		AND task_key_ = #{nodeId}
+		order by read_time_ desc
+	</select>
+
+	<select id="getReadByOwnerCountWithTaskId"
+		resultType="java.lang.Integer">
+		SELECT
+		count(id_)
+		FROM
+		bpm_read_record
+		WHERE
+		task_id_ = #{taskId}
+		AND reader_ = (
+		SELECT
+		b.OWNER_ID_
+		FROM
+		bpm_task b
+		WHERE
+		b.id_ = #{taskId}
+		)
+	</select>
+</mapper>

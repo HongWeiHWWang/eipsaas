@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.runtime.dao.BpmTaskTransRecordDao">
+	<resultMap id="BpmTaskTransRecord" type="com.hotent.runtime.model.BpmTaskTransRecord">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="TASK_ID_" jdbcType="VARCHAR"/>
+		<result property="taskName" column="TASK_NAME_" jdbcType="VARCHAR"/>
+		<result property="taskSubject" column="TASK_SUBJECT_" jdbcType="VARCHAR"/>
+		<result property="status" column="STATUS_" jdbcType="NUMERIC"/>
+		<result property="transUsers" column="TRANS_USERS_" jdbcType="VARCHAR"/>
+		<result property="transUserIds" column="TRANS_USER_IDS_" jdbcType="VARCHAR"/>
+		<result property="transOpinion" column="TRANS_OPINION_" jdbcType="VARCHAR"/>
+		<result property="decideType" column="DECIDE_TYPE" jdbcType="VARCHAR"/>
+		<result property="action" column="ACTION_" jdbcType="VARCHAR"/>
+		<result property="voteType" column="VOTE_TYPE_" jdbcType="VARCHAR"/>
+		<result property="voteAmount" column="VOTE_AMOUNT_" jdbcType="NUMERIC"/>
+		<result property="signType" column="SIGN_TYPE_" jdbcType="VARCHAR"/>
+		<result property="totalAmount" column="TOTAL_AMOUNT_" jdbcType="NUMERIC"/>
+		<result property="agreeAmount" column="AGREE_AMOUNT_" jdbcType="NUMERIC"/>
+		<result property="opposeAmount" column="OPPOSE_AMOUNT_" jdbcType="NUMERIC"/>
+		<result property="transOwner" column="TRANS_OWNER_" jdbcType="VARCHAR"/>
+		<result property="creator" column="CREATOR_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="transTime" column="TRANS_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="defName" column="DEF_NAME_" jdbcType="VARCHAR"/>
+		<result property="procInstId" column="PROC_INST_ID_" jdbcType="VARCHAR"/>
+		<collection property="receiverList" column="ID_"
+			ofType="com.hotent.runtime.model.BpmTransReceiver"
+			select="com.hotent.runtime.dao.BpmTransReceiverDao.getByTransRecordid"
+			/>
+	</resultMap>
+	
+	<select id="getByTaskId"   parameterType="java.lang.String" resultMap="BpmTaskTransRecord">
+		SELECT * FROM bpm_task_trans_record 
+		WHERE 
+		TASK_ID_=#{taskId} AND STATUS_ = 0
+	</select>
+	
+	<select id="getTransRecord" parameterType="java.util.Map" resultMap="BpmTaskTransRecord">
+		SELECT * FROM bpm_task_trans_record 
+		WHERE 1= 1 
+		<if test="userId!=null">
+			AND	TRANS_OWNER_=#{userId}
+		</if>
+		<if test="subject!=null">
+			AND TASK_SUBJECT_ like #{subject}
+		</if>
+		<if test="defName!=null">
+			AND DEF_NAME_ like #{defName}
+		</if>
+		<if test="status!=null">
+			AND STATUS_ = #{status}
+		</if>
+		<if test="transTimeStart!=null">
+			AND TRANS_TIME_ >= #{transTimeStart}
+		</if>
+		<if test="transTimeEnd!=null">
+			AND TRANS_TIME_ &lt;= #{transTimeEnd}
+		</if>
+		<if test="taskId!=null">
+			AND TASK_ID_ = #{taskId}
+		</if>
+		
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+		${ew.customSqlSegment}
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmCommuReceiverDao">
+	<resultMap id="BpmCommuReceiver" type="com.hotent.bpm.persistence.model.BpmCommuReceiver">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="commuId" column="commu_id_" jdbcType="VARCHAR"/>
+		<result property="receiverId" column="receiver_id_" jdbcType="VARCHAR"/>
+		<result property="receiver" column="receiver" jdbcType="VARCHAR"/>
+		<result property="status" column="status_" jdbcType="VARCHAR"/>
+		<result property="opinion" column="opinion_" jdbcType="VARCHAR"/>
+		<result property="receiveTime" column="receive_time_" jdbcType="TIMESTAMP"/>
+		<result property="feedbackTime" column="feedback_time_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<select id="getByCommuUser" resultMap="BpmCommuReceiver">
+		SELECT * FROM bpm_commu_receiver 
+		WHERE 
+		commu_id_=#{commuId} and receiver_id_=#{receiverId}  and status_ = 'no'
+	</select>
+
+    <select id="getByCommuId" resultMap="BpmCommuReceiver">
+		SELECT * FROM bpm_commu_receiver
+		WHERE
+		commu_id_=#{commuId} and status_ = 'no'
+	</select>
+	
+	<select id="getByCommuStatus" resultMap="BpmCommuReceiver">
+		SELECT * FROM bpm_commu_receiver 
+		WHERE 
+		commu_id_=#{commuId} 
+		<if test="status!=null">
+		and status_=#{status}
+		</if>
+	</select>
+	
+	<select id="checkHasCommued" resultType="int">
+		SELECT count(*) FROM bpm_commu_receiver 
+		WHERE 
+		commu_id_=#{commuId} and
+		receiver_id_=#{receiverId} and status_ = 'no'
+	</select>
+
+</mapper>

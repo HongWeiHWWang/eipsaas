@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+	<!-- 控件宏模版 -->
+	<template alias="fieldControl" name="PC端宏模板" type="macro" templateDesc="PC端宏模板" dir="pc"/>
+
+	<!-- 自定义SQL查询模版(VUE) -->
+	<template alias="queryDataViewTemplate_vue" name="自定义SQL查询模版(VUE)" type="queryDataTemplate" templateDesc="自定义SQL查询模版(VUE)" dir="pc"/>
+
+	<!--  业务数据模板(VUE) -->
+	<template alias="dataTemplateList_vue" name="数据视图模版(VUE)" type="dataTemplate" templateDesc="数据视图模版(VUE)" dir="pc"/>
+
+	<!-- 生成表单入口模板 vue 表单设计的模板的类型统一为  formDesign   -->
+	<template alias="generateForm" name="生成表单" type="formDesign" templateDesc="生成表单模板入口" dir="pc"/>
+
+	<template alias="layoutTemplate" name="表单布局模板" type="formDesign" templateDesc="表单布局模板" dir="pc"/>
+
+	<template alias="tableLayout" name="子表 table布局模板" type="formDesign" templateDesc="表单布局模板" dir="pc"/>
+	<template alias="subDivLayout" name="子表div布局模板" type="formDesign" templateDesc="表单布局模板" dir="pc"/>
+	
+	<template alias="sunTableLayout" name="孙表 table布局模板" type="formDesign" templateDesc="表单布局模板" dir="pc"/>
+	<template alias="sunDivLayout" name="孙表 div布局模板" type="formDesign" templateDesc="表单布局模板" dir="pc"/>
+	<template alias="hotTableLayout" name="子表handsontable布局模板" type="formDesign" templateDesc="表单布局模板" dir="pc"/>
+</templates>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.FormHistoryRecordDao">
+	<resultMap id="FormHistoryRecord" type="com.hotent.form.model.FormHistoryRecord">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="formId" column="form_id_" jdbcType="VARCHAR"/>
+		<result property="formHtml" column="form_html_" jdbcType="LONGVARCHAR"/>
+        <result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+        <result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+        <result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+
+    <select id="getFormHtmlByFormId" parameterType="java.lang.String" resultMap="FormHistoryRecord">
+		SELECT * FROM form_history_record
+		WHERE form_id_=#{formId} ORDER BY update_time_ DESC
+	</select>
+	
+</mapper>

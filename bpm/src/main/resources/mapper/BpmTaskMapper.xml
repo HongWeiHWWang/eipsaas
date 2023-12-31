@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmTaskDao">
+	<resultMap id="BpmTask" type="com.hotent.bpm.persistence.model.DefaultBpmTask">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="subject" column="subject_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="task_id_" jdbcType="VARCHAR"/>
+		<result property="execId" column="exec_id_" jdbcType="VARCHAR"/>
+		<result property="nodeId" column="node_id_" jdbcType="VARCHAR"/>
+		<result property="procInstId" column="proc_inst_id_" jdbcType="VARCHAR"/>
+		<result property="procDefId" column="proc_def_id_" jdbcType="VARCHAR"/>
+		<result property="procDefKey" column="proc_def_key_" jdbcType="VARCHAR"/>
+		<result property="procDefName" column="proc_def_name_" jdbcType="VARCHAR"/>
+		<result property="ownerId" column="owner_id_" jdbcType="VARCHAR"/>
+		<result property="assigneeId" column="assignee_id_" jdbcType="VARCHAR"/>
+		<result property="ownerName" column="owner_name_" jdbcType="VARCHAR"/>
+		<result property="assigneeName" column="assignee_name_" jdbcType="VARCHAR"/>
+		<result property="status" column="status_" jdbcType="VARCHAR"/>
+		<result property="priority" column="priority_" jdbcType="NUMERIC"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="dueTime" column="due_time_" jdbcType="TIMESTAMP"/>
+		<result property="suspendState" column="suspend_state_" jdbcType="NUMERIC"/>
+		<result property="parentId" column="parent_id_" jdbcType="VARCHAR"/>
+		<result property="bpmnInstId" column="bpmn_inst_id_" jdbcType="VARCHAR"/>
+		<result property="bpmnDefId" column="bpmn_def_id_" jdbcType="VARCHAR"/>
+		<result property="typeId" column="type_id_" jdbcType="VARCHAR"/>
+		<result property="supportMobile" column="support_mobile_" jdbcType="NUMERIC"/>
+        <result property="isRead" column="is_read_" jdbcType="NUMERIC"/>
+        <result property="isRevoke" column="is_revoke_" jdbcType="NUMERIC"/>
+        <result property="prop1" column="prop1_" jdbcType="VARCHAR"/>
+        <result property="prop2" column="prop2_" jdbcType="VARCHAR"/>
+        <result property="prop3" column="prop3_" jdbcType="VARCHAR"/>
+        <result property="prop4" column="prop4_" jdbcType="VARCHAR"/>
+        <result property="prop5" column="prop5_" jdbcType="VARCHAR"/>
+        <result property="prop6" column="prop6_" jdbcType="LONGVARCHAR"/>
+	</resultMap>
+	
+	<resultMap id="BpmTaskExt" type="com.hotent.bpm.persistence.model.DefaultBpmTask" extends="BpmTask">
+		<result property="transDate" column="transDate" jdbcType="TIMESTAMP"/>
+		<result property="createDate" column="createDate" jdbcType="TIMESTAMP"/>
+		<result property="creator" column="creator" jdbcType="VARCHAR"/>
+		<result property="dueDateType" column="dueDateType" jdbcType="VARCHAR"/>
+		<result property="dueExpDate" column="dueExpDate" jdbcType="TIMESTAMP"/>
+		<result property="dueTaskTime" column="dueTaskTime" jdbcType="NUMERIC"/>
+		<result property="dueStatus" column="dueStatus" jdbcType="NUMERIC"/>
+		<result property="instIsForbidden" column="instIsForbidden" jdbcType="VARCHAR"/>
+		<result property="leaderIds" column="leaderIds" jdbcType="VARCHAR"/>
+		<result property="urgentStateValue" column="urgentStateValue" jdbcType="VARCHAR"/>
+		<result property="isBpmTask" column="isBpmTask" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="customQuery" parameterType="java.util.Map" resultMap="BpmTask">
+		SELECT
+			task.*
+		FROM
+			(
+				SELECT
+					bpm_task.*, '1' AS isBpmTask
+				FROM
+					bpm_task
+				UNION ALL
+					SELECT
+						bpm_task_notice.*, '0' AS isBpmTask
+					FROM
+						bpm_task_notice
+					WHERE
+						bpm_task_notice.IS_READ_ != 1
+			) task
+		${ew.customSqlSegment}
+	</select>
+	
+    <sql id="getAllMyTask_Tables">
+	           SELECT task.*,
+	                inst.proc_def_name_ procDefName,
+	                inst.create_by_ creatorId,inst.CREATOR_ creator,
+	                inst.create_time_ createDate,
+	                inst.status_ instStatus,
+	                inst.is_forbidden_ instIsForbidden,
+	                inst.type_id_ typeId,
+	                due.due_time_ dueTaskTime,
+	                due.EXPIRATION_DATE_ dueExpDate,
+	                due.date_type_ dueDateType,
+	                due.status_ dueStatus 
+	           FROM (SELECT * from bpm_task UNION ALL SELECT * from bpm_task_notice ) task
+	                LEFT JOIN BPM_PRO_INST inst ON task.proc_inst_id_ = inst.id_
+	                LEFT JOIN  (select *  from bpm_task_due_time where is_new_ =1 ) due ON task.TASK_ID_ = due.TASK_ID_ 
+	</sql>
+
+    <!-- 指定用户领导的待办  -->
+    <select id="getLeaderByUserId" parameterType="java.util.Map" resultMap="BpmTask">
+        select * from (
+            SELECT task.*,
+            inst.proc_def_name_ procDefName,
+            inst.create_by_ creatorId,inst.CREATOR_ creator,
+            inst.create_time_ createDate,
+            inst.status_ instStatus,
+            inst.is_forbidden_ instIsForbidden,
+            inst.type_id_ typeId,
+            due.due_time_ dueTaskTime,
+            due.EXPIRATION_DATE_ dueExpDate,
+            due.date_type_ dueDateType,
+            due.status_ dueStatus,
+            inst.URGENT_STATE_ urgentStateValue
+            FROM (
+            SELECT * from bpm_task
+            INNER JOIN  (
+            SELECT ut.ID_ utaskId,  group_concat(ut.assignee_id_) as leaderIds from
+            (select ID_,'' as assignee_id_ from bpm_task where 1=0
+            <foreach collection="map.rightMap" index="key" item="item" open="" separator=" " close="">
+                UNION ALL
+                select ID_,'${key}' as assignee_id_ from  bpm_task task where (task.assignee_id_=${key}
+                <!-- 委托的情况只查自己的，领导的代理任务就不显示在秘书的待办列表 -->
+                <if test="item.isSelf">
+                    or (task.OWNER_ID_='${key}' and task.STATUS_='AGENT')
+                </if>
+                )
+                <if test="!item.isSelf and item.defKeys!=''">
+                    and task.PROC_DEF_KEY_ in (${item.defKeys})
+                </if>
+
+                <foreach item="value" index="type" collection="item.groupMap" open="" close="" separator=" ">
+                    UNION ALL select c.TASK_ID_ as 'ID_','${key}' as assignee_id_ from  bpm_task_candidate c
+                    <if test="!item.isSelf">
+                        INNER JOIN  bpm_task bt on bt.TASK_ID_ = c.TASK_ID_ and bt.STATUS_ !='DELIVERTO'
+                    </if>
+                    where c.executor_ in (${value}) and c.type_='${type}'
+                    <if test="!item.isSelf and item.defKeys!=''">
+                        and  bt.PROC_DEF_KEY_ in (${item.defKeys})
+                    </if>
+                </foreach>
+            </foreach>) ut group by ut.ID_
+            )  ubpt  on  ubpt.uTaskId = bpm_task.ID_
+            UNION  SELECT bpm_task_notice.*,bpm_task_notice.TASK_ID_ As uTaskId, '' As leaderIds from bpm_task_notice where assignee_id_=${map.userId}
+            )  task
+            LEFT JOIN BPM_PRO_INST inst ON task.proc_inst_id_ = inst.id_
+            LEFT JOIN  (select *  from bpm_task_due_time where is_new_ =1 ) due ON task.TASK_ID_ = due.TASK_ID_
+            )   tmp
+        ${ew.customSqlSegment}
+        <if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.customSqlSegment)">
+            and
+        </if>
+        <if test="@com.hotent.base.ognl.Ognl@isEmpty(ew.customSqlSegment)">
+            where
+        </if>
+        tmp.status_ !='TRANSFORMING' and tmp.status_!='COPYTO' and tmp.IS_DELE_ = 0 and tmp.status_ !='APPROVELINEING' and tmp.status_!='SIGNSEQUENCEING' and  tmp.status_!='SIGNLINEING'
+        group by tmp.id_,tmp.IS_DELE_,tmp.name_,tmp.subject_,tmp.proc_inst_id_,tmp.task_id_,tmp.exec_id_,tmp.node_id_,tmp.proc_def_id_,tmp.proc_def_key_,tmp.proc_def_key_,
+        tmp.proc_def_name_,tmp.owner_id_,tmp.assignee_id_,tmp.status_,tmp.priority_,tmp.create_time_,tmp.due_time_,tmp.suspend_state_,tmp.parent_id_,
+        tmp.bpmn_inst_id_,tmp.bpmn_def_id_,tmp.type_id_,tmp.support_mobile_,tmp.OWNER_NAME_,tmp.ASSIGNEE_NAME_,tmp.instIsForbidden,tmp.IS_READ_,tmp.IS_REVOKE_,tmp.prop1_,tmp.prop2_,tmp.prop3_,tmp.prop4_,tmp.prop5_,tmp.prop6_,tmp.utaskId,
+        tmp.leaderIds,
+        procDefName,creatorId,creator,createDate, instStatus,typeId,dueTaskTime,dueExpDate,dueDateType,dueStatus,urgentStateValue
+        order by CREATE_TIME_ desc
+    </select>
+    
+	<!-- 指定用户的待办  -->
+    <select id="getByUserId" parameterType="java.util.Map" resultMap="BpmTask">
+    	SELECT * FROM (
+	    	SELECT
+				bn.*, inst.proc_def_name_ procDefName,
+				inst.create_by_ creatorId,
+				inst.CREATOR_ creator,
+				inst.create_time_ createDate,
+				inst.status_ instStatus,
+				inst.is_forbidden_ instIsForbidden,
+				inst.type_id_ typeId
+			FROM
+				bpm_pro_inst inst,
+				bpm_task_notice bn
+			WHERE
+				bn.proc_inst_id_ = inst.id_
+				AND bn.assignee_id_ = #{map.user} 
+				AND bn.status_!='COPYTO'
+				AND inst.IS_DELE_ = 0
+			UNION ALL
+			SELECT
+			    bt.*, inst.proc_def_name_ procDefName,
+			    inst.create_by_ creatorId,
+			    inst.CREATOR_ creator,
+			    inst.create_time_ createDate,
+			    inst.status_ instStatus,
+			    inst.is_forbidden_ instIsForbidden,
+			    inst.type_id_ typeId
+			FROM
+			    bpm_pro_inst inst,
+			    bpm_task bt
+			LEFT JOIN bpm_task_candidate c ON bt.id_ = c.TASK_ID_
+			WHERE
+			    ((bt.assignee_id_ = #{map.user} or (bt.OWNER_ID_ =#{map.user} and bt.status_='AGENT'))
+			    <foreach collection="map" index="key" item="val" open="" separator=" " close="">
+			            or (c.executor_ in (${val}) and c.type_=#{key})
+			    </foreach>)
+				AND bt.proc_inst_id_ = inst.id_
+				AND bt.status_ != 'TRANSFORMING'
+				AND bt.status_ != 'COPYTO'
+				AND inst.IS_DELE_ = 0
+				AND bt.status_ != 'APPROVELINEING'
+				AND bt.status_ != 'SIGNSEQUENCEING'
+				AND bt.status_ != 'SIGNLINEING'
+			    <if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.customSqlSegment)">
+			    	<if test="!@com.hotent.base.ognl.Ognl@startsWith(ew.customSqlSegment, 'order by')">
+			    	AND 
+			    	</if>
+			        ${@com.hotent.base.ognl.Ognl@withOutWhere(ew.customSqlSegment)}
+			    </if>
+		) tmp
+        order by CREATE_TIME_ desc
+    </select>
+    
+    <!-- 指定用户的待办总数(带查询条件) -->
+    <select id="getCountByUserIdWithWhere" parameterType="java.util.Map" resultType="java.lang.Long">
+	    SELECT
+			count(1) as count
+		FROM
+			(
+		        SELECT
+					bn.task_id_ AS taskId,
+					bn.proc_inst_id_ AS instId
+				FROM
+					bpm_task_notice bn
+				WHERE
+					bn.assignee_id_ = #{map.user} AND bn.status_!='COPYTO'
+				UNION ALL
+		        SELECT
+						bt.id_ AS taskId,
+						bt.proc_inst_id_ AS instId
+					FROM
+						bpm_task bt
+					LEFT JOIN bpm_task_candidate c ON bt.id_ = c.TASK_ID_
+					WHERE
+						((bt.assignee_id_ = #{map.user} or (bt.OWNER_ID_ =#{map.user} and bt.status_='AGENT'))
+		                <foreach collection="map" index="key" item="val" open="" separator=" " close="">
+		                        or (c.executor_ in (${val}) and c.type_=#{key})
+		                </foreach>)
+					AND bt.status_ != 'TRANSFORMING'
+					AND bt.status_ != 'COPYTO'
+					AND bt.status_ != 'APPROVELINEING'
+					AND bt.status_ != 'SIGNSEQUENCEING'
+					AND bt.status_ != 'SIGNLINEING'
+					<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.customSqlSegment)">
+				        AND ${@com.hotent.base.ognl.Ognl@withOutWhere(ew.customSqlSegment)}
+				    </if>
+		    ) tmp
+		LEFT JOIN bpm_pro_inst inst ON tmp.instId = inst.id_
+		WHERE
+			inst.IS_DELE_ = 0
+    </select>
+	
+	<!-- 指定用户的待办总数（按分类统计，不带查询条件） -->
+	<select id="getCountByUserId" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			type_id_ as typeId,
+			count(1) as count
+		FROM
+			(
+		        SELECT
+					bn.task_id_ AS taskId,
+					bn.proc_inst_id_ AS instId
+				FROM
+					bpm_task_notice bn
+				WHERE
+					bn.assignee_id_ = #{map.user} AND bn.status_!='COPYTO'
+				UNION ALL
+		        SELECT
+						bt.id_ AS taskId,
+						bt.proc_inst_id_ AS instId
+					FROM
+						bpm_task bt
+					LEFT JOIN bpm_task_candidate c ON bt.id_ = c.TASK_ID_
+					WHERE
+						((bt.assignee_id_ = #{map.user} or (bt.OWNER_ID_ =#{map.user} and bt.status_='AGENT'))
+		                <foreach collection="map" index="key" item="val" open="" separator=" " close="">
+		                            or (c.executor_ in (${val}) and c.type_=#{key})
+		                </foreach>)
+					AND bt.status_ != 'TRANSFORMING'
+					AND bt.status_ != 'COPYTO'
+					AND bt.status_ != 'APPROVELINEING'
+					AND bt.status_ != 'SIGNSEQUENCEING'
+					AND bt.status_ != 'SIGNLINEING'
+		    ) tmp
+		LEFT JOIN bpm_pro_inst inst ON tmp.instId = inst.id_
+		WHERE
+			inst.IS_DELE_ = 0
+		GROUP BY
+			inst.type_id_
+	</select>
+	
+	<!-- 指定用户的待办总数 -->
+	<select id="getTodoCountByUserId" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT
+			count(1) as count
+		FROM
+			(
+		        SELECT
+					bn.task_id_ AS taskId,
+					bn.proc_inst_id_ AS instId
+				FROM
+					bpm_task_notice bn
+				WHERE
+					bn.assignee_id_ = #{map.user} AND bn.status_!='COPYTO'
+				UNION ALL
+		        SELECT
+						bt.id_ AS taskId,
+						bt.proc_inst_id_ AS instId
+					FROM
+						bpm_task bt
+					LEFT JOIN bpm_task_candidate c ON bt.id_ = c.TASK_ID_
+					WHERE
+						((bt.assignee_id_ = #{map.user} or (bt.OWNER_ID_ =#{map.user} and bt.status_='AGENT'))
+		                <foreach collection="map" index="key" item="val" open="" separator=" " close="">
+		                        or (c.executor_ in (#{val}) and c.type_=#{key})
+		                </foreach>)
+					AND bt.status_ != 'TRANSFORMING'
+					AND bt.status_ != 'COPYTO'
+					AND bt.status_ != 'APPROVELINEING'
+					AND bt.status_ != 'SIGNSEQUENCEING'
+					AND bt.status_ != 'SIGNLINEING'
+		    ) tmp
+		LEFT JOIN bpm_pro_inst inst ON tmp.instId = inst.id_
+		WHERE
+			inst.IS_DELE_ = 0
+	</select>
+	
+	<select id="getByInstId" parameterType="java.util.Map" resultMap="BpmTask">
+		select * from BPM_TASK t where t.proc_inst_id_=#{instId} order by create_time_ desc
+	</select>
+
+	<select id="getByExeIdAndNodeId" parameterType="java.util.Map" resultMap="BpmTask">
+		select * from BPM_TASK t where t.exec_id_=#{instId} and node_id_ = #{nodeId} order by create_time_ desc
+	</select>	
+	
+	<select id="getByInstUser" parameterType="java.util.Map" resultMap="BpmTask">
+		select * from (
+			select * from BPM_TASK t where t.assignee_id_=#{assigneeId}  and t.proc_inst_id_=#{instId}
+			
+			union all 
+			
+			select t.* from BPM_TASK t ,BPM_TASK_CANDIDATE tc where t.id_=tc.task_id_ 
+				and  t.assignee_id_='0' and tc.executor_=#{assigneeId}  and tc.type_='user'
+				and t.proc_inst_id_=#{instId}
+		) tmp
+		order by create_time_ desc
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM bpm_task 
+		WHERE
+		id_=#{id}
+	</delete>
+	
+	<select id="getByRelateTaskId"   parameterType="java.lang.String" resultMap="BpmTask">
+		SELECT * FROM bpm_task 
+		WHERE 
+		task_id_=#{taskId,jdbcType=VARCHAR}
+	</select>
+	
+	<delete id="removeByTaskId" parameterType="java.lang.String">
+		DELETE FROM bpm_task 
+		WHERE
+		task_id_=#{taskId,jdbcType=VARCHAR}
+	</delete>
+	
+	<delete id="delByParentId" parameterType="java.lang.String">
+		DELETE FROM bpm_task WHERE id_ in (SELECT bmt.id_ from (SELECT id_ from bpm_task where parent_id_ = #{parentId,jdbcType=VARCHAR}) bmt)
+	</delete>
+	
+	<select id="getByBpmInstIdUserIdGroupList" resultMap="BpmTask">
+		select * from (
+		select t.* from bpm_task t  where t.proc_inst_id_=#{bpmnInstId} and  t.assignee_id_=#{userId}
+		union select t.* from bpm_task t left join bpm_task_candidate c on t.task_id_=c.task_id_ where t.assignee_id_='0'  and c.act_inst_id_=#{bpmnInstId} and c.executor_=#{userId}  and c.type_='user'
+		<foreach collection="groupList" index="index" item="group" open="" separator=" " close=""> 
+         union  select t.* from bpm_task t left join bpm_task_candidate c on t.task_id_=c.task_id_ where t.assignee_id_='0'  and c.act_inst_id_=#{bpmnInstId} and c.executor_=#{group.groupId} and c.type_=#{group.dimKey}
+        </foreach>
+        )tmp
+		order by create_time_ desc
+	</select>
+	
+	<select id="updateAssigneeById" parameterType="java.util.Map">
+		update bpm_task set assignee_id_=#{assigneeId} where id_=#{id}
+	</select>
+	
+	<select id="updateAssigneeOwnerId" parameterType="java.util.Map">
+		update bpm_task set assignee_id_=#{assigneeId} ,owner_id_=#{ownerId} where id_=#{id}
+	</select>
+	
+	<delete id="delByInstList" >
+		DELETE FROM  bpm_task where proc_inst_id_ in 
+			<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        	</foreach> 
+	</delete>
+	
+	<select id="getByParentId" parameterType="java.lang.String" resultMap="BpmTask">
+		SELECT * FROM bpm_task 
+		WHERE
+		parent_id_=#{parentId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getIdsByParentId" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT id_ FROM bpm_task 
+		WHERE
+		parent_id_=#{parentId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getTransByUserId" parameterType="java.lang.String" resultMap="BpmTask">
+		select * from BPM_TASK t where t.assignee_id_=#{userId} and t.status_='TRANSFORMING' order by create_time_ desc
+	</select>
+	
+	<select id="getReminderTask"  resultMap="BpmTask">
+		select * from bpm_task a where exists (select 1 from bpm_task_reminder b where a.proc_def_id_=b.proc_def_id_ and a.node_id_=b.node_id_)	
+	</select>
+	
+	
+	<select id="getByInstList" parameterType="java.lang.String" resultMap="BpmTask">
+		SELECT * FROM bpm_task 
+		WHERE
+		proc_inst_id_ in 
+			<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        	</foreach> 
+	</select>
+	
+	<select id="getMyTransTask" resultMap="BpmTaskExt">
+		SELECT a.*,b.create_time_ as transDate FROM bpm_task a,bpm_task_trans b
+		WHERE a.id_=b.task_id_ and a.status_='TRANSFORMING' and assignee_id_=#{map.userId}
+		<if test="map.defName!=null">
+			and a.proc_def_name_ like #{map.defName}
+		</if>
+		<if test="map.subject!=null">
+			and a.subject_ like #{map.subject}
+		</if>
+		<if test="map.transTimeStart!=null">
+			and b.create_time_ >=#{map.transTimeStart}
+		</if>
+		<if test="map.transTimeEnd_DG!=null">
+			and b.create_time_ &lt;=#{map.transTimeEnd_DG}
+		</if>
+		<if test="map.orderBySql!=null">
+			ORDER BY ${map.orderBySql}
+		</if>
+		<if test="map.orderBySql==null">
+			ORDER BY b.create_time_ DESC
+		</if>
+	</select>
+	
+	<update id="updateTaskPriority" parameterType="java.util.Map" >
+		UPDATE bpm_task SET priority_= #{priority,jdbcType=NUMERIC} WHERE id_= #{taskId}
+	</update>
+	
+	<select id="getByExecuteAndNodeId">
+		SELECT * from bpm_task t ,act_ru_execution b
+		where t.EXEC_ID_ =b.ID_ and b.PARENT_ID_=#{executeId} and node_id_=#{nodeId};
+	</select>
+	
+	<select id="getTaskByTenantId" parameterType="java.lang.String" resultMap="BpmTask">
+		select * from BPM_TASK where tenant_id_=#{tenantId}
+	</select>
+
+    <update id="updateOwner" parameterType="java.util.Map" >
+        UPDATE bpm_task SET owner_id_= #{ownerId,jdbcType=VARCHAR},owner_name_= #{ownerName,jdbcType=VARCHAR} WHERE owner_id_= #{userId,jdbcType=VARCHAR}
+        <if test="instIds!=null">
+            AND proc_inst_id_ in <foreach collection="instIds" index="index" item="instId" open="(" separator="," close=")">
+            #{instId}
+        </foreach>
+        </if>
+    </update>
+
+    <update id="updateAssignee" parameterType="java.util.Map" >
+        UPDATE bpm_task SET assignee_id_= #{assigneeId,jdbcType=VARCHAR},assignee_name_= #{assigneeName,jdbcType=VARCHAR} WHERE assignee_id_= #{userId,jdbcType=VARCHAR}
+        <if test="instIds!=null">
+            AND proc_inst_id_ in <foreach collection="instIds" index="index" item="instId" open="(" separator="," close=")">
+            #{instId}
+        </foreach>
+        </if>
+    </update>
+
+    <update id="retrieveBpmTask" parameterType="java.util.Map" >
+        UPDATE bpm_task SET assignee_id_= #{assigneeId,jdbcType=VARCHAR},assignee_name_= #{assigneeName,jdbcType=VARCHAR},status_= 'NORMAL' WHERE task_id_= #{taskId,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateExtraProps" parameterType="com.hotent.bpm.persistence.model.DefaultBpmTask">
+		UPDATE bpm_task SET
+		prop1_=#{prop1,jdbcType=VARCHAR},
+		prop2_=#{prop2,jdbcType=VARCHAR},
+		prop3_=#{prop3,jdbcType=VARCHAR},
+		prop4_=#{prop4,jdbcType=VARCHAR},
+		prop5_=#{prop5,jdbcType=VARCHAR},
+		prop6_=#{prop6,jdbcType=LONGVARCHAR}
+		WHERE
+		id_=#{id}
+	</update>
+	
+	
+    <!-- 指定用户领导的待办总数（按分类统计，不带查询条件） oracle -->
+    <select id="getLeaderCountByUserId" databaseId="oracle" parameterType="java.util.Map" resultType="java.util.Map">
+        select type_id_ as typeId,count(1) as count from
+        (
+            select * from (
+                SELECT task.id_,task.IS_DELE_,task.name_,task.subject_,task.proc_inst_id_,task.task_id_,task.exec_id_,task.node_id_,task.proc_def_id_,task.proc_def_key_,
+                task.proc_def_name_,task.owner_id_,task.assignee_id_,task.status_,task.priority_,task.create_time_,task.due_time_,task.suspend_state_,task.parent_id_,
+                task.bpmn_inst_id_,task.bpmn_def_id_,task.type_id_,task.support_mobile_,task.TENANT_ID_,task.OWNER_NAME_,task.ASSIGNEE_NAME_,
+                task.IS_READ_,task.IS_REVOKE_,task.prop1_,task.prop2_,task.prop3_,task.prop4_,task.prop5_,to_char(task.prop6_) as prop6_,task.utaskId,task.leaderIds,
+                inst.proc_def_name_ procDefName,
+                inst.create_by_ creatorId,inst.CREATOR_ creator,
+                inst.create_time_ createDate,
+                inst.status_ instStatus,
+                inst.is_forbidden_ instIsForbidden,
+                inst.type_id_ typeId,
+                due.due_time_ dueTaskTime,
+                due.EXPIRATION_DATE_ dueExpDate,
+                due.date_type_ dueDateType,
+                due.status_ dueStatus,
+                inst.URGENT_STATE_ urgentStateValue
+            FROM (
+                SELECT bpm_task.id_,bpm_task.IS_DELE_,bpm_task.name_,bpm_task.subject_,bpm_task.proc_inst_id_,bpm_task.task_id_,bpm_task.exec_id_,bpm_task.node_id_,bpm_task.proc_def_id_,bpm_task.proc_def_key_,
+                bpm_task.proc_def_name_,bpm_task.owner_id_,bpm_task.assignee_id_,bpm_task.status_,bpm_task.priority_,bpm_task.create_time_,bpm_task.due_time_,bpm_task.suspend_state_,bpm_task.parent_id_,
+                bpm_task.bpmn_inst_id_,bpm_task.bpmn_def_id_,bpm_task.type_id_,bpm_task.support_mobile_,bpm_task.TENANT_ID_,bpm_task.OWNER_NAME_,bpm_task.ASSIGNEE_NAME_,
+                bpm_task.IS_READ_,bpm_task.IS_REVOKE_,bpm_task.prop1_,bpm_task.prop2_,bpm_task.prop3_,bpm_task.prop4_,bpm_task.prop5_,to_char(bpm_task.prop6_) as prop6_,ubpt.utaskId,ubpt.leaderIds
+                from bpm_task
+                INNER JOIN  (
+                SELECT ut.ID_ utaskId,  wm_concat(ut.assignee_id_) as leaderIds from
+                (select ID_,'' as assignee_id_ from bpm_task where 1=0
+                <foreach collection="rightMap" index="key" item="item" open="" separator=" " close="">
+                    UNION ALL
+                    select ID_,'${key}' as assignee_id_ from  bpm_task task where (task.assignee_id_=${key}
+                    <!-- 委托的情况只查自己的，领导的代理任务就不显示在秘书的待办列表 -->
+                    <if test="item.isSelf">
+                        or (task.OWNER_ID_='${key}' and task.STATUS_='AGENT')
+                    </if>
+                    )
+                    <if test="!item.isSelf and item.defKeys!=''">
+                        and task.PROC_DEF_KEY_ in (${item.defKeys})
+                    </if>
+
+                    <foreach item="value" index="type" collection="item.groupMap" open="" close="" separator=" ">
+                        UNION ALL select c.TASK_ID_ as ID_,'${key}' as assignee_id_ from  bpm_task_candidate c
+                        <if test="!item.isSelf">
+                            INNER JOIN  bpm_task bt on bt.TASK_ID_ = c.TASK_ID_ and bt.STATUS_ !='DELIVERTO'
+                        </if>
+                        where c.executor_ in (${value}) and c.type_='${type}'
+                        <if test="!item.isSelf and item.defKeys!=''">
+                            and  bt.PROC_DEF_KEY_ in (${item.defKeys})
+                        </if>
+                    </foreach>
+                </foreach>) ut group by ut.ID_
+                )  ubpt  on  ubpt.uTaskId = bpm_task.ID_
+            UNION
+                SELECT bpm_task_notice.id_,bpm_task_notice.IS_DELE_,bpm_task_notice.name_,bpm_task_notice.subject_,bpm_task_notice.proc_inst_id_,bpm_task_notice.task_id_,bpm_task_notice.exec_id_,bpm_task_notice.node_id_,bpm_task_notice.proc_def_id_,bpm_task_notice.proc_def_key_,
+                bpm_task_notice.proc_def_name_,bpm_task_notice.owner_id_,bpm_task_notice.assignee_id_,bpm_task_notice.status_,bpm_task_notice.priority_,bpm_task_notice.create_time_,bpm_task_notice.due_time_,bpm_task_notice.suspend_state_,bpm_task_notice.parent_id_,
+                bpm_task_notice.bpmn_inst_id_,bpm_task_notice.bpmn_def_id_,bpm_task_notice.type_id_,bpm_task_notice.support_mobile_,bpm_task_notice.TENANT_ID_,bpm_task_notice.OWNER_NAME_,bpm_task_notice.ASSIGNEE_NAME_,
+                bpm_task_notice.IS_READ_,bpm_task_notice.IS_REVOKE_,bpm_task_notice.prop1_,bpm_task_notice.prop2_,bpm_task_notice.prop3_,bpm_task_notice.prop4_,bpm_task_notice.prop5_,to_char(bpm_task_notice.prop6_) as prop6_,ubpt.utaskId,ubpt.leaderIds
+                from bpm_task_notice
+                INNER JOIN  (
+                SELECT ut.ID_ utaskId,  wm_concat(ut.assignee_id_) as leaderIds from
+                (select ID_,'' as assignee_id_ from bpm_task_notice where 1=0
+                <foreach collection="rightMap" index="key" item="item" open="" separator=" " close="">
+                    UNION ALL
+                    select ID_,'${key}' as assignee_id_ from  bpm_task_notice task where (task.assignee_id_=${key}
+                    <!-- 委托的情况只查自己的，领导的代理任务就不显示在秘书的待办列表 -->
+                    <if test="item.isSelf">
+                        or (task.OWNER_ID_='${key}' and task.STATUS_='AGENT')
+                    </if>
+                    )
+                    <if test="!item.isSelf and item.defKeys!=''">
+                        and task.PROC_DEF_KEY_ in (${item.defKeys})
+                    </if>
+
+                    <foreach item="value" index="type" collection="item.groupMap" open="" close="" separator=" ">
+                        UNION ALL select c.TASK_ID_ as ID_,'${key}' as assignee_id_ from  bpm_task_candidate c
+                        <if test="!item.isSelf">
+                            INNER JOIN  bpm_task_notice bt on bt.TASK_ID_ = c.TASK_ID_ and bt.STATUS_ !='DELIVERTO'
+                        </if>
+                        where c.executor_ in (${value}) and c.type_='${type}'
+                        <if test="!item.isSelf and item.defKeys!=''">
+                            and  bt.PROC_DEF_KEY_ in (${item.defKeys})
+                        </if>
+                    </foreach>
+                </foreach>) ut group by ut.ID_
+                )  ubpt  on  ubpt.uTaskId = bpm_task_notice.ID_
+            )  task
+            LEFT JOIN BPM_PRO_INST inst ON task.proc_inst_id_ = inst.id_
+            LEFT JOIN  (select *  from bpm_task_due_time where is_new_ =1 ) due ON task.TASK_ID_ = due.TASK_ID_
+            )   tmp
+            where
+            tmp.status_ !='TRANSFORMING' and tmp.status_!='COPYTO' and tmp.IS_DELE_ = 0 and tmp.status_ !='APPROVELINEING' and tmp.status_!='SIGNSEQUENCEING' and  tmp.status_!='SIGNLINEING'
+            group by tmp.id_,tmp.IS_DELE_,tmp.name_,tmp.subject_,tmp.proc_inst_id_,tmp.task_id_,tmp.exec_id_,tmp.node_id_,tmp.proc_def_id_,tmp.proc_def_key_,
+            tmp.proc_def_name_,tmp.owner_id_,tmp.assignee_id_,tmp.status_,tmp.priority_,tmp.create_time_,tmp.due_time_,tmp.suspend_state_,tmp.parent_id_,
+            tmp.bpmn_inst_id_,tmp.bpmn_def_id_,tmp.type_id_,tmp.support_mobile_,tmp.TENANT_ID_,tmp.OWNER_NAME_,tmp.ASSIGNEE_NAME_,tmp.instIsForbidden,tmp.IS_READ_,tmp.IS_REVOKE_,tmp.prop1_,tmp.prop2_,tmp.prop3_,tmp.prop4_,tmp.prop5_,tmp.prop6_,tmp.utaskId,
+            tmp.leaderIds,
+            procDefName,creatorId,creator,createDate, instStatus,typeId,dueTaskTime,dueExpDate,dueDateType,dueStatus,urgentStateValue
+            order by CREATE_TIME_ desc
+        ) temp group by type_id_
+    </select>
+
+    <!-- 指定用户领导的待办总数（按分类统计，不带查询条件） -->
+    <select id="getLeaderCountByUserId" parameterType="java.util.Map" resultType="java.util.Map">
+        select type_id_ as typeId,count(1) as count from
+        (
+            select * from (
+                SELECT task.id_,task.IS_DELE_,task.name_,task.subject_,task.proc_inst_id_,task.task_id_,task.exec_id_,task.node_id_,task.proc_def_id_,task.proc_def_key_,
+                task.proc_def_name_,task.owner_id_,task.assignee_id_,task.status_,task.priority_,task.create_time_,task.due_time_,task.suspend_state_,task.parent_id_,
+                task.bpmn_inst_id_,task.bpmn_def_id_,task.type_id_,task.support_mobile_,task.TENANT_ID_,task.OWNER_NAME_,task.ASSIGNEE_NAME_,
+                task.IS_READ_,task.IS_REVOKE_,task.prop1_,task.prop2_,task.prop3_,task.prop4_,task.prop5_,task.prop6_,task.utaskId,task.leaderIds,
+                inst.proc_def_name_ procDefName,
+                inst.create_by_ creatorId,inst.CREATOR_ creator,
+                inst.create_time_ createDate,
+                inst.status_ instStatus,
+                inst.is_forbidden_ instIsForbidden,
+                inst.type_id_ typeId,
+                due.due_time_ dueTaskTime,
+                due.EXPIRATION_DATE_ dueExpDate,
+                due.date_type_ dueDateType,
+                due.status_ dueStatus,
+                inst.URGENT_STATE_ urgentStateValue
+            FROM (
+                SELECT bpm_task.id_,bpm_task.IS_DELE_,bpm_task.name_,bpm_task.subject_,bpm_task.proc_inst_id_,bpm_task.task_id_,bpm_task.exec_id_,bpm_task.node_id_,bpm_task.proc_def_id_,bpm_task.proc_def_key_,
+                bpm_task.proc_def_name_,bpm_task.owner_id_,bpm_task.assignee_id_,bpm_task.status_,bpm_task.priority_,bpm_task.create_time_,bpm_task.due_time_,bpm_task.suspend_state_,bpm_task.parent_id_,
+                bpm_task.bpmn_inst_id_,bpm_task.bpmn_def_id_,bpm_task.type_id_,bpm_task.support_mobile_,bpm_task.TENANT_ID_,bpm_task.OWNER_NAME_,bpm_task.ASSIGNEE_NAME_,
+                bpm_task.IS_READ_,bpm_task.IS_REVOKE_,bpm_task.prop1_,bpm_task.prop2_,bpm_task.prop3_,bpm_task.prop4_,bpm_task.prop5_,bpm_task.prop6_,ubpt.utaskId,ubpt.leaderIds
+                from bpm_task
+                INNER JOIN  (
+                SELECT ut.ID_ utaskId,  group_concat(ut.assignee_id_) as leaderIds from
+                (select ID_,'' as assignee_id_ from bpm_task where 1=0
+                <foreach collection="rightMap" index="key" item="item" open="" separator=" " close="">
+                    UNION ALL
+                    select ID_,'${key}' as assignee_id_ from  bpm_task task where (task.assignee_id_=${key}
+                    <!-- 委托的情况只查自己的，领导的代理任务就不显示在秘书的待办列表 -->
+                    <if test="item.isSelf">
+                        or (task.OWNER_ID_='${key}' and task.STATUS_='AGENT')
+                    </if>
+                    )
+                    <if test="!item.isSelf and item.defKeys!=''">
+                        and task.PROC_DEF_KEY_ in (${item.defKeys})
+                    </if>
+
+                    <foreach item="value" index="type" collection="item.groupMap" open="" close="" separator=" ">
+                        UNION ALL select c.TASK_ID_ as ID_,'${key}' as assignee_id_ from  bpm_task_candidate c
+                        <if test="!item.isSelf">
+                            INNER JOIN  bpm_task bt on bt.TASK_ID_ = c.TASK_ID_ and bt.STATUS_ !='DELIVERTO'
+                        </if>
+                        where c.executor_ in (${value}) and c.type_='${type}'
+                        <if test="!item.isSelf and item.defKeys!=''">
+                            and  bt.PROC_DEF_KEY_ in (${item.defKeys})
+                        </if>
+                    </foreach>
+                </foreach>) ut group by ut.ID_
+                )  ubpt  on  ubpt.uTaskId = bpm_task.ID_
+          UNION
+                SELECT bpm_task_notice.id_,bpm_task_notice.IS_DELE_,bpm_task_notice.name_,bpm_task_notice.subject_,bpm_task_notice.proc_inst_id_,bpm_task_notice.task_id_,bpm_task_notice.exec_id_,bpm_task_notice.node_id_,bpm_task_notice.proc_def_id_,bpm_task_notice.proc_def_key_,
+                bpm_task_notice.proc_def_name_,bpm_task_notice.owner_id_,bpm_task_notice.assignee_id_,bpm_task_notice.status_,bpm_task_notice.priority_,bpm_task_notice.create_time_,bpm_task_notice.due_time_,bpm_task_notice.suspend_state_,bpm_task_notice.parent_id_,
+                bpm_task_notice.bpmn_inst_id_,bpm_task_notice.bpmn_def_id_,bpm_task_notice.type_id_,bpm_task_notice.support_mobile_,bpm_task_notice.TENANT_ID_,bpm_task_notice.OWNER_NAME_,bpm_task_notice.ASSIGNEE_NAME_,
+                bpm_task_notice.IS_READ_,bpm_task_notice.IS_REVOKE_,bpm_task_notice.prop1_,bpm_task_notice.prop2_,bpm_task_notice.prop3_,bpm_task_notice.prop4_,bpm_task_notice.prop5_,bpm_task_notice.prop6_,ubpt.utaskId,ubpt.leaderIds
+                from bpm_task_notice
+                INNER JOIN  (
+                SELECT ut.ID_ utaskId,  group_concat(ut.assignee_id_) as leaderIds from
+                (select ID_,'' as assignee_id_ from bpm_task_notice where 1=0
+                <foreach collection="rightMap" index="key" item="item" open="" separator=" " close="">
+                    UNION ALL
+                    select ID_,'${key}' as assignee_id_ from  bpm_task_notice task where (task.assignee_id_=${key}
+                    <!-- 委托的情况只查自己的，领导的代理任务就不显示在秘书的待办列表 -->
+                    <if test="item.isSelf">
+                        or (task.OWNER_ID_='${key}' and task.STATUS_='AGENT')
+                    </if>
+                    )
+                    <if test="!item.isSelf and item.defKeys!=''">
+                        and task.PROC_DEF_KEY_ in (${item.defKeys})
+                    </if>
+
+                    <foreach item="value" index="type" collection="item.groupMap" open="" close="" separator=" ">
+                        UNION ALL select c.TASK_ID_ as ID_,'${key}' as assignee_id_ from  bpm_task_candidate c
+                        <if test="!item.isSelf">
+                            INNER JOIN  bpm_task_notice bt on bt.TASK_ID_ = c.TASK_ID_ and bt.STATUS_ !='DELIVERTO'
+                        </if>
+                        where c.executor_ in (${value}) and c.type_='${type}'
+                        <if test="!item.isSelf and item.defKeys!=''">
+                            and  bt.PROC_DEF_KEY_ in (${item.defKeys})
+                        </if>
+                    </foreach>
+                </foreach>) ut group by ut.ID_
+                )  ubpt  on  ubpt.uTaskId = bpm_task_notice.ID_
+            )  task
+            LEFT JOIN BPM_PRO_INST inst ON task.proc_inst_id_ = inst.id_
+            LEFT JOIN  (select *  from bpm_task_due_time where is_new_ =1 ) due ON task.TASK_ID_ = due.TASK_ID_) tmp
+              where
+                tmp.status_ !='TRANSFORMING' and tmp.status_!='COPYTO' and tmp.IS_DELE_ = 0 and tmp.status_ !='APPROVELINEING' and tmp.status_!='SIGNSEQUENCEING' and  tmp.status_!='SIGNLINEING'
+                group by tmp.id_
+              ) temp
+            group by type_id_
+    </select>
+	
+	
+</mapper>

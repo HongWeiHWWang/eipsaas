@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.Calendar.dao.CalendarAssignDao">
+	<resultMap id="CalendarAssign" type="com.hotent.Calendar.model.CalendarAssign">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="calendarId" column="CANLENDAR_ID_" jdbcType="VARCHAR"/>
+		<result property="assignType" column="ASSIGN_TYPE_" jdbcType="VARCHAR"/>
+		<result property="assignId" column="ASSIGN_ID_" jdbcType="VARCHAR"/>
+		<result property="calendarName" column="calendar_name_" jdbcType="VARCHAR"/>
+		<result property="assignUserName" column="ASSIGN_USER_NAME_" jdbcType="VARCHAR"/>
+		
+	</resultMap>
+	
+	<sql id="columns">
+		id_,canlendar_Id_,assign_Type_,assign_Id_
+	</sql>
+	
+	<select id="get" parameterType="java.lang.String" resultMap="CalendarAssign">
+		SELECT id_,canlendar_id_,assign_type_,assign_id_,calendar_name_,assign_user_name_ FROM (
+			SELECT ca.id_,ca.canlendar_id_,ca.assign_type_,ca.assign_id_,
+				cc.name_ as calendar_name_,ca.assign_user_name_
+				FROM portal_cal_assign ca 
+				INNER JOIN portal_calendar cc ON ca.canlendar_id_ = cc.id_
+				WHERE ca.assign_type_ = 1
+			UNION 
+				SELECT ca.id_,ca.canlendar_id_,ca.assign_type_,ca.assign_id_,
+				cc.name_ as calendar_name_,ca.assign_user_name_
+				FROM portal_cal_assign ca 
+				INNER JOIN portal_calendar cc ON ca.canlendar_id_ = cc.id_
+				WHERE ca.assign_type_ = 2
+		) temp	WHERE id_=#{id}
+	</select>
+
+	<select id="getByAssignId" parameterType="Map" resultMap="CalendarAssign">
+		SELECT <include refid="columns"/>
+		FROM portal_cal_assign
+		WHERE assign_Type_=#{assignType} and assign_Id_=#{assignId}
+		 
+	</select>
+	 
+	<select id="query" resultMap="CalendarAssign">
+		SELECT id_,canlendar_id_,assign_type_,assign_id_,calendar_name_,assign_user_name_ FROM (
+			SELECT ca.id_,ca.canlendar_id_,ca.assign_type_,ca.assign_id_,
+				cc.name_ as calendar_name_, ca.assign_user_name_
+				FROM portal_cal_assign ca 
+				INNER JOIN portal_calendar cc ON ca.canlendar_id_ = cc.id_
+				WHERE ca.assign_type_ = 1
+			UNION 
+				SELECT ca.id_,ca.canlendar_id_,ca.assign_type_,ca.assign_id_,
+				cc.name_ as calendar_name_, ca.assign_user_name_
+				FROM portal_cal_assign ca 
+				INNER JOIN portal_calendar cc ON ca.canlendar_id_ = cc.id_
+				WHERE ca.assign_type_ = 2
+		) temp ${ew.customSqlSegment}
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+	
+	<delete id="delByCalId" parameterType="java.lang.String">
+		DELETE FROM portal_cal_assign 
+		WHERE
+		canlendar_Id_=#{canlendarId}
+	</delete>
+	
+	<select id="getbyAssign" parameterType="java.lang.String" resultMap="CalendarAssign">
+		SELECT <include refid="columns"/> FROM portal_cal_assign
+		WHERE assign_Id_ = #{assignId}
+	</select>
+</mapper>

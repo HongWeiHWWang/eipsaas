@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.sys.persistence.dao.SysRoleAuthDao">
+	<resultMap id="SysRoleAuth" type="com.hotent.sys.persistence.model.SysRoleAuth">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="roleAlias" column="ROLE_ALIAS_" jdbcType="VARCHAR"/>
+		<result property="menuAlias" column="MENU_ALIAS_" jdbcType="VARCHAR"/>
+		<result property="methodAlias" column="METHOD_ALIAS_" jdbcType="VARCHAR"/>
+		<result property="dataPermission" column="DATA_PERMISSION_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap id="SysRoleAuthExt" type="com.hotent.sys.persistence.model.SysRoleAuth" extends="SysRoleAuth">
+		<result property="methodRequestUrl" column="methodRequestUrl" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getSysRoleAuthByRoleAlias"   parameterType="java.lang.String" resultMap="SysRoleAuth">
+		SELECT * FROM portal_sys_role_auth 
+		WHERE 
+		ROLE_ALIAS_=#{roleAlias}
+	</select>
+	
+	<select id="getMenuAliasByRoleAlias"   parameterType="java.lang.String" resultType="String">
+		SELECT MENU_ALIAS_ FROM portal_sys_role_auth 
+		WHERE 
+		ROLE_ALIAS_=#{roleAlias}
+	</select>
+	
+	<select id="getMethodAliasByRoleAlias"   parameterType="java.lang.String"  resultType="String">
+		SELECT METHOD_ALIAS_ FROM portal_sys_role_auth 
+		WHERE 
+		ROLE_ALIAS_=#{roleAlias}
+	</select>
+	
+	<select id="getMethodByRoleAlias" parameterType="java.util.List"  resultType="String">
+		SELECT METHOD_ALIAS_ FROM portal_sys_role_auth 
+		WHERE  METHOD_ALIAS_ is not null  and
+		ROLE_ALIAS_ IN 
+		<foreach collection="roles" item="role" separator="," open="(" close=")">
+      	#{role}
+   		</foreach>
+	</select>
+	
+	<delete id="removeByRoleAlias" parameterType="java.lang.String">
+		DELETE FROM portal_sys_role_auth 
+		WHERE
+		ROLE_ALIAS_=#{roleAlias} and METHOD_ALIAS_ is null 
+	</delete>
+	
+	<delete id="removeRoleMethods" parameterType="java.lang.String">
+		DELETE FROM portal_sys_role_auth 
+		WHERE
+		ROLE_ALIAS_=#{roleAlias} and METHOD_ALIAS_  IN 
+		<foreach collection="methodAlias" item="item" separator="," open="(" close=")">
+      	#{item}
+   		</foreach> 
+	</delete>
+	
+	<select id="getSysRoleAuthAll" resultMap="SysRoleAuthExt">
+		SELECT b.*, a.request_url_  "methodRequestUrl"   FROM portal_sys_role_auth b LEFT JOIN  portal_sys_method a on a.ALIAS_ = b.METHOD_ALIAS_ 
+		WHERE 
+		b.METHOD_ALIAS_ is not null and b.ROLE_ALIAS_ is not null
+	</select>
+</mapper>

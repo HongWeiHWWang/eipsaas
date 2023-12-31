@@ -1,0 +1,14 @@
+com\hotent\sys\persistence\manager\SysPropertiesManagerTest.class
+com\hotent\sys\persistence\manager\SysCategoryManagerTest.class
+com\hotent\sys\persistence\manager\SysDataSourceManagerTest.class
+com\hotent\sys\persistence\manager\SysIdentityManagerTest.class
+com\hotent\sys\persistence\manager\SysDataSourceDefManagerTest.class
+com\hotent\sys\persistence\manager\SysLogsSettingManagerTest.class
+com\hotent\sys\persistence\manager\SysMethodManagerTest.class
+com\hotent\sys\SysTestCase.class
+com\hotent\sys\persistence\manager\SysAuthUserManagerTest.class
+com\hotent\sys\persistence\manager\SysRoleAuthManagerTest.class
+com\hotent\sys\persistence\manager\SysTypeManagerTest.class
+com\hotent\sys\EncrytUtilTest.class
+com\hotent\sys\persistence\manager\DataDictManagerTest.class
+com\hotent\sys\persistence\manager\SysLogsManagerTest.class

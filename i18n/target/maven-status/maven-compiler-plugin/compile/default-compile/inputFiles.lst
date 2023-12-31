@@ -1,0 +1,17 @@
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\support\entity\MessageEntity.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\support\service\impl\RedisMessageService.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\persistence\manager\I18nMessageErrorManager.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\persistence\manager\I18nMessageManager.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\persistence\dao\I18nMessageTypeDao.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\persistence\dao\I18nMessageDao.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\persistence\manager\impl\I18nMessageErrorManagerImpl.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\util\I18nUtil.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\persistence\manager\impl\I18nMessageTypeManagerImpl.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\persistence\model\I18nMessage.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\persistence\dao\I18nMessageErrorDao.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\persistence\model\I18nMessageError.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\persistence\manager\impl\I18nMessageManagerImpl.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\persistence\manager\I18nMessageTypeManager.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\persistence\model\I18nMessageType.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\Application.java
+C:\Dev\IdeaProjects\eipsaas\eipsaas\i18n\src\main\java\com\hotent\i18n\support\service\MessageService.java

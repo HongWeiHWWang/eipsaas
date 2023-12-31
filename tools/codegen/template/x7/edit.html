@@ -1,0 +1,42 @@
+<#import "function.ftl" as func>
+<#assign comment=model.tabComment>
+<#assign class=model.variables.class>
+<#assign package=model.variables.package>
+<#assign classVar=model.variables.classVar>
+<#assign system=vars.system>
+<#assign companyEn=vars.companyEn>
+<#assign commonList=model.commonList>
+<#assign pkModel=model.pkModel>
+<#assign pk=func.getPk(model) >
+<#assign pkVar=func.convertUnderLine(pk) >
+<div class="white-bg animated fadeInRight" full-scroll ng-controller="${classVar}EditCtrl">
+	<div class="row wrapper">
+		<div class="ibox">
+			<div class="ibox-title no-borders">
+				<h5>{{title}}</h5>
+				<div class="ibox-tools">		
+					<a ng-click="close()"><i class="fa fa-times"></i></a>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<form class="form-horizontal" name="${classVar}Form" ng-submit="save()">
+					<#list commonList as col>
+                	<#assign colName=func.convertUnderLine(col.columnName)>
+					<div class="form-group">								
+						<label class="col-sm-2 control-label">${col.getComment()}:</label>
+						<div class="col-sm-10">
+							<input aria-required="true" class="form-control input-sm" type="text" ng-model="data.${colName}"   ht-validate="{required:false,maxlength:128}"  />
+						</div>
+					</div>
+					</#list>
+					<div class="form-group">
+						<div class="col-sm-8 col-sm-offset-2" align="center">
+							<button class="btn btn-primary" type="submit" >保存</button>
+							<button class="btn btn-white" type="button" ng-click="close()">取消</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmAgentConditionDao">
+	<resultMap id="BpmAgentCondition" type="com.hotent.bpm.persistence.model.BpmAgentCondition">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="settingId" column="setting_id_" jdbcType="VARCHAR"/>
+		<result property="conditionDesc" column="condition_desc_" jdbcType="VARCHAR"/>
+		<result property="condition" column="condition_" jdbcType="VARCHAR"/>
+		<result property="agentId" column="agent_id_" jdbcType="VARCHAR"/>
+		<result property="agentName" column="agent_name_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="create" parameterType="com.hotent.bpm.persistence.model.BpmAgentCondition">
+		INSERT INTO bpm_agent_condition
+		(id_,setting_id_,condition_desc_,condition_,agent_id_,agent_name_)
+		VALUES 
+		(#{id,jdbcType=VARCHAR}, #{settingId,jdbcType=VARCHAR}, #{conditionDesc,jdbcType=VARCHAR}, #{condition,jdbcType=VARCHAR}, #{agentId,jdbcType=VARCHAR}, #{agentName,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="BpmAgentCondition">
+		SELECT * FROM bpm_agent_condition 
+		WHERE 
+		id_=#{id}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BpmAgentCondition">
+		SELECT * FROM bpm_agent_condition
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM bpm_agent_condition 
+		WHERE
+		id_=#{id}
+	</delete>
+	
+	<select id="getBySettingId"   parameterType="java.lang.String" resultMap="BpmAgentCondition">
+		SELECT * FROM bpm_agent_condition 
+		WHERE 
+		setting_id_=#{settingId}
+	</select>
+	
+	
+	<delete id="removeBySettingId">
+		DELETE FROM bpm_agent_condition 
+		WHERE
+		setting_id_=#{settingId}
+	</delete>
+	
+	
+</mapper>

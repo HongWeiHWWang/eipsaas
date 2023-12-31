@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmAgentDefDao">
+	<resultMap id="BpmAgentDef" type="com.hotent.bpm.persistence.model.BpmAgentDef">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="settingId" column="setting_id_" jdbcType="VARCHAR"/>
+		<result property="flowKey" column="flow_key_" jdbcType="VARCHAR"/>
+		<result property="flowName" column="flow_name_" jdbcType="VARCHAR"/>
+		<result property="nodeId" column="node_id_" jdbcType="VARCHAR"/>
+		<result property="nodeName" column="node_name_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getBySettingId"   parameterType="java.lang.String" resultMap="BpmAgentDef">
+		SELECT * FROM bpm_agent_def 
+		WHERE 
+		setting_id_=#{id}
+	</select>
+
+	<delete id="removeBySettingId" parameterType="java.lang.String">
+		DELETE FROM bpm_agent_def 
+		WHERE
+		setting_id_=#{settingId}
+	</delete>
+	
+</mapper>

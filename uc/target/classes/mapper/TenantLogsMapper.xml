@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.TenantLogsDao">
+	<resultMap id="TenantLogs" type="com.hotent.uc.model.TenantLogs">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="tenantId" column="TENANT_ID_" jdbcType="VARCHAR"/>
+		<result property="type" column="TYPE_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="reqUrl" column="REQ_URL_" jdbcType="VARCHAR"/>
+		<result property="ip" column="IP_" jdbcType="VARCHAR"/>
+		<result property="params" column="PARAMS_" jdbcType="VARCHAR"/>
+		<result property="opeContent" column="OPE_CONTENT_" jdbcType="LONGVARCHAR"/>
+		<result property="result" column="RESULT_" jdbcType="NUMERIC"/>
+		<result property="reason" column="REASON_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<delete id="deleteByTenantId" parameterType="java.lang.String">
+		DELETE FROM UC_TENANT_LOGS 
+		WHERE
+		TENANT_ID_=#{tenantId,jdbcType=VARCHAR}
+	</delete>
+	
+	
+</mapper>

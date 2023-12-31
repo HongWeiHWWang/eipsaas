@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.UserRelDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.UserRel">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="value" column="VALUE_" jdbcType="VARCHAR"/>
+		<result property="alias" column="ALIAS_" jdbcType="VARCHAR"/>
+		<result property="level" column="LEVEL_" jdbcType="VARCHAR"/>
+		<result property="parentId" column="PARENT_ID_" jdbcType="VARCHAR"/>
+		<result property="typeId" column="TYPE_ID_" jdbcType="VARCHAR"/>
+		<result property="groupType" column="GROUP_TYPE_" jdbcType="VARCHAR"/>
+		<result property="path" column="PATH_" jdbcType="VARCHAR"/>
+		<result property="status" column="STATUS_" jdbcType="NUMERIC"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<parameterMap id="UserRel" type="com.hotent.uc.model.UserRel" />
+	
+	<sql id="Base_Column_List">
+		ID_,NAME_,VALUE_,ALIAS_,LEVEL_,PARENT_ID_,TYPE_ID_,GROUP_TYPE_,PATH_,STATUS_,UPDATE_TIME_,IS_DELE_,VERSION_
+	</sql>
+	
+	<select id="getByAlias"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_USER_REL 
+		WHERE 
+		ALIAS_=#{alias} AND IS_DELE_!='1'
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_USER_REL 
+		${ew.customSqlSegment} 
+	</select>
+	
+	<select id="getByTypeId"  parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" />  FROM UC_USER_REL where TYPE_ID_ = #{typeId} AND IS_DELE_!='1'
+		<if test="authSql!=null">
+			${authSql}
+		</if>
+	</select>
+	
+	<select id="getByUserIdAndParentId" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" /> from UC_USER_REL where type_id_ = #{typeId,jdbcType=VARCHAR}  and parent_id_ = #{parentId,jdbcType=VARCHAR}
+		<if test="value != null">
+			and VALUE_ = #{value,jdbcType=VARCHAR}
+		</if>
+		AND IS_DELE_!='1'
+	</select>
+	
+	
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_USER_REL WHERE IS_DELE_='1' 
+	</delete>
+	
+	<delete id="removeByTypeId" parameterType="java.util.Map">
+		UPDATE UC_USER_REL SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE
+		TYPE_ID_=#{typeId}
+	</delete>
+	
+	<select id="getSuperUserRelBySql"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		select distinct relb.* from UC_USER_REL rela left join UC_USER_REL relb
+		on rela.PARENT_ID_ = relb.ID_ where relb.ID_ is not null and rela.STATUS_=1  and relb.STATUS_=1 AND rela.IS_DELE_!='1' AND relb.IS_DELE_!='1'
+		<if test="whereSql!=null">
+			${whereSql}
+		</if>
+	</select>
+	
+	<select id="getByWhereSql"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from UC_USER_REL rela where rela.STATUS_=1  AND rela.IS_DELE_!='1' 
+		<if test="whereSql!=null">
+			${whereSql}
+		</if>
+	</select>
+	
+	<update id="removeByPath" parameterType="java.util.Map" >
+		UPDATE UC_USER_REL SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE
+		PATH_ like #{path}
+	</update>
+	
+	<select id="getByParentId"  parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" />  FROM UC_USER_REL where PARENT_ID_ = #{parentId} AND IS_DELE_!='1'
+	</select>
+	
+</mapper>

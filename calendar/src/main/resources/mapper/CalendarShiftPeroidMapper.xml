@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.Calendar.dao.CalendarShiftPeroidDao">
+	<resultMap id="CalendarShiftPeroid" type="com.hotent.Calendar.model.CalendarShiftPeroid">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="shiftId" column="shift_id_" jdbcType="VARCHAR"/>
+		<result property="startTime" column="start_time_" jdbcType="VARCHAR"/>
+		<result property="endTime" column="end_time_" jdbcType="VARCHAR"/>
+		<result property="memo" column="memo_" jdbcType="VARCHAR"/>
+		
+	</resultMap>
+	
+	<delete id="delByMainId">
+	    DELETE FROM portal_cal_shift_peroid
+	    WHERE
+	    shift_id_=#{shiftId}
+	</delete>    
+	
+	<select id="getCalendarShiftPeroidList" resultMap="CalendarShiftPeroid">
+	    SELECT *
+	    FROM portal_cal_shift_peroid 
+	    WHERE shift_id_=#{shiftId}
+	</select>
+</mapper>

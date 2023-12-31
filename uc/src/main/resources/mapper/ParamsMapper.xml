@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.ParamsDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.Params">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="code" column="CODE_" jdbcType="VARCHAR"/>
+		<result property="type" column="TYPE_" jdbcType="VARCHAR"/>
+		<result property="ctlType" column="CTL_TYPE_" jdbcType="VARCHAR"/>
+		<result property="json" column="JSON_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+		<result property="tenantTypeId" column="TENANT_TYPE_ID_" jdbcType="VARCHAR"/>
+		<result property="typeName" column="type_name_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<parameterMap id="Params" type="com.hotent.uc.model.Params" />
+	
+	<sql id="Base_Column_List">
+		ID_,NAME_,CODE_,TYPE_,CTL_TYPE_,JSON_,UPDATE_TIME_,IS_DELE_,VERSION_,TENANT_TYPE_ID_
+	</sql>
+	
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_PARAMS WHERE IS_DELE_='1' 
+	</delete>
+	
+	<select id="getByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_PARAMS WHERE CODE_ = #{code} AND IS_DELE_!='1'
+	</select>
+	
+	<select id="getByType" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_PARAMS WHERE TYPE_ = #{type} AND IS_DELE_!='1'
+	</select>
+	
+	<select id="getByTenantTypeId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_PARAMS WHERE TENANT_TYPE_ID_ = #{tenantTypeId} AND IS_DELE_!='1'
+	</select>
+
+	<select id="queryWithType" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select up.*,tt.name_ "type_name_" from uc_params up
+		left join uc_tenant_type tt on up.tenant_type_id_ = tt.id_
+		${ew.customSqlSegment}
+	</select>
+
+	<select id="getCountByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1) from uc_params
+		where code_ = #{code}
+	</select>
+
+</mapper>

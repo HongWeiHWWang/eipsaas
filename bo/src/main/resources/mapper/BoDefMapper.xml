@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bo.persistence.dao.BoDefDao">
+	<resultMap id="BODef" type="com.hotent.bo.model.BoDef">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="categoryId" column="category_id_" jdbcType="VARCHAR"/>
+		<result property="categoryName" column="category_name_" jdbcType="VARCHAR"/>
+		<result property="alias" column="alias_" jdbcType="VARCHAR"/>
+		<result property="description" column="description_" jdbcType="VARCHAR"/>
+		<result property="supportDb" column="support_db_" jdbcType="NUMERIC"/>
+		<result property="deployed" column="deployed_" jdbcType="NUMERIC"/>
+		<result property="status" column="status_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+        <result property="rev" column="rev_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<insert id="insert" databaseId="pg" parameterType="com.hotent.bo.model.BoDef">
+		INSERT INTO form_bo_def (id_, category_id_, category_name_, alias_, description_, support_db_, deployed_, status_, create_by_, create_time_, rev_) 
+		VALUES 
+		(#{id,jdbcType=VARCHAR}, #{categoryId,jdbcType=VARCHAR} , #{categoryName,jdbcType=VARCHAR},#{alias,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+		<!-- <choose>
+		    <when test="supportDb==true">
+		        1
+		    </when>
+		    <otherwise>
+		        0
+		    </otherwise>
+		</choose> -->
+		 CAST(#{supportDb} as integer)
+		,
+		<!-- <choose>
+		    <when test="deployed==true">
+		        1
+		    </when>
+		    <otherwise>
+		        0
+		    </otherwise>
+		</choose> -->
+		 CAST(#{deployed} as integer)
+		 , #{status,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{rev,jdbcType=NUMERIC})
+	</insert>
+	
+	<!-- <update id="updateById" databaseId="pg" parameterType="com.hotent.bo.model.BoDef">
+		UPDATE form_bo_def SET
+		category_id_=#{categoryId,jdbcType=VARCHAR},
+		category_name_=#{categoryName,jdbcType=VARCHAR},
+		description_=#{description,jdbcType=VARCHAR},
+		support_db_=CAST(#{supportDb} as integer),
+		deployed_=CAST(#{deployed} as integer),
+		status_=#{status,jdbcType=VARCHAR},
+		create_by_=#{createBy,jdbcType=VARCHAR},
+		create_time_=#{createTime,jdbcType=TIMESTAMP},
+		rev_=#{rev,jdbcType=NUMERIC}
+		WHERE
+		id_=#{id}
+	</update> -->
+
+    <select id="getBoDefByRev" parameterType="java.util.Map" resultMap="BODef">
+		SELECT * FROM form_bo_def WHERE id_=#{id} and REV_=#{rev}
+	</select>
+	
+	<delete id="removeByAlias" parameterType="java.lang.String">
+		DELETE FROM form_bo_def
+		WHERE
+		alias_=#{alias}
+	</delete>
+	
+	<select id="getByAlias"   parameterType="java.lang.String" resultMap="BODef">
+		SELECT * FROM form_bo_def
+		WHERE 
+		alias_=#{alias,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getByFormKey" parameterType="java.lang.String" resultMap="BODef">
+		SELECT d.* from form_definition a,form_meta b ,form_bo_relation c,form_bo_def d
+		where a.DEF_ID_=b.ID_ and b.ID_=c.FORM_ID_ and c.BO_DEF_ID_=d.ID_
+		and a.FORM_KEY_=#{formKey} and a.IS_MAIN_='Y'
+	</select>
+
+	<select id="getFormDifinitionData" parameterType="java.lang.String"  resultType="java.util.HashMap">
+		SELECT form.id_,form.name_,form.form_type_,form.def_id_ FROM
+		form_definition form
+		INNER JOIN form_bo_relation rel ON form.DEF_ID_ = rel.FORM_ID_
+		WHERE rel.BO_DEF_ID_ = #{id}
+	</select>
+	
+	<select id="getEntData" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT def.id_ AS defId,ent.id_,ent.name_ FROM form_bo_ent ent
+		INNER JOIN form_bo_ent_relation rel ON rel.ref_ent_id_=ent.id_
+		INNER JOIN form_bo_def def ON def.id_=rel.bo_defid_
+		WHERE rel.bo_defid_=#{id}
+	</select>
+</mapper>

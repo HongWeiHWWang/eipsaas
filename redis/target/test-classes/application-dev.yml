@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    dynamic:
+      primary: master #设置默认的数据源或者数据源组,默认值即为master
+      datasource:
+        master:
+          username: sa
+          password: sa
+          driver-class-name: org.h2.Driver
+          url: jdbc:h2:mem:h2test;DB_CLOSE_DELAY=-1;MODE=MySQL
+  redis:
+    database: 4
+    host: 192.168.1.211
+    port: 6379
+    password:
+  h2:
+    console:
+      enabled: true

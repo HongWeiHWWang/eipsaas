@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.dao.FormCodegenLogDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hotent.form.model.FormCodegenLog">
+        <id column="id_" property="id" />
+        <result column="type_" property="type" />
+        <result column="table_or_form_" property="tableOrForm" />
+        <result column="ope_content_" property="opeContent" />
+        <result column="ip_" property="ip" />
+        <result column="create_by_" property="createBy" />
+        <result column="create_org_id_" property="createOrgId" />
+        <result column="create_time_" property="createTime" />
+        <result column="update_by_" property="updateBy" />
+        <result column="update_time_" property="updateTime" />
+        <result column="tenant_id_" property="tenantId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id_, type_, table_or_form_, ope_content_, ip_, create_by_, create_org_id_, create_time_, update_by_, update_time_, tenant_id_
+    </sql>
+
+</mapper>

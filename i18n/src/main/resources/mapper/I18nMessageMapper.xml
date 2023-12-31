@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.i18n.persistence.dao.I18nMessageDao">
+    <resultMap id="I18nMessage" type="com.hotent.i18n.persistence.model.I18nMessage">
+        <id property="id" column="ID_" jdbcType="VARCHAR"/>
+        <result property="type" column="TYPE_" jdbcType="VARCHAR"/>
+        <result property="key" column="KEY_" jdbcType="VARCHAR"/>
+        <result property="value" column="VALUE_" jdbcType="LONGVARCHAR"/>
+        <result property="types" column="types" jdbcType="VARCHAR"/>
+        <result property="vals" column="vals" jdbcType="VARCHAR"/>
+        <result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+        <result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+        <result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="getList_mysql" parameterType="java.util.Map" resultType="java.util.Map">
+        select * from (
+        select t.key_ "key_"
+        <if test="params.types!=null">
+            ,
+        </if>
+        <foreach collection="params.types" item="type" separator=",">
+            max(case when t.TYPE_ = '${type}' then t.VALUE_ else null end) as "${type}"
+        </foreach>
+        from portal_i18n_message t
+        WHERE
+        1 = 1
+        <if test="params.key!=null">
+            and ( t.key_ like concat('%',#{params.key},'%') or  t.VALUE_ like concat('%',#{params.val},'%'))
+        </if>
+        group BY t.KEY_ order by t.create_time_ desc
+        ) as m
+        where 1=1
+        <!--  <if test="params.relation==null">
+             <if test="params.key!=null">
+                 and lower(m.key_) like concat("%",#{params.key},"%")
+                 OR(
+                 <foreach collection="params.types" item="type" separator="or">
+                     lower(m.`${type}`) like concat("%",#{params.val},"%")
+                 </foreach>
+                 )
+             </if>
+         </if> -->
+
+    </select>
+
+    <select id="getList_oracle" parameterType="java.util.Map" resultType="java.util.Map">
+        select m.* from (
+        select t.id_ "id",t.key_ "key_"
+        <if test="params.types!=null">
+            ,
+        </if>
+        <foreach collection="params.types" item="type" separator=",">
+            max(decode(t.TYPE_,'${type}',to_char(t.VALUE_),null)) "${type}"
+        </foreach>
+        from portal_i18n_message t where 1=1
+        group BY t.KEY_,t.ID_ order by t.ID_
+        ) m where 1=1
+        <if test="params.relation==null">
+            <if test="params.key!=null">
+                and lower(m.key_) like concat("%",#{params.key},"%")
+                OR(
+                <foreach collection="params.types" item="type" separator="or">
+                    lower(m.`${type}`) like concat("%",#{params.val},"%")
+                </foreach>
+                )
+            </if>
+        </if>
+        <if test="params.relation!=null">
+            <if test="params.key!=null">
+                and lower(m.key_) like concat("%",#{params.key},"%")
+            </if>
+            <if test="params.val!=null">
+                AND(
+                <foreach collection="params.types" item="type" separator="or">
+                    lower(m.`${type}`) like concat("%",#{params.val},"%")
+                </foreach>
+                )
+            </if>
+        </if>
+    </select>
+
+    <select id="getByMesKey_mysql" parameterType="java.util.Map" resultType="java.util.Map">
+        select t.key_
+        <if test="types!=null">
+            ,
+        </if>
+        <foreach collection="types" item="type" separator=",">
+            max(if(t.TYPE_='${type}',t.VALUE_,null)) '${type}'
+        </foreach>
+        from portal_i18n_message t
+        where t.key_ = #{key}
+        group BY t.KEY_
+    </select>
+
+    <select id="getByMesKey_oracle" parameterType="java.util.Map" resultType="java.util.Map">
+        select t.key_ "key_"
+        <if test="types!=null">
+            ,
+        </if>
+        <foreach collection="types" item="type" separator=",">
+            max(decode(t.TYPE_,'${type}',to_char(t.VALUE_),null)) "${type}"
+        </foreach>
+        from portal_i18n_message t
+        where t.key_ = #{key}
+        group BY t.KEY_
+    </select>
+
+    <delete id="delByKey" parameterType="java.lang.String">
+		DELETE FROM portal_i18n_message WHERE key_ = #{key}
+	</delete>
+
+    <delete id="delByKeyAndType" parameterType="java.util.Map">
+		delete from portal_i18n_message where key_=#{key} and type_=#{type}
+	</delete>
+
+    <select id="getByKeyAndType" parameterType="java.util.Map" resultMap="I18nMessage">
+		select * from portal_i18n_message WHERE KEY_ = #{key} and TYPE_ = #{type}
+	</select>
+
+    <select id="getI18nInfo" resultType="java.util.Map">
+		select  m.ID_ ID_ , m.KEY_ KEY_,m.VALUE_ VALUE_,mt.TYPE_ TYPE_,mt.DESC_ DESC_  from portal_i18n_message m INNER JOIN portal_i18n_message_type mt ON m.TYPE_ = mt.TYPE_
+	</select>
+
+    <select id="searchList_oracle" parameterType="java.util.Map" resultType="java.util.Map">
+        select m.* from (
+        select t.key_ "key_"
+        <if test="types!=null">
+            ,
+        </if>
+        <foreach collection="types" item="type" separator=",">
+            max(decode(t.TYPE_,'${type}',to_char(t.VALUE_),null)) "${type}"
+        </foreach>
+        from portal_i18n_message t group BY t.KEY_
+        ) m
+        where 1=1
+        <if test="val!=null">
+            and (
+            <foreach collection="types" item="type" separator="or">
+                lower(m."${type}") like '${val}'
+            </foreach>
+            )
+        </if>
+    </select>
+
+    <select id="searchList_mysql" parameterType="java.util.Map" resultType="java.util.Map">
+        select * from (
+        select t.key_ "key_"
+        <if test="types!=null">
+            ,
+        </if>
+        <foreach collection="types" item="type" separator=",">
+            max(if(t.TYPE_='${type}',t.VALUE_,null)) '${type}'
+        </foreach>
+        from portal_i18n_message t group BY t.KEY_
+        ) as m
+        where 1=1
+        <if test="val!=null">
+            and (
+            <foreach collection="types" item="type" separator="or">
+                lower(m.`${type}`) like '${val}'
+            </foreach>
+            )
+        </if>
+    </select>
+
+</mapper>

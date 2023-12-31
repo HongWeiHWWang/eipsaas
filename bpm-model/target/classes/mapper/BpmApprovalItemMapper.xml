@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpmModel.dao.BpmApprovalItemDao">
+	<resultMap id="BpmApprovalItem" type="com.hotent.bpmModel.model.BpmApprovalItem">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="defKey" column="DEF_KEY_" jdbcType="VARCHAR"/>
+		<result property="defName" column="DEF_NAME_" jdbcType="VARCHAR"/>
+		<result property="typeId" column="TYPE_ID_" jdbcType="VARCHAR"/>
+		<result property="type" column="TYPE_" jdbcType="NUMERIC"/>
+		<result property="expression" column="EXPRESSION_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<select id="getByDefKeyAndUserAndSys" resultMap="BpmApprovalItem">
+		SELECT * FROM bpm_approval_item 
+		WHERE 
+		(USER_ID_=#{curUserId} and TYPE_ = 4) OR DEF_KEY_= #{defKey} OR TYPE_=1
+	</select>
+	
+	<select id="getItemByType" resultMap="BpmApprovalItem">
+		SELECT * FROM bpm_approval_item 
+		WHERE 
+		TYPE_= #{type}
+	</select>
+</mapper>

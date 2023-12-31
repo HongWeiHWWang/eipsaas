@@ -1,0 +1,6 @@
+com\hotent\assembly\feign\impl\BpmRuntimeFeignServiceAssemblyImpl.class
+com\hotent\assembly\feign\impl\FormFeignServiceAssemblyImpl.class
+com\hotent\assembly\feign\impl\PortalFeignServiceAssemblyImpl.class
+com\hotent\assembly\feign\impl\UCFeignServiceAssemblyImpl.class
+com\hotent\assembly\Application.class
+com\hotent\assembly\feign\impl\BpmModelFeignServiceAssemblyImpl.class

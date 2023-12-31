@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.OperateLogDao">
+	<resultMap id="OrgoperateLog" type="com.hotent.uc.model.OperateLog">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="reqIp" column="REQ_IP_" jdbcType="VARCHAR"/>
+		<result property="reqType" column="REQ_TYPE_" jdbcType="VARCHAR"/>
+		<result property="reqUrl" column="REQ_URL_" jdbcType="VARCHAR"/>
+		<result property="reqParam" column="REQ_PARAM_" jdbcType="VARCHAR"/>
+		<result property="startTime" column="START_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="endTime" column="END_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="operatorName" column="OPERATOR_NAME_" jdbcType="VARCHAR"/>
+		<result property="note" column="NOTE_" jdbcType="LONGVARCHAR"/>
+		<result property="success" column="SUCCESS_" jdbcType="NUMERIC"/>
+		<result property="failReason" column="FAIL_REASON_" jdbcType="LONGVARCHAR"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+	<delete id="removePhysicalById" parameterType="java.lang.String">
+		DELETE FROM UC_OPERATE_LOG 
+		WHERE
+		ID_=#{id}
+	</delete>
+	
+</mapper>

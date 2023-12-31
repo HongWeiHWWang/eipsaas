@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.portal.persistence.dao.SysIndexLayoutManageDao">
+	<resultMap id="SysIndexLayoutManage" type="com.hotent.portal.model.SysIndexLayoutManage">
+		<id property="id" column="ID" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+		<result property="memo" column="MEMO" jdbcType="VARCHAR"/>
+		<result property="orgId" column="ORG_ID" jdbcType="VARCHAR"/>
+		<result property="templateHtml" column="TEMPLATE_HTML" jdbcType="LONGVARCHAR"/>
+		<result property="designHtml" column="DESIGN_HTML" jdbcType="LONGVARCHAR"/>
+		<result property="isDef" column="IS_DEF" jdbcType="NUMERIC"/>
+		<result property="orgName" column="org_name" jdbcType="VARCHAR"/>
+		<result property="layoutType" column="LAYOUT_TYPE" jdbcType="NUMERIC"/>
+		<result property="enable" column="ENABLE" jdbcType="NUMERIC"/>
+		<result property="shareToSub" column="SHARE_TO_SUB" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<select id="getByUserIdFilter" resultMap="SysIndexLayoutManage"  parameterType="java.util.Map" >
+		select * from portal_sys_layout_MANAGE  where ID in(
+			select t.id from (
+				<foreach collection="relationMap" index="key"  item="ent" separator="union">
+					select r.id from portal_sys_layout_MANAGE r,portal_sys_auth_user defUser where defUser.OWNER_ID_=r.id and defUser.RIGHT_TYPE_=#{key}  and defUser.OBJ_TYPE_=#{objType}
+					<if test="@com.hotent.base.ognl.Ognl@notEquals(key,'everyone') and @com.hotent.base.ognl.Ognl@isNotEmpty(ent)">
+							and defUser.OWNER_ID_ in 
+							<foreach collection="ent"  item="id" separator="," open="(" close=")">
+								#{id}
+							</foreach>
+					</if>
+				</foreach>
+			) t
+		) 
+		<where>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(name)"> AND NAME  LIKE #{name}  </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(memo)"> AND MEMO  LIKE #{memo}  </if>
+		</where>
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(orderField)">
+		order by ${orderField} ${orderSeq}
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isEmpty(orderField)">
+		order by IS_DEF DESC
+		</if>
+	</select>
+	
+	<select id="getManageLayout" resultMap="SysIndexLayoutManage">
+		SELECT *
+		FROM portal_sys_layout_MANAGE   
+		<where>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(orgIds)"> AND ORG_ID in (${orgIds}) </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(isDef)"> AND IS_DEF  =${isDef} </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(isNullOrg)"> AND ORG_ID IS NULL </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(layoutType)"> AND LAYOUT_TYPE=#{layoutType,jdbcType=NUMERIC} </if>
+		</where>
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(orderField)">
+		order by ${orderField} ${orderSeq}
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isEmpty(orderField)">
+		order by ORG_ID
+		</if>
+	</select>
+	
+	<update id="updateIsDef" parameterType="java.lang.String">
+			UPDATE portal_sys_layout_MANAGE SET 
+			IS_DEF=0
+			WHERE 
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(orgId)">
+				ORG_ID = #{orgId}
+			</if>
+			<if test="@com.hotent.base.ognl.Ognl@isEmpty(orgId)">
+				ORG_ID is null or org_id = ''
+			</if>
+	</update>
+	
+	<select id="getEnableByOrgIdAndType"  parameterType="java.util.Map" resultMap="SysIndexLayoutManage">
+		SELECT *
+		FROM portal_sys_layout_MANAGE 
+		WHERE ORG_ID = #{orgId} AND LAYOUT_TYPE =#{layoutType} AND ENABLE = 1 
+	</select>
+	
+	<select id="getSharedByOrgIdAndType"  parameterType="java.util.Map" resultMap="SysIndexLayoutManage">
+		SELECT *
+		FROM portal_sys_layout_MANAGE 
+		WHERE ORG_ID = #{orgId}  AND LAYOUT_TYPE =#{layoutType} AND ENABLE = 1 AND SHARE_TO_SUB = 1 
+	</select>
+	
+	<select id="getSharedByOrgIds" parameterType="java.util.Map" resultMap="SysIndexLayoutManage">
+		SELECT
+			*
+		FROM
+			portal_sys_layout_MANAGE
+		WHERE
+			ORG_ID IN 
+			<foreach collection="orgIds" item="orgId" separator="," open="(" close=")">
+				#{orgId}
+			</foreach>
+		AND LAYOUT_TYPE = #{layoutType}
+		AND ENABLE = 1
+		AND SHARE_TO_SUB = 1
+	</select>
+	
+	<select id="getByOrgIdAndLayoutType"  parameterType="java.util.Map" resultMap="SysIndexLayoutManage">
+		SELECT *
+		FROM portal_sys_layout_MANAGE 
+		WHERE ORG_ID = #{orgId} AND LAYOUT_TYPE = #{layoutType}
+	</select>
+	
+	<select id="getByName"  parameterType="java.lang.String" resultType="Integer">
+		SELECT count(*) as amount FROM portal_sys_layout_MANAGE where name=#{name}
+	</select>
+	
+	<update id="cancelOrgIsDef" parameterType="java.util.Map" >
+	<![CDATA[
+	  update portal_sys_layout_MANAGE set IS_DEF=0 where  LAYOUT_TYPE = #{layoutType}	  and  IS_DEF !=2
+	]]>
+	<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(orgId)">
+			AND	ORG_ID = #{orgId}
+	</if>
+	</update>
+	
+	<select id="getByOrgIdAndLayoutTypeAndLayoutId"  parameterType="java.util.Map" resultMap="SysIndexLayoutManage">
+		SELECT *
+		FROM portal_sys_layout_MANAGE 
+		WHERE ORG_ID = #{orgId} AND LAYOUT_TYPE = #{layoutType} AND ID = #{layoutId}
+	</select>
+	<select id="getByIdAndType"  parameterType="java.util.Map" resultMap="SysIndexLayoutManage">
+		SELECT *
+		FROM portal_sys_layout_MANAGE 
+		WHERE ID = #{id} AND  LAYOUT_TYPE = #{type}
+	</select>
+	
+	<select id="isExistName" parameterType="java.lang.String" resultType="Integer">
+		SELECT count(*) amount FROM portal_sys_layout_MANAGE WHERE NAME = #{name}
+	</select>
+	
+</mapper>

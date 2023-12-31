@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.runtime.dao.BpmTestCaseDao">
+	<resultMap id="BpmTestCase" type="com.hotent.runtime.model.BpmTestCase">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="boFormData" column="bo_form_data_" jdbcType="LONGVARCHAR"/>
+		<result property="flowVars" column="flow_vars_" jdbcType="VARCHAR"/>
+		<result property="startor" column="startor_" jdbcType="VARCHAR"/>
+		<result property="actionType" column="action_type_" jdbcType="VARCHAR"/>
+		<result property="bpmDebugger" column="bpm_debugger_" jdbcType="VARCHAR"/>
+		<result property="defKey" column="def_key_" jdbcType="VARCHAR"/>
+		<result property="startorAccount" column="startor_account_" jdbcType="VARCHAR"/>
+		<result property="startorFullName" column="startor_full_name_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+</mapper>

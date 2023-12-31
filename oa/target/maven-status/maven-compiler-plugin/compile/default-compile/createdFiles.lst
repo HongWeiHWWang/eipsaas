@@ -1,0 +1,11 @@
+com\wijo\oa\persistence\manager\impl\MeetingroomManagerImpl.class
+com\wijo\oa\persistence\manager\impl\MeetingroomBookManagerImpl.class
+com\wijo\oa\persistence\dao\MeetingroomBookDao.class
+com\wijo\oa\persistence\dao\MeetingroomDao.class
+com\wijo\oa\persistence\manager\MeetingroomBookManager.class
+com\wijo\oa\Application.class
+com\wijo\oa\model\Meetingroom.class
+com\wijo\oa\controller\MeetingroomBookController.class
+com\wijo\oa\model\MeetingroomBook.class
+com\wijo\oa\controller\MeetingroomController.class
+com\wijo\oa\persistence\manager\MeetingroomManager.class

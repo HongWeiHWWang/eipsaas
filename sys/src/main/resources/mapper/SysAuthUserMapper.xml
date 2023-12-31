@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.hotent.sys.persistence.dao.SysAuthUserDao">
+	<resultMap id="SysAuthUser" type="com.hotent.sys.persistence.model.SysAuthUser">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="objType" column="OBJ_TYPE_" jdbcType="VARCHAR"/>
+		<result property="authorizeId" column="AUTHORIZE_ID_" jdbcType="VARCHAR"/>
+		<result property="ownerId" column="OWNER_ID_" jdbcType="VARCHAR"/>
+		<result property="ownerName" column="OWNER_NAME_" jdbcType="VARCHAR"/>
+		<result property="rightType" column="RIGHT_TYPE_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="columns">
+		ID_,OBJ_TYPE_,AUTHORIZE_ID_,OWNER_ID_,OWNER_NAME_,RIGHT_TYPE_
+	</sql>
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="id!=null"> AND ID_  =#{id} </if>
+			<if test="objType!=null"> AND OBJ_TYPE_  =#{objType} </if>
+			<if test="authorizeId!=null"> AND AUTHORIZE_ID_  =#{authorizeId} </if>
+			<if test="ownerId!=null"> AND OWNER_ID_  =#{ownerId} </if>
+			<if test="ownerName!=null"> AND OWNER_NAME_ LIKE #{ownerName}  </if>
+			<if test="rightType!=null"> AND RIGHT_TYPE_  =#{rightType}  </if>
+		</where>
+	</sql>
+	
+	<delete id="delById" parameterType="java.lang.String">
+		DELETE FROM portal_sys_auth_user 
+		WHERE
+		ID_=#{id}
+	</delete>
+		
+	<select id="getById" parameterType="java.lang.String" resultMap="SysAuthUser">
+		SELECT <include refid="columns"/>
+		FROM portal_sys_auth_user
+		WHERE
+		ID_=#{id}
+	</select>
+	
+	<select id="getAll" resultMap="SysAuthUser">
+		SELECT <include refid="columns"/>
+		FROM portal_sys_auth_user   
+		<include refid="dynamicWhere" />
+		<if test="orderField!=null">
+		order by ${orderField} ${orderSeq}
+		</if>
+		<if test="orderField!=null">
+		order by ID_  desc
+		</if>
+	</select>
+	
+	<!--根据用户权限Map获取有权限流程列表  -->
+	<select id="getAuthorizeIdsByUserMap" resultType="java.lang.String"  parameterType="java.util.Map" >
+		select AUTHORIZE_ID_ from (
+		select AUTHORIZE_ID_ from portal_sys_auth_user u  where  RIGHT_TYPE_ = 'everyone' and  OBJ_TYPE_=#{objType,jdbcType=VARCHAR}
+		   <foreach collection="userRightMap" index="key" item="value" open="" separator=" " close=""> 
+				union
+				select AUTHORIZE_ID_ from portal_sys_auth_user u
+	 				 where  RIGHT_TYPE_ = #{key}  and OWNER_ID_ in (${value}) and  OBJ_TYPE_=#{objType,jdbcType=VARCHAR}
+             </foreach>
+             ) a ORDER BY a.AUTHORIZE_ID_  DESC
+	</select> 
+	
+	
+	<!--根据用户权限Map获取有权限流程列表  -->
+	<select id="getAuthByAuthorizeId"  resultType="java.lang.String"  parameterType="java.util.Map" >
+		select AUTHORIZE_ID_ from portal_sys_auth_user u  where  RIGHT_TYPE_ = 'everyone' and  AUTHORIZE_ID_=#{authorizeId,jdbcType=VARCHAR}
+		   <foreach collection="userRightMap" index="key" item="value" open="" separator=" " close=""> 
+				union
+				select AUTHORIZE_ID_ from portal_sys_auth_user u
+	 				 where  RIGHT_TYPE_ = #{key}  and OWNER_ID_ in (${value}) and  AUTHORIZE_ID_=#{authorizeId,jdbcType=VARCHAR}
+             </foreach>
+	</select> 
+	
+	<delete id="delByAuthorizeId" parameterType="java.lang.String">
+		DELETE FROM portal_sys_auth_user 
+		WHERE AUTHORIZE_ID_=#{authorizeId} AND OBJ_TYPE_=#{objType,jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

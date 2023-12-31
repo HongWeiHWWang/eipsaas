@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: dev
+    base: com.hotent.job.controller
+    title: "job"
+    description: "job executor"
+    version: "7.2.3"
+    platform: mysql
+    
+# Server settings (ServerProperties)
+server:
+  port: 8083
+  address: 0.0.0.0
+  sessionTimeout: 30
+  contextPath: /
+  session:
+    timeout: 30

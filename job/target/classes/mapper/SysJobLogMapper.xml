@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.job.persistence.dao.SysJobLogDao">
+	<resultMap id="SysJobLog" type="com.hotent.job.model.SysJobLog">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="jobName" column="job_name_" jdbcType="VARCHAR"/>
+		<result property="trigName" column="trig_name_" jdbcType="VARCHAR"/>
+		<result property="startTime" column="start_time_" jdbcType="TIMESTAMP"/>
+		<result property="endTime" column="end_time_" jdbcType="TIMESTAMP"/>
+		<result property="content" column="content_" jdbcType="LONGVARCHAR"/>
+		<result property="state" column="state_" jdbcType="VARCHAR"/>
+		<result property="runTime" column="run_time_" jdbcType="NUMERIC"/>
+	</resultMap>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmExeStackRelationDao">
+	<resultMap id="BpmExeStackRelation" type="com.hotent.bpm.persistence.model.BpmExeStackRelation">
+		<id property="relationId" column="relation_id_" jdbcType="VARCHAR"/>
+		<result property="procInstId" column="proc_inst_id_" jdbcType="VARCHAR"/>
+		<result property="fromStackId" column="from_stack_id_" jdbcType="VARCHAR"/>
+		<result property="toStackId" column="to_stack_id_" jdbcType="VARCHAR"/>
+		<result property="fromNodeId" column="from_node_id_" jdbcType="VARCHAR"/>
+		<result property="toNodeId" column="to_node_id_" jdbcType="VARCHAR"/>
+		<result property="relationState" column="relation_state_" jdbcType="NUMERIC"/>
+		<result property="fromNodeType" column="from_node_type_" jdbcType="VARCHAR"/>
+		<result property="toNodeType" column="to_node_type_" jdbcType="VARCHAR"/>
+		<result property="createdTime" column="created_time_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<select id="getByToStackId"   parameterType="java.lang.String" resultMap="BpmExeStackRelation">
+		SELECT * FROM bpm_exe_stack_relation 
+		WHERE 
+		to_stack_id_=#{stackId}
+	</select>
+		
+	<select id="getByFromStackId"   parameterType="java.lang.String" resultMap="BpmExeStackRelation">
+		SELECT * FROM bpm_exe_stack_relation 
+		WHERE 
+		from_stack_id_=#{stackId}
+	</select>
+	
+    <select id="getListByProcInstId"   parameterType="java.lang.String" resultMap="BpmExeStackRelation">
+		SELECT * FROM bpm_exe_stack_relation 
+		WHERE 
+		proc_inst_id_=#{procInstId} ORDER BY created_time_ DESC
+	</select>
+
+    <select id="getById"   parameterType="java.lang.String" resultMap="BpmExeStackRelation">
+		SELECT * FROM bpm_exe_stack_relation
+		WHERE
+		proc_inst_id_= #{instId} and from_stack_id_ = #{fromId} and to_stack_id_ = #{toId}
+	</select>
+	
+	<delete id="removeHisByInstId">
+		DELETE FROM bpm_exe_stack_relation_his
+		WHERE
+		proc_inst_id_=#{procInstId,jdbcType=VARCHAR}
+	</delete>
+	
+</mapper>

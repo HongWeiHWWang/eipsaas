@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.im.persistence.dao.ImGeneralContactDao">
+	<resultMap id="ImGeneralContact" type="com.hotent.im.persistence.model.ImGeneralContact">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="owner" column="owner_" jdbcType="VARCHAR"/>
+		<result property="account" column="account_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<insert id="create" parameterType="com.hotent.im.persistence.model.ImGeneralContact">
+		INSERT INTO portal_im_general_contact
+		(id_,owner_,account_,create_time_)
+		VALUES 
+		(#{id,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="ImGeneralContact">
+		SELECT * FROM portal_im_general_contact 
+		WHERE 
+		id_=#{id}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="ImGeneralContact">
+		SELECT * FROM portal_im_general_contact
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+	
+	<update id="update" parameterType="com.hotent.im.persistence.model.ImGeneralContact">
+		UPDATE portal_im_general_contact SET
+		owner_=#{owner,jdbcType=VARCHAR},
+		account_=#{account,jdbcType=VARCHAR},
+		create_time_=#{createTime,jdbcType=TIMESTAMP}
+		WHERE
+		id_=#{id}
+	</update>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM portal_im_general_contact 
+		WHERE
+		id_=#{id}
+	</delete>
+	
+	<select id="getByOwnerAndAccount"   parameterType="java.util.Map" resultMap="ImGeneralContact">
+		SELECT * FROM portal_im_general_contact 
+		WHERE 
+		owner_=#{owner,jdbcType=VARCHAR}
+		and
+		account_=#{account,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getGeneralContactInfo" parameterType="java.util.Map" resultMap="ImGeneralContact">
+		select igc.* from portal_im_general_contact igc
+
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY igc.create_time_ DESC
+		</if>
+	</select>
+	
+</mapper>

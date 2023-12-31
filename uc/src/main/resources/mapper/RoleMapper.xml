@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.RoleDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.Role">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="code" column="CODE_" jdbcType="VARCHAR"/>
+		<result property="enabled" column="ENABLED_" jdbcType="NUMERIC"/>
+		<result property="description" column="DESCRIPTION_" jdbcType="VARCHAR"/>
+		
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<parameterMap id="Role" type="com.hotent.uc.model.Role" />
+	
+	<sql id="Base_Column_List">
+		ID_,NAME_,CODE_,ENABLED_,DESCRIPTION_,UPDATE_TIME_,IS_DELE_,VERSION_,CREATE_BY_,UPDATE_BY_,CREATE_ORG_ID_
+	</sql>
+	
+	
+	<select id="getByCode"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_ROLE 
+		WHERE 
+		CODE_=#{code} AND IS_DELE_!='1'
+	</select>
+	
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_ROLE WHERE IS_DELE_='1'
+	</delete>
+	
+	<select id="getListByUserId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT r.ID_,r.NAME_,r.CODE_  from UC_USER_ROLE ur  INNER JOIN UC_USER u on ur.USER_ID_=u.ID_ 
+		INNER JOIN UC_ROLE  r on  ur.ROLE_ID_=r.ID_  and ur.USER_ID_= #{userId} WHERE r.IS_DELE_!='1' AND ur.IS_DELE_!='1'
+	</select>
+
+	<select id="getListByAccount" parameterType="java.lang.String" resultMap="BaseResultMap" >
+		SELECT DISTINCT r.* ,u.* FROM UC_ROLE r INNER JOIN uc_user_role ur 
+		ON r.ID_ = ur.ROLE_ID_  INNER JOIN uc_user u ON u.ID_ = ur.USER_ID_ WHERE u.ACCOUNT_ = #{account} 
+		AND r.IS_DELE_!='1' AND u.IS_DELE_!='1' AND ur.IS_DELE_!='1'
+	</select>
+	
+	<select id="getOrgRoleList" resultMap="BaseResultMap">
+		select r.* from uc_role r INNER JOIN uc_org_role o ON r.ID_ = o.ROLE_ID_ 
+		where r.IS_DELE_!='1' AND o.IS_DELE_!='1'
+		<if test="orgId!=null">
+			and o.ORG_ID_ = #{orgId}
+		</if>
+		<if test="orgCode!=null">
+			and o.CODE_ = #{orgCode}
+		</if>
+		<if test="roleCode!=null">
+			and r.CODE_ = #{roleCode}
+		</if>
+		<if test="roleId!=null">
+			and r.ID_ = #{roleId}
+		</if>
+		<if test="isInherit!=null">
+			and o.IS_INHERIT_ = #{isInherit}
+		</if>
+	</select>
+
+	<select id="getOrgRoleListNotCode" parameterType="java.lang.String" resultMap="BaseResultMap" >
+		SELECT <include refid="Base_Column_List" />
+		FROM uc_role WHERE CODE_ != #{code} and IS_DELE_='0'
+	</select>
+
+	<select id="getCountByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(1) FROM UC_ROLE
+		WHERE CODE_ = #{code}
+	</select>
+</mapper>

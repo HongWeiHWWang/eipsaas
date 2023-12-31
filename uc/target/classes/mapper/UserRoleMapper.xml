@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.UserRoleDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.UserRole">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="roleId" column="ROLE_ID_" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="fullname" column="FULLNAME_" jdbcType="VARCHAR"/>
+		<result property="roleName" column="ROLE_NAME_" jdbcType="VARCHAR"/>
+		<result property="alias" column="ALIAS_" jdbcType="VARCHAR"/>
+		<result property="account" column="ACCOUNT_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<parameterMap id="UserRole" type="com.hotent.uc.model.UserRole" />
+	
+	<sql id="Base_Column_List">
+		ID_,ROLE_ID_,USER_ID_,UPDATE_TIME_,IS_DELE_,VERSION_
+	</sql>
+
+   <select id="getByRoleIdUserId"  parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_USER_ROLE 
+		WHERE 
+		ROLE_ID_=#{roleId} and USER_ID_=#{userId} AND IS_DELE_!=1
+	</select>
+	
+	<select id="getByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select a.*, c.ACCOUNT_, b.CODE_ ALIAS_ from UC_USER_ROLE a 
+		inner join UC_ROLE b on a.ROLE_ID_=b.ID_ 
+		inner join UC_USER c on a.USER_ID_=c.ID_ 
+		where c.ACCOUNT_=#{account}
+	</select>
+	
+	
+	<select id="queryByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT ur.*,u.FULLNAME_,u.ACCOUNT_,r.NAME_ "ROLE_NAME_" ,r.CODE_  "ALIAS_" from UC_USER_ROLE ur  INNER JOIN UC_USER u on ur.USER_ID_=u.ID_
+		INNER JOIN UC_ROLE  r on  ur.ROLE_ID_=r.ID_
+		<if test="ew.paramNameValuePairs.roleId!=null">
+			 and ur.ROLE_ID_= #{ew.paramNameValuePairs.roleId}
+		</if>
+		<if test="ew.paramNameValuePairs.userId!=null">
+			 and ur.USER_ID_= #{ew.paramNameValuePairs.userId}
+		</if>
+		<if test="ew.paramNameValuePairs.alias!=null">
+			 and r.CODE_= #{ew.paramNameValuePairs.alias}
+		</if>
+		${ew.customSqlSegment}
+		<if test="@com.hotent.base.ognl.Ognl@isEmpty(ew.customSqlSegment)"> WHERE </if>
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.customSqlSegment)"> AND </if>
+		ur.IS_DELE_!='1' AND u.IS_DELE_!='1' AND r.IS_DELE_!='1'
+	</select>
+	
+	
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_USER_ROLE WHERE IS_DELE_=1 
+	</delete>
+	
+	<delete id="removeByRoleId" parameterType="java.util.Map">
+		UPDATE UC_USER_ROLE SET IS_DELE_=1,UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE
+		ROLE_ID_=#{roleId}
+	</delete>
+	
+	<delete id="removeByUserId" parameterType="java.util.Map">
+		UPDATE UC_USER_ROLE SET IS_DELE_=1,UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE
+		USER_ID_=#{userId}
+	</delete>
+</mapper>

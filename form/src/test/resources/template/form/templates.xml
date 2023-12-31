@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+	<!-- 控件宏模版 -->
+	<template alias="fieldControl" name="PC端宏模板" type="macro" templateDesc="PC端宏模板" dir="pc"/>
+	<!-- 主表 -->
+	<template alias="oneColumn" name="单列模板" type="main" templateDesc="单列模板" macroAlias="fieldControl" dir="pc"/>
+	<template alias="twoColumn" name="两列模板" type="main" templateDesc="两列模板" macroAlias="fieldControl" dir="pc"/>
+	<template alias="threeColumn" name="叁列模板" type="main" templateDesc="叁列模板" macroAlias="fieldControl" dir="pc"/>
+	<template alias="fourColumn" name="四列模板" type="main" templateDesc="四列模板" macroAlias="fieldControl" dir="pc"/>
+	<!-- 子表 -->
+	<template alias="blockTemplate" name="块模板(单列)" type="subTable" templateDesc="块模板(单列)" macroAlias="fieldControl" dir="pc"/>
+	<template alias="blockTemplate2" name="块模板(两列)" type="subTable" templateDesc="块模板(两列)" macroAlias="fieldControl" dir="pc"/>
+	<template alias="blockTemplate3" name="块模板(三列)" type="subTable" templateDesc="块模板(三列)" macroAlias="fieldControl" dir="pc"/>
+	<template alias="blockInlineTemplate" name="块模板(单行)" type="subTable" templateDesc="块模板(单行)" macroAlias="fieldControl" dir="pc"/>
+
+	<!-- 手机端 -->
+	<template alias="mobileFieldMacro" name="手机端宏模板" dir="mobile" type="mobileMacro" templateDesc="手机端宏模板"/>
+	<template alias="mobileMainTemplate" name="手机主表模板" type="mobileMain" dir="mobile" templateDesc="手机主表单列" macroAlias="mobileFieldMacro"/>
+ <!--	<template alias="normalEditSubTemplate" name="手机子表表内编辑" type="mobileSub" dir="mobile" templateDesc="手机子表表内编辑" macroAlias="mobileFieldMacro"/>
+	<template alias="alertEditSubTemplate" name="手机子表弹出框编辑" type="mobileSub" dir="mobile" templateDesc="手机表单弹出框编辑" macroAlias="mobileFieldMacro"/>
+ -->	<template alias="blockSubTemplate" name="手机子表块编辑" type="mobileSub" dir="mobile" templateDesc="手机表单块模式编辑" macroAlias="mobileFieldMacro"/>
+	
+	
+	<!-- 自定义SQL查询mu -->
+	<template alias="queryDataViewTemplate" name="自定义SQL查询模版" type="queryDataTemplate" templateDesc="自定义SQL查询模版" dir="pc"/>
+	
+	<!--  业务数据模板 -->
+	<template alias="dataTemplateList" name="业务数据模版" type="dataTemplate" templateDesc="业务数据模版" dir="pc"/>
+	
+</templates>

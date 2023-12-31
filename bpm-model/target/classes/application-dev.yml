@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: bpm-model-eureka
+  profiles:
+    active: dev
+  datasource:
+    dynamic:
+      datasource:
+        master:
+          username: root
+          password: HUZIMBF0ckEWdgif9/133dgEU6kfC8xjihEFYeQ9bhGcWXRuN9EM81NZzzMRn9i63aAIT5C5cZYxR7aO4SX0QA==
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/eip?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
+          druid:
+            public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANRnrjXbx7azwaBOwFarcR2D3yH4zLts8bgjmczSwhrJOF9mH/GPQK3B/QUbQdzOFBdSSxVXDv5R8HdgUqxfhBMCAwEAAQ==
+  redis:
+    database: 6
+    host: 127.0.0.1
+    port: 6379
+    password: $123myredis
+  activemq:
+    broker-url: tcp://127.0.0.1:61616
+    user: admin
+    password: admin
+
+server:
+  port: 8087
+
+jms:
+  enable: true
+
+redis:
+  enable: true
+
+# 分布式事务
+seata:
+  enabled: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/

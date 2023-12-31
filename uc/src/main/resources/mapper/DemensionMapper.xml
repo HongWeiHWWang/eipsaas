@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.DemensionDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.Demension">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="demCode" column="CODE_" jdbcType="VARCHAR"/>
+		<result property="demName" column="DEM_NAME_" jdbcType="VARCHAR"/>
+		<result property="demDesc" column="DEM_DESC_" jdbcType="VARCHAR"/>
+		<result property="isDefault" column="IS_DEFAULT_" jdbcType="NUMERIC"/>
+		<result property="organId" column="ORGAN_ID_" jdbcType="VARCHAR"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+
+		
+	</resultMap>
+	
+	
+	<select id="getByCode"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT 
+		*
+		FROM UC_DEMENSION 
+		WHERE 
+		CODE_=#{code} AND IS_DELE_!='1'
+	</select>
+	
+	<select id="getDefaultDemension"  resultMap="BaseResultMap">
+		SELECT 
+		*
+		FROM UC_DEMENSION 
+		WHERE 
+		IS_DEFAULT_=1 AND IS_DELE_!='1'
+	</select>
+	
+	<update id="setNotDefaultDemension" parameterType="java.time.LocalDateTime">
+		UPDATE UC_DEMENSION SET IS_DEFAULT_= 0 where IS_DEFAULT_= 1
+	</update>
+
+	<select id="getCountByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(1) FROM UC_DEMENSION
+		WHERE CODE_ = #{code}
+	</select>
+	
+</mapper>

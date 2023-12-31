@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.jee-soft.cn/bpm/plugins/userCalc/approver"
+    targetNamespace="http://www.jee-soft.cn/bpm/plugins/userCalc/approver"
+    xmlns:base="http://www.jee-soft.cn/bpm/plugins/userCalc/base" elementFormDefault="qualified">
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/userCalc/base"  schemaLocation="base.xsd"/>
+    <xs:element name="approver">
+        <xs:annotation>
+            <xs:documentation>流程实例审批人</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="base:abstractLogic">
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+     </xs:element>
+</xs:schema>

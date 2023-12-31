@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.hotent.runtime.dao.ConditionScriptDao">
+	<resultMap id="ConditionScript" type="com.hotent.runtime.model.ConditionScript">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="className" column="CLASS_NAME_" jdbcType="VARCHAR"/>
+		<result property="classInsName" column="CLASS_INS_NAME_" jdbcType="VARCHAR"/>
+		<result property="methodName" column="METHOD_NAME_" jdbcType="VARCHAR"/>
+		<result property="methodDesc" column="METHOD_DESC_" jdbcType="VARCHAR"/>
+		<result property="returnType" column="RETURN_TYPE_" jdbcType="VARCHAR"/>
+		<result property="argument" column="ARGUMENT_" jdbcType="VARCHAR"/>
+ 
+		<result property="enable" column="ENABLE_" jdbcType="NUMERIC"/>
+		<result property="type" column="TYPE_" jdbcType="NUMERIC"/>
+	</resultMap>
+
+	<sql id="columns">
+		ID_, CLASS_NAME_,CLASS_INS_NAME_,METHOD_NAME_,METHOD_DESC_,RETURN_TYPE_,ARGUMENT_,ENABLE_,TYPE_
+	</sql>
+
+</mapper>

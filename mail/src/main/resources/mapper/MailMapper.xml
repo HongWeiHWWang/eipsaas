@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.mail.persistence.dao.MailDao">
+	<resultMap id="Mail" type="com.hotent.mail.model.Mail">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="subject" column="TITLE_" jdbcType="VARCHAR"/>
+		<result property="content" column="CONTENT_" jdbcType="LONGVARCHAR"/>
+		<result property="senderAddress" column="SENDER_ADDRESSES_" jdbcType="VARCHAR"/>
+		<result property="senderName" column="SENDER_NAME_" jdbcType="VARCHAR"/>
+		<result property="receiverAddresses" column="RECEIVER_ADDRESSES_" jdbcType="VARCHAR"/>
+		<result property="receiverName" column="RECEIVER_NAMES_" jdbcType="VARCHAR"/>
+		<result property="copyToAddresses" column="CC_ADDRESSES_" jdbcType="VARCHAR"/>
+		<result property="bccName" column="BCC_NAMES_" jdbcType="VARCHAR"/>
+		<result property="bcCAddresses" column="BCC_ADDRESSES_" jdbcType="VARCHAR"/>
+		<result property="copyToName" column="CC_NAMES_" jdbcType="VARCHAR"/>
+		<result property="messageId" column="MESSAGE_ID_" jdbcType="VARCHAR"/>
+		<result property="type" column="TYPE_" jdbcType="NUMERIC"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="isReply" column="IS_REPLY_" jdbcType="NUMERIC"/>
+		<result property="sendDate" column="SEND_DATE_" jdbcType="TIMESTAMP"/>
+		<result property="fileIds" column="FILE_IDS_" jdbcType="VARCHAR"/>
+		<result property="isRead" column="IS_READ_" jdbcType="NUMERIC"/>
+		<result property="setId" column="SET_ID_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="columns">
+		ID_,TITLE_,CONTENT_,SENDER_ADDRESSES_,SENDER_NAME_,RECEIVER_ADDRESSES_,RECEIVER_NAMES_,CC_ADDRESSES_,CC_NAMES_,BCC_ADDRESSES_,BCC_NAMES_,SEND_DATE_,FILE_IDS_,IS_READ_,IS_REPLY_,MESSAGE_ID_,TYPE_,USER_ID_,SET_ID_
+	</sql>
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(id)"> AND ID_  =#{id} </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(subject)"> AND TITLE_  LIKE #{subject} </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(senderAddress)"> AND SENDER_ADDRESSES_  LIKE #{senderAddress}  </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(senderName)"> AND SENDER_NAME_  LIKE #{senderName}  </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(receiverAddresses)"> AND RECEIVER_ADDRESSES_  LIKE #{receiverAddresses}  </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(receiverName)"> AND RECEIVER_NAMES_  LIKE #{receiverName}  </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(copyToAddresses)"> AND CC_ADDRESSES_  LIKE #{copyToAddresses}  </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(copyToName)"> AND CC_NAMES_  LIKE #{copyToName}  </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(bcCAddresses)"> AND BCC_ADDRESSES_  LIKE #{bcCAddresses}  </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(bccName)"> AND BCC_NAMES_  LIKE #{bccName}  </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(sendDate)"> AND SEND_DATE_  =#{sendDate} </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(fileIds)"> AND FILE_IDS_  LIKE #{fileIds}  </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(isRead)"> AND IS_READ_  =#{isRead} </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(isReply)"> AND IS_REPLY_  =#{isReply} </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(messageId)"> AND MESSAGE_ID_  =#{messageId} </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(type)"> AND TYPE_  =#{type} </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(userId)"> AND USER_ID_  =#{userId} </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(setId)"> AND SET_ID_  =#{setId} </if>
+		</where>
+	</sql>
+
+	
+	<sql id="dynamicWhere2">
+		<where>
+		    USER_ID_=#{userId} 
+		    <if test="@com.hotent.base.ognl.Ognl@isNotEmpty(subject)"> AND TITLE_  LIKE #{subject} </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(beginsendDate)"> AND mail.SEND_DATE_  >=#{beginsendDate,jdbcType=DATE} </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(endsendDate)" > AND mail.SEND_DATE_ &lt;=#{endsendDate,jdbcType=DATE} </if>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(isRead)"> AND IS_READ_  =#{isRead} </if>
+		</where>
+	</sql>
+	
+	<update id="updateTypes" parameterType="java.util.Map">
+		UPDATE portal_sys_mail SET 
+		TYPE_=#{type}
+		where ID_=#{id}
+	</update>
+    
+    <select id="getByEmailId" resultType="int">
+	 SELECT count(*) FROM portal_sys_mail where MESSAGE_ID_=#{messageId} and SET_ID_=#{setId}
+    </select>	
+	
+	<select id="getDefaultMailList" resultMap="Mail">
+		SELECT <include refid="columns"/>
+		FROM portal_sys_mail mail
+		<include refid="dynamicWhere2"/> 
+		and 
+		SET_ID_=#{setId} and TYPE_=#{type}
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(orderField)">
+		order by ${orderField} ${orderSeq}
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isEmpty(orderField)">
+		order by ID_  desc
+		</if>
+	</select>
+		
+	<select id="getFolderList"   parameterType="java.util.Map" resultMap="Mail">
+    	SELECT <include refid="columns"/>
+		FROM portal_sys_mail
+		<include refid="dynamicWhere2"/> 
+		and 
+		SET_ID_=#{setId} and TYPE_=#{type}
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(orderField)">
+		order by ${orderField} ${orderSeq}
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isEmpty(orderField)">
+		order by ID_  desc
+		</if>
+    </select>
+    
+    <select id="getFolderCount" resultType="int" parameterType="java.util.Map">
+    	SELECT COUNT(*) FROM portal_sys_mail WHERE SET_ID_=#{setId} and TYPE_=#{type}
+    </select>
+    
+    <delete id="delByEmailid" parameterType="java.lang.String">
+		DELETE FROM portal_sys_mail 
+		WHERE
+		MESSAGE_ID_=#{uid}
+	</delete>
+
+	<delete id="delBySetId" parameterType="java.lang.String">
+		DELETE FROM portal_sys_mail 
+		WHERE
+		SET_ID_=#{setId}
+	</delete>
+	<select id="getMailByUserId" parameterType="java.lang.String" resultType="com.hotent.mail.model.Mail" >
+		select ID_,TITLE_ FROM portal_sys_mail where USER_ID_=#{userId} and IS_READ_=0 and TYPE_=1 order by SEND_DATE_ desc
+	</select>
+	
+	<update id="isRead" parameterType="java.lang.String">
+		UPDATE portal_sys_mail SET 
+		IS_READ_=1
+		where ID_=#{id}
+	</update>
+</mapper>

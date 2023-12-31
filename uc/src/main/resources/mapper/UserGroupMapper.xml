@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.UserGroupDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.UserGroup">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="json" column="JSON_" jdbcType="VARCHAR"/>
+		<result property="code" column="CODE_" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="orgId" column="ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="roleId" column="ROLE_ID_" jdbcType="VARCHAR"/>
+		<result property="posId" column="POS_ID_" jdbcType="VARCHAR"/>
+		<result property="description" column="DESCRIPTION_" jdbcType="VARCHAR"/>
+		<result property="creator" column="CREATOR_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<parameterMap id="UserGroup" type="com.hotent.uc.model.UserGroup" />
+	
+	<sql id="Base_Column_List">
+		ID_,NAME_,JSON_,CODE_,USER_ID_,ORG_ID_,ROLE_ID_,POS_ID_,DESCRIPTION_,CREATOR_,UPDATE_TIME_,IS_DELE_,VERSION_
+	</sql>
+	
+	
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_USER_GROUP WHERE IS_DELE_='1' 
+	</delete>
+	
+	<select id="getByCode"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_USER_GROUP 
+		WHERE 
+		CODE_=#{code} AND IS_DELE_!='1'
+	</select>
+	
+	<select id="getByWhereSql"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_USER_GROUP WHERE IS_DELE_!='1'
+		<if test="whereSql!=null">
+			${whereSql}
+		</if>
+	</select>
+	
+</mapper>

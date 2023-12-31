@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.Calendar.dao.CalendarShiftDao">
+	<resultMap id="CalendarShift" type="com.hotent.Calendar.model.CalendarShift">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="memo" column="memo_" jdbcType="VARCHAR"/>
+		<result property="minutes" column="minutes_" jdbcType="NUMERIC"/>
+		<result property="isDefault" column="is_default_" jdbcType="VARCHAR"/>
+		
+	</resultMap>
+	
+	<sql id="columns">
+		id_,name_,memo_,minutes_,is_default_
+	</sql>
+	<!-- 
+	  *获取cal_shit表的默认班次的id，初始化数据的时候，默认班次数据sql脚本insert到表里,
+      *亦可以由用户见面设定
+	 -->
+	<select id="getUniqueDefaultShift" parameterType="java.lang.String" resultMap="CalendarShift">
+		SELECT <include refid="columns"/> FROM portal_cal_shift
+		WHERE is_default_ = 1
+	</select>
+	
+	<update id="setNotDefaultShift">
+		UPDATE portal_cal_shift SET is_Default_=0
+	</update>
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmProStatusDao">
+	<resultMap id="DefaultBpmProStatus" type="com.hotent.bpm.persistence.model.DefaultBpmProStatus">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="procInstId" column="proc_inst_id_" jdbcType="VARCHAR"/>
+		<result property="procDefId" column="proc_def_id_" jdbcType="VARCHAR"/>
+		<result property="nodeId" column="node_id_" jdbcType="VARCHAR"/>
+		<result property="nodeName" column="node_name_" jdbcType="VARCHAR"/>
+		<result property="status" column="status_" jdbcType="VARCHAR"/>
+		<result property="lastUpdate" column="last_update_" jdbcType="TIMESTAMP"/>
+		<result property="lastUserid" column="last_userid_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="queryHistorys"   parameterType="java.lang.String" resultMap="DefaultBpmProStatus">
+		SELECT * FROM bpm_pro_status_hi 
+		WHERE 
+		proc_inst_id_=#{procInstId}
+	</select>	
+	
+	
+	<insert id="archiveHistory"  parameterType="java.lang.String" >
+		insert into bpm_pro_status_hi (id_,proc_inst_id_,proc_def_id_,node_id_,node_name_,status_,last_update_,last_userid_) 
+		select id_,proc_inst_id_,proc_def_id_,node_id_,node_name_,status_,last_update_,last_userid_  from bpm_pro_status where proc_inst_id_=#{procInstId}
+	</insert>
+	
+	<select id="getByInstNodeId"  parameterType="java.util.Map"  resultMap="DefaultBpmProStatus">
+		select * from  bpm_pro_status  where proc_inst_id_=#{procInstId} and node_id_= #{nodeId}
+	</select>
+	
+	
+	<delete id="delByInstList" >
+		DELETE FROM  bpm_pro_status where proc_inst_id_ in 
+			<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        	</foreach> 
+	</delete>
+	
+	<update id="updStatusByInstList" >
+		update bpm_pro_status set status_=#{status} where proc_inst_id_ in 
+			<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        	</foreach> 
+        	and status_='pending'
+	</update>
+</mapper>

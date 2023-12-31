@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="codegen.xsd">
+	<variables>
+		<variable name="developer" value="David" />
+		<variable name="email" value="376514860@qq.com"/>
+		<variable name="company" value="wijo" />
+	</variables>
+	
+	<templates>
+		<template id="entity" path="x7\entity.ftl"/>
+		<template id="dao" path="x7\dao.ftl"/>
+		<template id="manager"  path="x7\manager.ftl"/>
+		<template id="managerImpl"  path="x7\managerImpl.ftl"/>
+		<template id="mapping"  path="x7\mapping.ftl"/>
+		<template id="controllerNG"  path="x7\controllerNg.ftl"/>
+		
+		
+		<template id="managerVue"  path="x7\entityManagerVue.ftl"/>
+	</templates>
+	<!-- D:\workspace\sjs_managevue\shenjiaosuo_managevue\portal  -->
+	<!-- D:\workspace\sjs_managevue\shenjiaosuo_managevue\web\manage -->
+	<files baseDir="C:\Dev\IdeaProjects\eipsaas\eipsaas\oa" >
+	    <!--后台代码 -->
+	    <file refTemplate="entity" filename="{class}.java" dir="src\main\java\com\{companyEn}\{system}\model"  sub="true" override="true"/>
+		<file refTemplate="dao" filename="{class}Dao.java" dir="src\main\java\com\{companyEn}\{system}\persistence\dao" sub="true"  override="true"/>
+		<file refTemplate="mapping" filename="{class}Mapper.xml" dir="src\main\resources\mapper"  sub="true"  override="true"/>
+		<file refTemplate="manager" filename="{class}Manager.java" dir="src\main\java\com\{companyEn}\{system}\persistence\manager" sub="true"  override="true"/>
+		<file refTemplate="managerImpl" filename="{class}ManagerImpl.java" dir="src\main\java\com\{companyEn}\{system}\persistence\manager\impl" sub="true"  override="true"/>
+		<file refTemplate="controllerNG" filename="{class}Controller.java" dir="\src\main\java\com\{companyEn}\{system}\controller" sub="true" override="true"/>
+
+		<!--前台代码
+	    <file refTemplate="managerVue" filename="{class}Manager.vue" dir="\src\views\{system}"  override="true"/>
+		-->
+	</files>
+	<!-- -->
+	<table tableName="w_meetingroom">
+		<variable name="class" value="Meetingroom" />
+		<variable name="package" value="Meetingroom" />
+	</table>
+
+	<table tableName="w_meetingroom_book">
+		<variable name="class" value="MeetingroomBook" />
+		<variable name="package" value="MeetingroomBook" />
+	</table>
+
+
+
+	<!--
+	<table tableName="w_meetingroom" >
+		<variable name="class" value="Meetingroom" />
+		<variable name="package" value="Meetingroom" />
+		
+		<subtable tablename="w_meetingroom_book" foreignKey="F_MEETINGROOM_ID">
+			<variable name="class" value="MeetingroomBook" />
+			<variable name="package" value="Meetingroom" />
+		</subtable>
+	</table>
+	-->
+
+</config>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmTaskNoticeDoneDao">
+	<resultMap id="BpmTaskNoticeDone" type="com.hotent.bpm.persistence.model.BpmTaskNoticeDone">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="procDefId" column="PROC_DEF_ID_" jdbcType="VARCHAR"/>
+		<result property="supInstId" column="SUP_INST_ID_" jdbcType="VARCHAR"/>
+		<result property="procInstId" column="PROC_INST_ID_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="TASK_ID_" jdbcType="VARCHAR"/>
+		<result property="taskKey" column="TASK_KEY_" jdbcType="VARCHAR"/>
+		<result property="taskName" column="TASK_NAME_" jdbcType="VARCHAR"/>
+		<result property="token" column="TOKEN_" jdbcType="VARCHAR"/>
+		<result property="qualfieds" column="QUALFIEDS_" jdbcType="VARCHAR"/>
+		<result property="qualfiedNames" column="QUALFIED_NAMES_" jdbcType="VARCHAR"/>
+		<result property="auditor" column="AUDITOR_" jdbcType="VARCHAR"/>
+		<result property="auditorName" column="AUDITOR_NAME_" jdbcType="VARCHAR"/>
+		<result property="opinion" column="OPINION_" jdbcType="VARCHAR"/>
+		<result property="status" column="STATUS_" jdbcType="VARCHAR"/>
+		<result property="formDefId" column="FORM_DEF_ID_" jdbcType="VARCHAR"/>
+		<result property="formName" column="FORM_NAME_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="assignTime" column="ASSIGN_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="completeTime" column="COMPLETE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="durMs" column="DUR_MS_" jdbcType="NUMERIC"/>
+		<result property="files" column="FILES_" jdbcType="VARCHAR"/>
+		<result property="interpose" column="INTERPOSE_" jdbcType="NUMERIC"/>
+        <result property="subject" column="subject_" jdbcType="VARCHAR"/>
+        <result property="procDefName" column="proc_def_name_" jdbcType="VARCHAR"/>
+        <result property="bpmTaskNoticeId" column="bpm_task_notice_id_" jdbcType="VARCHAR"/>
+        <result property="supportMobile" column="SUPPORT_MOBILE_" jdbcType="NUMERIC"/>
+        <result property="typeId" column="type_id_" jdbcType="VARCHAR"/>
+
+	</resultMap>
+
+	<select id="selectPage" parameterType="java.util.Map" resultMap="BpmTaskNoticeDone">
+		select * from (
+		SELECT btnd.*,(SELECT type_id_ from bpm_pro_inst where bpm_pro_inst.ID_ = btnd.PROC_INST_ID_ )  type_id_  FROM bpm_task_notice_done btnd
+		) bpm_task_notice_done
+		${ew.customSqlSegment}
+	</select>
+
+	<select id="getNoticeDoneReadCount" parameterType="java.util.Map" resultType="java.util.Map">
+		select count(1) as count,type_id_ as typeId from bpm_task_notice_done done
+		left join bpm_pro_inst inst on inst.id_ = done.proc_inst_id_
+		${ew.customSqlSegment}
+		group by type_id_
+	</select>
+
+    <delete id="delBpmTaskNoticeDoneByDefId" parameterType="java.lang.String">
+		DELETE FROM bpm_task_notice_done
+		WHERE
+		PROC_DEF_ID_=#{defId}
+	</delete>
+
+    <delete id="delBpmTaskNoticeDoneById" parameterType="java.lang.String">
+		DELETE FROM bpm_task_notice_done
+		WHERE
+		bpm_task_notice_id_=#{id}
+	</delete>
+
+    <delete id="delBpmTaskNoticeDoneByInstId" parameterType="java.lang.String">
+		DELETE FROM bpm_task_notice_done
+		WHERE
+		PROC_INST_ID_=#{instId}
+	</delete>
+
+</mapper>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.im.persistence.dao.ImMessageSessionDao">
+	<resultMap id="ImMessageSession" type="com.hotent.im.persistence.model.ImMessageSession">
+		<id property="id" column="id_" jdbcType="NUMERIC"/>
+		<result property="code" column="code_" jdbcType="VARCHAR"/>
+		<result property="title" column="title_" jdbcType="VARCHAR"/>
+		<result property="icon" column="icon_" jdbcType="VARCHAR"/>
+		<result property="scene" column="scene_" jdbcType="VARCHAR"/>
+		<result property="lastText" column="last_text_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="owner" column="owner_" jdbcType="VARCHAR"/>
+		<result property="description" column="description_" jdbcType="VARCHAR"/>
+		<result property="lastTextTime" column="last_text_time_" jdbcType="TIMESTAMP"/>
+		
+		
+		
+		<result property="userAccount" column="user_account_" jdbcType="VARCHAR"/>
+		<result property="userSessionTitle" column="session_title_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="create" parameterType="com.hotent.im.persistence.model.ImMessageSession">
+		INSERT INTO portal_im_message_session
+		(id_,code_,title_,icon_,scene_,last_text_,create_time_,owner_,description_,last_text_time_)
+		VALUES 
+		(#{id,jdbcType=NUMERIC}, #{code,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
+		#{scene,jdbcType=VARCHAR}, #{lastText,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{owner,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},#{lastTextTime,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="ImMessageSession">
+		SELECT * FROM portal_im_message_session 
+		WHERE 
+		id_=#{id}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="ImMessageSession">
+		SELECT * FROM portal_im_message_session
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+	
+	<update id="update" parameterType="com.hotent.im.persistence.model.ImMessageSession">
+		UPDATE portal_im_message_session SET
+		code_=#{code,jdbcType=VARCHAR},
+		title_=#{title,jdbcType=VARCHAR},
+		icon_=#{icon,jdbcType=VARCHAR},
+		scene_=#{scene,jdbcType=VARCHAR},
+		last_text_=#{lastText,jdbcType=VARCHAR},
+		create_time_=#{createTime,jdbcType=TIMESTAMP},
+		owner_=#{owner,jdbcType=VARCHAR},
+		description_=#{description,jdbcType=VARCHAR}
+		WHERE
+		id_=#{id}
+	</update>
+	
+	
+	
+	<update id="updateMessageArrived" parameterType="com.hotent.im.persistence.model.ImMessageSession">
+		UPDATE portal_im_message_session SET
+		last_text_=#{lastText,jdbcType=VARCHAR},
+		last_text_time_=#{lastTextTime,jdbcType=TIMESTAMP}
+		WHERE
+		code_=#{sessionCode,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateTitle" parameterType="com.hotent.im.persistence.model.ImMessageSession">
+		UPDATE portal_im_message_session SET
+		title_=#{title,jdbcType=VARCHAR}
+		WHERE
+		code_=#{sessionCode,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateDescription" parameterType="com.hotent.im.persistence.model.ImMessageSession">
+		UPDATE portal_im_message_session SET
+		description_=#{description,jdbcType=VARCHAR}
+		WHERE
+		code_=#{sessionCode,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateLastText" parameterType="com.hotent.im.persistence.model.ImMessageSession">
+		UPDATE portal_im_message_session SET
+		last_text_=#{lastText,jdbcType=VARCHAR}
+		WHERE
+		code_=#{sessionCode,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateEarliestAsOwner" parameterType="java.util.Map">
+		update portal_im_message_session set owner_ = (select user_account_ from portal_im_session_user 
+		where session_code_ = #{sessionCode,jdbcType=VARCHAR} order by join_time_ desc  LIMIT 1) 
+		where code_ = #{sessionCode,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateSessionOwner" parameterType="java.util.Map">
+		UPDATE portal_im_message_session SET
+		owner_=#{owner,jdbcType=VARCHAR}
+		WHERE
+		code_=#{sessionCode,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateIcon" parameterType="java.util.Map">
+		UPDATE portal_im_message_session SET
+		icon_=#{icon,jdbcType=VARCHAR}
+		WHERE
+		code_=#{sessionCode,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM portal_im_message_session 
+		WHERE
+		id_=#{id}
+	</delete>
+	
+	<select id="getBySessionCode"   parameterType="java.lang.String" resultMap="ImMessageSession">
+		SELECT code_,title_,icon_,scene_,last_text_,create_time_,owner_ FROM portal_im_message_session 
+		WHERE 
+		code_ = #{code}
+	</select>
+	
+	<select id="getByCodeAndUser"   parameterType="java.lang.String" resultMap="ImMessageSession">
+		SELECT ims.code_ , ims.title_ , ims.icon_ , ims.scene_,isu.user_account_,isu.session_title_ as userSessionTitle FROM portal_im_message_session ims
+		LEFT JOIN portal_im_session_user isu on ims.code_ = isu.session_code_
+		where ims.code_ = #{sessionCode,jdbcType=VARCHAR}
+		and isu.user_account_ = #{userAccount,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<select id="getTeamSessionDetail"   parameterType="java.lang.String" resultMap="ImMessageSession">
+		select ims.code_,ims.title_,ims.icon_,ims.scene_,ims.owner_,isu.user_alias_ as userAlias,ims.create_time_,ims.description_ from portal_im_message_session ims
+
+		LEFT JOIN portal_im_session_user isu on isu.user_account_ = ims.owner_
+		
+		where ims.code_ = #{sessionCode,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getByDynamicSql" parameterType="java.util.Map" resultMap="ImMessageSession" >
+		SELECT ${fieldSql} FROM portal_im_message_session 
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY create_time_ ASc
+		</if>
+	</select>
+	
+</mapper>

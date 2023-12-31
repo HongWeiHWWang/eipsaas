@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.runtime.dao.BpmSelectorDefDao">
+	<resultMap id="bpmSelectorDef" type="com.hotent.runtime.model.BpmSelectorDef">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="alias" column="alias_" jdbcType="VARCHAR"/>
+		<result property="groupField" column="group_field_" jdbcType="VARCHAR"/>
+		<result property="buttons" column="buttons_" jdbcType="VARCHAR"/>
+		<result property="isCustom" column="is_custom_" jdbcType="NUMERIC"/>
+		<result property="flag" column="flag_" jdbcType="NUMERIC"/>
+		<result property="method" column="method_" jdbcType="VARCHAR"/>
+		<result property="confKey" column="conf_key_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getByAlias"   parameterType="java.lang.String" resultMap="bpmSelectorDef">
+		SELECT * FROM bpm_selector_def 
+		WHERE 
+		alias_=#{alias}
+	</select>
+	
+	<select id="isExistAlias" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) FROM bpm_selector_def
+		WHERE 
+		alias_=#{alias}
+		<if test="id!=null">
+			AND id_ !=#{id}
+		</if>
+	</select>
+</mapper>

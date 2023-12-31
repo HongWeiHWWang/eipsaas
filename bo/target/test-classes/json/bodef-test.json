@@ -1,0 +1,92 @@
+{
+    "status": "normal",
+    "supportDb": true,
+    "deployed": false,
+    "description": "个人信息",
+    "alias": "person",
+    "ents": [{
+        "packageId": "",
+        "name": "xx",
+        "desc": "学校",
+        "status": "enabled",
+        "createBy": "",
+        "createTime": "2016-04-11 18:00:00",
+        "isCreateTable": true,
+        "dsName": "dataSource_Default",
+        "tableName": "W_xx",
+        "isExternal": "0",
+        "pk": "",
+        "fk": "",
+        "pkType": "",
+        "relation": "onetomany",
+        "attributeList": [{
+            "isRequired": "0",
+            "dataType": "varchar",
+            "attrLength": "50",
+            "desc": "名称",
+            "name": "name"
+        }, {
+            "isRequired": "0",
+            "dataType": "varchar",
+            "attrLength": "50",
+            "desc": "地址",
+            "name": "addr"
+        }]
+    }, {
+        "packageId": "",
+        "name": "class",
+        "desc": "班级",
+        "status": "enabled",
+        "createBy": "",
+        "createTime": "2016-04-13 18:09:00",
+        "isCreateTable": true,
+        "dsName": "dataSource_Default",
+        "tableName": "W_class",
+        "isExternal": "0",
+        "pk": "",
+        "fk": "",
+        "pkType": "",
+        "relation": "onetomany",
+        "attributeList": [{
+            "isRequired": "0",
+            "dataType": "varchar",
+            "attrLength": "50",
+            "desc": "名称",
+            "name": "name"
+        }, {
+            "isRequired": "0",
+            "dataType": "varchar",
+            "attrLength": "50",
+            "desc": "类型",
+            "name": "type"
+        }]
+    }, {
+        "packageId": "",
+        "name": "cswbsjy",
+        "desc": "测试外部数据源",
+        "status": "enabled",
+        "createBy": "",
+        "createTime": "2016-04-11 10:21:10.0",
+        "isCreateTable": true,
+        "dsName": "dataSource_Default",
+        "tableName": "xb_db_id",
+        "isExternal": "1",
+        "pk": "id_",
+        "fk": "",
+        "pkType": "varchar",
+        "relation": "main",
+        "attributeList": [{
+            "isRequired": "0",
+            "dataType": "number",
+            "attrLength": "20",
+            "name": "start_",
+            "fieldName":"start_"
+        }, {
+            "isRequired": "0",
+            "dataType": "number",
+            "attrLength": "20",
+            "name": "max_",
+            "fieldName":"max_"
+        }]
+    }]
+}

@@ -1,0 +1,35 @@
+
+export const emojiJson = {
+  '[笑脸]':{
+    key:'smile',
+    name:'笑脸'
+  },
+  '[脸红]':{
+    key:'flushed',
+    name:'脸红'
+  },
+  '[低落]':{
+    key:'disappointed',
+    name:'低落'
+  },
+  '[开心]':{
+    key:'blush',
+    name:'开心'
+  },
+  '[哭]':{
+    key:'sob',
+    name:'哭'
+  },
+  '[破涕为笑]':{
+    key:'joy',
+    name:'破涕为笑'
+  },
+  '[生气]':{
+    key:'rage',
+    name:'生气'
+  },
+  '[点赞]':{
+    key:'thumbsup',
+    name:'点赞'
+  }
+};

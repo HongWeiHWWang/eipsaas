@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:base="http://www.jee-soft.cn/bpm/plugins/userCalc/base" targetNamespace="http://www.jee-soft.cn/bpm/plugins/userCalc/base" xmlns:tns="http://www.example.org/base" elementFormDefault="qualified">
+	
+    <xs:simpleType name="logicCalType">
+    	<xs:annotation>
+    		<xs:documentation>逻辑运算(or,and,not)</xs:documentation>
+    	</xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="or"/>
+            <xs:enumeration value="and"/>
+            <xs:enumeration value="exclude"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="extractType">
+    	<xs:annotation>
+    		<xs:documentation>人员抽取类型</xs:documentation>
+    	</xs:annotation>
+    	<xs:restriction base="xs:string">
+            <xs:enumeration value="no"/>
+            <xs:enumeration value="extract"/>
+            <xs:enumeration value="secondExtract"/>
+            <xs:enumeration value="usergroup"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="boolType">
+    	<xs:annotation>
+    		<xs:documentation>布尔值(Y,N)</xs:documentation>
+    	</xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Y"/>
+            <xs:enumeration value="N"/>
+        </xs:restriction>
+    </xs:simpleType>    
+    
+    <xs:complexType name="abstractLogic">
+    	<xs:attribute name="logicCal" type="base:logicCalType" />
+    	<xs:attribute name="extract" type="base:extractType" /> 
+    </xs:complexType>
+    
+    <xs:element name="userRule">
+    	<xs:complexType>
+    		<xs:all> 
+	    		<xs:element name="description" type="xs:string" maxOccurs="1" minOccurs="0">
+	    			<xs:annotation>
+			            <xs:documentation>描述</xs:documentation>
+			        </xs:annotation>
+	    		</xs:element>
+	    		<xs:element name="condition" type="xs:string" maxOccurs="1" minOccurs="0">
+	    			<xs:annotation>
+			            <xs:documentation>条件表达式</xs:documentation>
+			        </xs:annotation>
+	    		</xs:element>
+	    		<xs:element name="conditionMode" type="xs:string" maxOccurs="1" minOccurs="0">
+	    			<xs:annotation>
+			            <xs:documentation>条件表达式模式：design=来自设计器；input=直接输入</xs:documentation>
+			        </xs:annotation>
+	    		</xs:element>    
+	    		<xs:element name="parentFlowkey" type="xs:string" maxOccurs="1" minOccurs="0">
+	    			<xs:annotation>
+			            <xs:documentation>父流程的定义Key</xs:documentation>
+			        </xs:annotation>
+	    		</xs:element> 		
+	    		<xs:element name="calcs" maxOccurs="1" minOccurs="1">
+	    			<xs:annotation>
+			            <xs:documentation>人员计算插件</xs:documentation>
+			        </xs:annotation>
+	    		</xs:element>
+    		</xs:all>
+    	
+	    	<xs:attribute name="name" type="xs:string">
+	    		<xs:annotation>
+			            <xs:documentation>规则名称</xs:documentation>
+			        </xs:annotation>
+	    	</xs:attribute>
+	    	
+	    	<xs:attribute name="groupNo" type="xs:int" use="required">
+	    		<xs:annotation>
+			            <xs:documentation>分组编号</xs:documentation>
+			        </xs:annotation>
+	    	</xs:attribute>
+    	</xs:complexType>
+    </xs:element>
+	
+	
+	
+	<xs:complexType name="executorVar">
+		
+		<xs:attribute name="source" type="base:executorSrcType" use="required">
+			<xs:annotation>
+				<xs:documentation>值来自BO还是流程变量</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		
+		<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+		
+		<xs:attribute name="executorType" type="base:executorType" use="required"></xs:attribute>
+		
+		<xs:attribute name="userValType" type="base:userValType" use="optional">
+			<xs:annotation>
+				<xs:documentation>代表是用户ID还是账号</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>		
+		
+		<xs:attribute name="dimension" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>维度KEY</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>	
+		<xs:attribute name="groupValType" type="base:groupValType" use="optional">
+			<xs:annotation>
+				<xs:documentation>值</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>		
+		
+	
+	</xs:complexType>
+	
+	
+	<xs:simpleType name="executorSrcType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BO"></xs:enumeration>
+			<xs:enumeration value="flowVar"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="executorType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="group"></xs:enumeration>
+			<xs:enumeration value="user"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	
+	<xs:simpleType name="userValType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="account"></xs:enumeration>
+			<xs:enumeration value="userId"></xs:enumeration>
+			<xs:enumeration value=""></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="groupValType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="groupKey"></xs:enumeration>
+			<xs:enumeration value="groupId"></xs:enumeration>
+			<xs:enumeration value=""></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	
+    
+   
+</xs:schema>

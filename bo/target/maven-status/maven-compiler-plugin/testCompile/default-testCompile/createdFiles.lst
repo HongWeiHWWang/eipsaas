@@ -1,0 +1,8 @@
+com\hotent\bo\core\persistence\manager\BoEntManagerTest.class
+com\hotent\bo\core\persistence\manager\BoEntRelManagerTest.class
+com\hotent\bo\core\util\BoDataTest.class
+com\hotent\bo\core\persistence\manager\BoDataRelManagerTest.class
+com\hotent\bo\core\persistence\manager\BoAttributeManagerTest.class
+com\hotent\bo\core\persistence\manager\BoInstManagerTest.class
+com\hotent\bo\core\BoTestCase.class
+com\hotent\bo\core\persistence\manager\BoDefManagerTest.class

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmSignDataDao">
+	<resultMap id="BpmSignData" type="com.hotent.bpm.persistence.model.BpmSignData">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="defId" column="def_id_" jdbcType="VARCHAR"/>
+		<result property="instId" column="inst_id_" jdbcType="VARCHAR"/>
+		<result property="actInstId" column="act_inst_id_" jdbcType="VARCHAR"/>
+		<result property="executeId" column="execute_id_" jdbcType="VARCHAR"/>
+		<result property="nodeId" column="node_id_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="task_id_" jdbcType="VARCHAR"/>
+		<result property="qualifiedId" column="qualified_id_" jdbcType="VARCHAR"/>
+		<result property="qualifiedName" column="qualified_name_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="voteResult" column="vote_result_" jdbcType="VARCHAR"/>
+		<result property="voteId" column="vote_id_" jdbcType="VARCHAR"/>
+		<result property="voter" column="voter_" jdbcType="VARCHAR"/>
+		<result property="voteTime" column="vote_time_" jdbcType="TIMESTAMP"/>
+		<result property="index" column="index_" jdbcType="NUMERIC"/>
+		<result property="isActive" column="IS_ACTIVE_" jdbcType="NUMERIC"/>
+		<result property="type" column="TYPE_" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<insert id="create" parameterType="com.hotent.bpm.persistence.model.BpmSignData">
+		INSERT INTO bpm_task_signdata
+		(id_,def_id_,inst_id_,act_inst_id_,execute_id_,node_id_,task_id_,qualified_id_,qualified_name_,create_time_,vote_result_,vote_id_,voter_,vote_time_,index_,IS_ACTIVE_,TYPE_)
+		VALUES 
+		(#{id,jdbcType=VARCHAR}, #{defId,jdbcType=VARCHAR}, #{instId,jdbcType=VARCHAR}, #{actInstId,jdbcType=VARCHAR},#{executeId,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{qualifiedId,jdbcType=VARCHAR}, #{qualifiedName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{voteResult,jdbcType=VARCHAR}, #{voteId,jdbcType=VARCHAR}, #{voter,jdbcType=VARCHAR}, #{voteTime,jdbcType=TIMESTAMP},
+		#{index,jdbcType=NUMERIC},#{isActive,jdbcType=NUMERIC},#{type,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="BpmSignData">
+		SELECT * FROM bpm_task_signdata 
+		WHERE 
+		id_=#{id}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BpmSignData">
+		SELECT * FROM bpm_task_signdata
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM bpm_task_signdata 
+		WHERE
+		id_=#{id}
+	</delete>
+	
+	<delete id="removeByNotActive" >
+		DELETE FROM  bpm_task_signdata 
+		WHERE
+		execute_id_=#{executeId}
+		and
+		node_id_=#{nodeId}
+		and IS_ACTIVE_=0
+	</delete>
+	
+	<update id="updByNotActive" >
+		update   bpm_task_signdata set IS_ACTIVE_=0
+		WHERE
+		execute_id_=#{executeId}
+		and
+		node_id_=#{nodeId}
+	</update>
+	
+	<select id="getVoteByExecuteNode" resultMap="BpmSignData">
+		SELECT * from bpm_task_signdata where execute_id_=#{executeId} and node_id_=#{nodeId}  and IS_ACTIVE_=#{isActive}
+	</select>
+	
+	<select id="getByExeNodeIndex" resultMap="BpmSignData">
+		SELECT * from bpm_task_signdata where execute_id_=#{executeId} and node_id_=#{nodeId}  and index_=#{index}  and IS_ACTIVE_=1
+	</select>
+	
+	<select id="getByInstanIdAndUserId" resultMap="BpmSignData">
+		select * from bpm_task_signdata WHERE INST_ID_ =#{instancId}  AND QUALIFIED_ID_ = #{userId} AND TASK_ID_ = #{taskId}
+	</select>
+	
+	<delete id="delByInstList" >
+		DELETE FROM  bpm_task_signdata where inst_id_ in 
+			<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        	</foreach> 
+	</delete>
+	
+	<select id="getByInstanIdAndNodeIdAndNo" resultMap="BpmSignData">
+		SELECT * from bpm_task_signdata where inst_id_=#{instId} and node_id_=#{nodeId}  and vote_result_='no'
+	</select>
+	<delete id="deleteByInstanIdAndNodeIdAndNo">
+		DELETE FROM  bpm_task_signdata 
+		WHERE inst_id_=#{instId} and node_id_=#{nodeId}  and vote_result_='no'
+	</delete>
+	
+	<update id="updByActive" >
+		update   bpm_task_signdata set IS_ACTIVE_=1, index_=-1
+		WHERE
+		inst_id_=#{instId}
+		and
+		node_id_=#{nodeId}
+	</update>
+	
+	
+</mapper>

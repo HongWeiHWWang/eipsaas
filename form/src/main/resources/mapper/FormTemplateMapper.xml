@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.FormTemplateDao">
+	<resultMap id="BpmFormTemplate" type="com.hotent.form.model.FormTemplate">
+		<id property="templateId" column="template_id_" jdbcType="VARCHAR"/>
+		<result property="templateName" column="template_name_" jdbcType="VARCHAR"/>
+		<result property="templateType" column="template_type_" jdbcType="VARCHAR"/>
+		<result property="macrotemplateAlias" column="macrotemplate_alias_" jdbcType="VARCHAR"/>
+		<result property="html" column="html_" jdbcType="LONGVARCHAR"/>
+		<result property="templateDesc" column="template_desc_" jdbcType="VARCHAR"/>
+		<result property="canedit" column="canedit_" jdbcType="NUMERIC"/>
+		<result property="alias" column="alias_" jdbcType="VARCHAR"/>
+		<result property="source" column="source_" jdbcType="VARCHAR"/>
+        <result property="rev" column="rev_" jdbcType="NUMERIC"/>
+		<result property="isDefault" column="IS_DEFAULT_" jdbcType="NUMERIC" />
+	</resultMap>
+	
+    <select id="getTemplateByRev" parameterType="java.util.Map" resultMap="BpmFormTemplate">
+		SELECT * FROM form_template WHERE template_id_=#{id} and REV_=#{rev}
+	</select>
+	
+	<select id="getTemplateType" parameterType="java.lang.String" resultMap="BpmFormTemplate">
+		SELECT * FROM form_template WHERE template_type_ =#{templateType}
+	</select>
+	
+	<delete id="delSystem">
+		DELETE FROM form_template WHERE canEdit_=0
+	</delete>
+	
+	<select id="getByTemplateAlias"  resultMap="BpmFormTemplate" parameterType="String">
+		SELECT *
+		FROM form_template
+		WHERE  alias_  =#{alias}
+	</select>
+	
+	<select id="getHasData"  resultType="Integer" parameterType="String">
+		SELECT count(*) amount
+		FROM form_template
+	</select>
+
+	<update id="setNotDefault" parameterType="com.hotent.form.model.FormTemplate">
+		UPDATE form_template SET IS_DEFAULT_=0 WHERE template_type_=#{templateType}
+	</update>
+	
+	<update id="setDefault" parameterType="com.hotent.form.model.FormTemplate">
+		UPDATE form_template SET IS_DEFAULT_=1 WHERE template_id_=#{templateId}
+	</update>
+</mapper>

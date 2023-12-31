@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bo.persistence.dao.BoEntRelDao">
+	<resultMap id="BoEntRel" type="com.hotent.bo.model.BoEntRel">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="boDefid" column="bo_defid_" jdbcType="VARCHAR"/>
+		<result property="parentId" column="parent_id_" jdbcType="VARCHAR"/>
+		<result property="refEntId" column="ref_ent_id_" jdbcType="VARCHAR"/>
+		<result property="type" column="type_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getByDefIdAndEntId" resultMap="BoEntRel">
+		select * from form_bo_ent_relation where bo_defid_ =#{defId} and ref_ent_id_ =#{entId}
+	</select>
+	
+	<delete id="removeByDefId" parameterType="java.lang.String">
+		DELETE FROM form_bo_ent_relation
+		WHERE
+		bo_defid_=#{defId}
+	</delete>
+	
+	<select id="getByDefId"   parameterType="java.lang.String" resultMap="BoEntRel">
+		SELECT * FROM form_bo_ent_relation
+		WHERE 
+		bo_defid_=#{defId}
+	</select>
+	
+	<select id="getByEntId" parameterType="java.lang.String" resultMap="BoEntRel">
+		SELECT * FROM form_bo_ent_relation
+		WHERE 
+		ref_ent_id_=#{entId}
+	</select>
+</mapper>

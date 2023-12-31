@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.sys.persistence.dao.SysDataSourceDefDao">
+	<resultMap id="SysDataSourceDef" type="com.hotent.sys.persistence.model.SysDataSourceDef">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="classPath" column="class_path_" jdbcType="VARCHAR"/>
+		<result property="settingJson" column="setting_json_" jdbcType="CLOB"/>
+		<result property="initMethod" column="init_method_" jdbcType="VARCHAR"/>
+		<result property="closeMethod" column="close_method_" jdbcType="VARCHAR"/>
+		<result property="isSystem" column="is_system_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<select id="getAll" resultMap="SysDataSourceDef">
+		SELECT * FROM portal_sys_datasorce_def
+		WHERE 1=1
+	</select>
+	
+</mapper>

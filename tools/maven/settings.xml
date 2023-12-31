@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+    <localRepository>D:/.m2/repository</localRepository>
+    <mirrors>
+        <mirror>
+            <id>internal-repository</id>
+            <name>Internal Repository Manager</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <mirrorOf>central</mirrorOf>
+        </mirror>
+        <mirror>
+            <id>internal-repository-thirdparty</id>
+            <name>internal-repository-thirdparty</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <mirrorOf>thirdparty</mirrorOf>
+        </mirror>
+    </mirrors>
+    <profiles>
+        <repository>
+            <id>offical</id>
+            <name>Maven Official Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <profile>
+            <id>hotent-remote</id>
+            <repositories>
+                <repository>
+                    <id>hotent-remote</id>
+                    <name>remote hotent maven release</name>
+                    <url>http://www.hotent.xyz:8081/nexus/repository/maven-public/</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
+    <activeProfiles>
+        <activeProfile>hotent-remote</activeProfile>
+        <activeProfile>offical</activeProfile>
+    </activeProfiles>
+</settings>

@@ -1,0 +1,22 @@
+[{
+	"key": "startCity",
+	"type": "java.lang.String",
+	"bind": {
+		"type": "2",
+		"value": "sc"
+	}
+},{
+	"key": "lastCity",
+	"type": "java.lang.String",
+	"bind": {
+		"type": "2",
+		"value": "lc"
+	}
+},{
+	"key": "theDate",
+	"type": "java.lang.String",
+	"bind": {
+		"type": "2",
+		"value": "td"
+	}
+}]

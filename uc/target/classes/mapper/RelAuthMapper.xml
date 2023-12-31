@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.RelAuthDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.RelAuth">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="relId" column="REL_ID_" jdbcType="VARCHAR"/>
+		<result property="typeId" column="TYPE_ID_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="fullname" column="USER_NAME" jdbcType="VARCHAR"/>
+		<result property="account" column="USER_ACCOUNT" jdbcType="VARCHAR"/>
+		<result property="relName" column="REL_NAME" jdbcType="VARCHAR"/>
+		<result property="typeName" column="TYPE_NAME" jdbcType="VARCHAR"/>
+		<result property="relPath" column="REL_PATH" jdbcType="VARCHAR"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<parameterMap id="RelAuth" type="com.hotent.uc.model.RelAuth" />
+	
+	<sql id="Base_Column_List">
+		ID_,USER_ID_,REL_ID_,TYPE_ID_,UPDATE_TIME_,IS_DELE_,VERSION_
+	</sql>
+	
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT a.*,
+		b.FULLNAME_ as USER_NAME,b.ACCOUNT_ as USER_ACCOUNT,c.NAME_ as REL_NAME,c.PATH_ as REL_PATH
+		FROM UC_REL_AUTH a
+		left join UC_USER b on a.USER_ID_ = b.ID_
+		left join UC_USER_REL c on a.REL_ID_ = c.ID_ 
+		WHERE
+		a.ID_=#{id} AND a.IS_DELE_!='1' AND b.IS_DELE_!='1' AND c.IS_DELE_!='1'
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT a.ID_,a.USER_ID_,a.REL_ID_,a.TYPE_ID_,
+		b.FULLNAME_ as USER_NAME,b.ACCOUNT_ as USER_ACCOUNT,c.NAME_ as REL_NAME,c.PATH_ as REL_PATH
+		FROM UC_REL_AUTH a
+		left join UC_USER b on a.USER_ID_ = b.ID_
+		left join UC_USER_REL c on a.REL_ID_ = c.ID_ 
+		${ew.customSqlSegment} 
+	</select>
+	
+	<select id="queryOnSync" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT * FROM UC_REL_AUTH
+		${ew.customSqlSegment} 
+	</select>
+	
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_REL_AUTH  WHERE IS_DELE_='1'
+	</delete>
+	
+	<select id="getAllRelAuth" resultMap="BaseResultMap">
+		SELECT a.ID_,a.USER_ID_,a.REL_ID_,a.TYPE_ID_,
+		b.FULLNAME_ as USER_NAME,b.ACCOUNT_ as USER_ACCOUNT,c.NAME_ as REL_NAME,c.PATH_ as REL_PATH
+		FROM UC_REL_AUTH a
+		inner join UC_USER b on a.USER_ID_ = b.ID_
+		inner join UC_USER_REL c on a.REL_ID_ = c.ID_ 
+		WHERE 1= 1  AND a.IS_DELE_!='1' AND b.IS_DELE_!='1' AND c.IS_DELE_!='1'
+		<if test="ew.paramNameValuePairs.userId!=null">
+			AND	a.USER_ID_ =#{ew.paramNameValuePairs.userId}
+		</if>
+		<if test="ew.paramNameValuePairs.relId!=null">
+			AND a.REL_ID_ = #{ew.paramNameValuePairs.relId}
+		</if>
+		<if test="ew.paramNameValuePairs.userName!=null">
+			AND b.FULLNAME_ = #{ew.paramNameValuePairs.userName}
+		</if>
+		<if test="ew.paramNameValuePairs.relName!=null">
+			AND c.NAME_ = #{ew.paramNameValuePairs.relName}
+		</if>
+		<if test="ew.paramNameValuePairs.typeId!=null">
+			AND a.TYPE_ID_ = #{ew.paramNameValuePairs.typeId}
+		</if>
+		<if test="ew.paramNameValuePairs.orderBySql!=null">
+			ORDER BY ${ew.paramNameValuePairs.orderBySql}
+		</if>
+	</select>
+	
+	<select id="getByRelIdAndUserId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT a.*,b.FULLNAME_ as USER_NAME,b.ACCOUNT_ as USER_ACCOUNT,c.NAME_ as REL_NAME,c.PATH_ as REL_PATH
+		FROM UC_REL_AUTH a
+		inner join UC_USER b on a.USER_ID_ = b.ID_
+		inner join UC_USER_REL c on a.REL_ID_ = c.ID_ 
+		where a.REL_ID_ = #{relId} and a.USER_ID_ = #{userId} AND a.IS_DELE_!='1'
+	</select>
+	
+	<delete id="delByRelId" parameterType="java.util.Map">
+		UPDATE UC_REL_AUTH SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE
+		REL_ID_=#{relId}
+	</delete>
+	
+	
+	<select id="getByUserId" resultMap="BaseResultMap">
+		SELECT a.ID_,a.USER_ID_,a.REL_ID_,a.TYPE_ID_,
+		b.FULLNAME_ as USER_NAME,b.ACCOUNT_ as USER_ACCOUNT,c.NAME_ as REL_NAME,c.PATH_ as REL_PATH
+		FROM UC_REL_AUTH a
+		left join UC_USER b on a.USER_ID_ = b.ID_
+		left join UC_USER_REL c on a.REL_ID_ = c.ID_ 
+		where a.USER_ID_ = #{userId} 
+		AND a.IS_DELE_!='1' AND b.IS_DELE_!='1' AND c.IS_DELE_!='1'
+	</select>
+	
+	<select id="getRelAuthListByTypeAndUser" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT a.ID_,a.USER_ID_,a.REL_ID_,a.TYPE_ID_,
+		b.FULLNAME_ as USER_NAME,b.ACCOUNT_ as USER_ACCOUNT,c.NAME_ as REL_NAME,c.PATH_ as REL_PATH
+		FROM UC_REL_AUTH a
+		left join UC_USER b on a.USER_ID_ = b.ID_
+		left join UC_USER_REL c on a.REL_ID_ = c.ID_ 
+		WHERE b.ACCOUNT_=#{account} AND a.IS_DELE_!='1'
+	</select>
+	
+	<select id="getRelAuthsByTypeAndUser" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT a.ID_,a.USER_ID_,a.REL_ID_,a.TYPE_ID_,
+		b.FULLNAME_ as USER_NAME,b.ACCOUNT_ as USER_ACCOUNT,c.NAME_ as REL_NAME,c.PATH_ as REL_PATH
+		FROM UC_REL_AUTH a
+		left join UC_USER b on a.USER_ID_ = b.ID_
+		left join UC_USER_REL c on a.REL_ID_ = c.ID_ 
+		WHERE b.ID_=#{userId} AND a.IS_DELE_!='1'
+	</select>
+</mapper>

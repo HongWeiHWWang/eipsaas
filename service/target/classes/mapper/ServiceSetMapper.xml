@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.service.dao.ServiceSetDao">
+	<resultMap id="SysServiceSet" type="com.hotent.service.model.ServiceSet">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="alias" column="alias_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="wsdlUrl" column="url_" jdbcType="VARCHAR"/>
+		<result property="address" column="address_" jdbcType="VARCHAR"/>
+		<result property="methodName" column="method_name_" jdbcType="VARCHAR"/>
+		<result property="namespace" column="namespace_" jdbcType="VARCHAR"/>
+		<result property="soapAction" column="soap_action_" jdbcType="VARCHAR"/>
+		<result property="inputSet" column="input_set_" jdbcType="LONGVARCHAR"/>
+	</resultMap>
+	
+	<select id="getByAlias"   parameterType="java.lang.String" resultMap="SysServiceSet">
+		SELECT * FROM portal_service_set 
+		WHERE 
+		alias_=#{alias}
+	</select>
+</mapper>

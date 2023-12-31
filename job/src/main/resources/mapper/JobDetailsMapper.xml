@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.job.persistence.dao.JobDetailsDao">
+	<resultMap id="JobDetails" type="com.hotent.job.model.JobDetails">
+		<id property="schedName" column="sched_name" jdbcType="VARCHAR"/>
+		<result property="jobName" column="job_name" jdbcType="VARCHAR"/>
+		<result property="jobGroup" column="job_group" jdbcType="VARCHAR"/>
+		<result property="description" column="description" jdbcType="VARCHAR"/>
+		<result property="jobClassNname" column="job_class_name" jdbcType="VARCHAR"/>
+	</resultMap>
+</mapper>

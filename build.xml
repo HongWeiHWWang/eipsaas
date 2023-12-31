@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<project name ="项目打包" default ="全部源码" basedir ="." xmlns:artifact="urn:maven-artifact-ant"> 
+    
+	<property name="build.dir" value="build"/>
+	
+	<target name="全部源码">
+		<delete dir="${build.dir}">
+		</delete>
+		<mkdir dir="${build.dir}"/>
+		
+		<!-- 注释 -->
+		<!--<copy todir="${build.dir}/x7/activemq">
+			<fileset dir="activemq">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>-->
+		
+		<copy todir="${build.dir}/x7/activemq">
+			<fileset dir="activemq">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/activiti">
+			<fileset dir="activiti">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/assembly">
+			<fileset dir="assembly">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/base">
+			<fileset dir="base">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/bo">
+			<fileset dir="bo">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/bpm">
+			<fileset dir="bpm">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/bpm-model">
+			<fileset dir="bpm-model">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/bpm-runtime">
+			<fileset dir="bpm-runtime">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/calendar">
+			<fileset dir="calendar">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<!-- doc文件  -->
+		<copy todir="${build.dir}/x7/doc">
+			<fileset dir="doc">
+				<!-- 过滤文件 -->
+				<exclude name="白皮书配图.pptx"/>
+				<!-- 过滤文件夹 -->
+				<exclude name="7.2.2新闻公告与轮播图业务表单/"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/file">
+			<fileset dir="file">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/form">
+			<fileset dir="form">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/i18n">
+			<fileset dir="i18n">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/integrate">
+			<fileset dir="integrate">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/job">
+			<fileset dir="job">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/mail">
+			<fileset dir="mail">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/poi">
+			<fileset dir="poi">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/portal">
+			<fileset dir="portal">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/redis">
+			<fileset dir="redis">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/rest-auth-service">
+			<fileset dir="rest-auth-service">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/service">
+			<fileset dir="service">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/sys">
+			<fileset dir="sys">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/table">
+			<fileset dir="table">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/tools">
+			<fileset dir="tools">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/uc">
+			<fileset dir="uc">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/uc-api">
+			<fileset dir="uc-api">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/uc-api-impl">
+			<fileset dir="uc-api-impl">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/x7/ueditor">
+			<fileset dir="ueditor">
+				<include name="src/"/>
+				<include name="pom.xml"/>
+			</fileset>
+		</copy>
+		<copyfile dest="${build.dir}/x7/pom.xml" src="pom.xml"/>
+	</target>
+	
+</project>

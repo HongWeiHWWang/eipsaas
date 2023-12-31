@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmDefActDao">
+	<resultMap id="BpmDefAct" type="com.hotent.bpm.persistence.model.BpmDefAct">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="authorizeId" column="AUTHORIZE_ID_" jdbcType="VARCHAR"/>
+		<result property="defKey" column="DEF_KEY_" jdbcType="VARCHAR"/>
+		<result property="defName" column="DEF_NAME_" jdbcType="VARCHAR"/>
+		<result property="rightContent" column="RIGHT_CONTENT_" jdbcType="VARCHAR"/>
+		<result property="type" column="TYPE_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="columns">
+		ID_,AUTHORIZE_ID_,DEF_KEY_,DEF_NAME_,RIGHT_CONTENT_,TYPE_
+	</sql>
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="id!=null"> AND ID_  =#{id} </if>
+			<if test="authorizeId!=null"> AND AUTHORIZE_ID_  =#{authorizeId} </if>
+			<if test="defKey!=null"> AND DEF_KEY_  =#{defKey} </if>
+			<if test="defName!=null"> AND DEF_NAME_ LIKE #{defName}  </if>
+			<if test="rightContent!=null"> AND RIGHT_CONTENT_  LIKE #{rightContent}  </if>
+			<if test="type!=null"> AND TYPE_  = #{type}  </if>
+			
+		</where>
+	</sql>
+
+	<insert id="create" parameterType="com.hotent.bpm.persistence.model.BpmDefAct">
+		INSERT INTO BPM_DEF_ACT
+		(ID_,AUTHORIZE_ID_,DEF_KEY_,DEF_NAME_,RIGHT_CONTENT_,TYPE_)
+		VALUES
+		(#{id,jdbcType=VARCHAR}, #{authorizeId,jdbcType=VARCHAR}, #{defKey,jdbcType=VARCHAR}, #{defName,jdbcType=VARCHAR}, #{rightContent,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="delById" parameterType="java.lang.String">
+		DELETE FROM BPM_DEF_ACT 
+		WHERE
+		ID_=#{id}
+	</delete>
+	
+	<delete id="delByMap" parameterType="java.util.Map" >
+		DELETE FROM BPM_DEF_ACT 
+		    <include refid="dynamicWhere" />
+	</delete>
+	
+	<select id="getById" parameterType="java.lang.String" resultMap="BpmDefAct">
+		SELECT <include refid="columns"/>
+		FROM BPM_DEF_ACT
+		WHERE
+		ID_=#{id}
+	</select>
+	
+	<select id="getAll" resultMap="BpmDefAct">
+		SELECT <include refid="columns"/>
+		FROM BPM_DEF_ACT   
+		<include refid="dynamicWhere" />
+		<if test="orderField">
+		order by ${orderField} ${orderSeq}
+		</if>
+		<if test="orderField">
+		order by ID_  desc
+		</if>
+	</select>
+	
+	<select id="getByAuthorizeId" resultMap="BpmDefAct">
+		SELECT <include refid="columns"/>
+		FROM BPM_DEF_ACT
+		WHERE AUTHORIZE_ID_=#{authorizeId}
+	</select>
+	
+	<delete id="delByAuthorizeId" parameterType="java.lang.String">
+		DELETE FROM BPM_DEF_ACT 
+			WHERE AUTHORIZE_ID_=#{authorizeId}
+	</delete>
+	
+	<!--根据用户权限Map获取有权限流程列表  -->
+	<select id="getActRightByUserMap" resultMap="BpmDefAct"  parameterType="java.util.Map" >
+		
+		select b.ID_,b.AUTHORIZE_ID_,b.DEF_KEY_,b.DEF_NAME_,b.RIGHT_CONTENT_,b.TYPE_ from BPM_DEF_ACT b , 
+		BPM_DEF_AUTH_TYPE t where b.AUTHORIZE_ID_=t.AUTHORIZE_ID_  and t.AUTHORIZE_TYPE_=#{authorizeType}  
+		and b.AUTHORIZE_ID_ in (
+	          select distinct a.ID_ from  BPM_DEF_AUTHORIZE a, (
+	                select u.AUTHORIZE_ID_ from BPM_DEF_USER u  where  u.RIGHT_TYPE_ = 'everyone'
+			   <foreach collection="userRightMap" index="key" item="value" open="" separator=" " close=""> 
+					union
+					select u.AUTHORIZE_ID_ from BPM_DEF_USER u
+		 				 where  u.RIGHT_TYPE_ = #{key}  and u.OWNER_ID_ in (${value}) 
+	             </foreach>
+	          ) c  where  a.ID_ = c.AUTHORIZE_ID_ 
+	     )
+	     <if test="defKey!=null">
+	     	and b.DEF_KEY_=#{defKey}
+	     </if>
+		
+	</select> 
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM BPM_DEF_ACT 
+		WHERE
+		ID_=#{id}
+	</delete>
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="BpmDefAct">
+		SELECT * FROM BPM_DEF_ACT 
+		WHERE 
+		ID_=#{id}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BpmDefAct">
+		SELECT * FROM BPM_DEF_ACT
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+	
+	
+
+</mapper>

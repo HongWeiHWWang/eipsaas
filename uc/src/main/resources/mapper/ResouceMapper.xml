@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.ResouceDao">
+	<resultMap id="Resouce" type="com.hotent.uc.model.Resouce">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="roleId" column="ROLE_ID_" jdbcType="VARCHAR"/>
+		<result property="resouce" column="RESOUCE_" jdbcType="VARCHAR"/>
+		<result property="pre" column="PRE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+    <select id="getResouceByAccount" parameterType="java.lang.String" resultMap="Resouce">
+		select urr.* FROM UC_ROLE_RESOUCE urr, UC_USER_ROLE uur,UC_USER uu,UC_ROLE  ur where
+	      ur.ID_=uur.ROLE_ID_ and 
+	      urr.ROLE_ID_ =ur.ID_  and 
+	      uu.ID_ =uur.USER_ID_ and 
+          ur.ENABLED_=1 AND uur.IS_DELE_ !=1 AND ur.IS_DELE_ !=1  and uu.ACCOUNT_=#{account}
+	</select>
+</mapper>

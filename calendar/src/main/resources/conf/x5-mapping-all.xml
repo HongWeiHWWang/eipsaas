@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<mappings> 
+	<mappingLocation code="base" value="classpath*:com/hotent/**/mapping/*.xml"/>
+	<!-- <mappingLocation code="third" value="classpath*:com/third/**/mapping/*.xml"/> -->
+</mappings>
+

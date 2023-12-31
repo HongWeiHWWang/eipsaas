@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.im.persistence.dao.ImSessionUserDao">
+	<resultMap id="ImSessionUser" type="com.hotent.im.persistence.model.ImSessionUser">
+		<id property="id" column="id_" jdbcType="NUMERIC"/>
+		<result property="userAlias" column="user_alias_" jdbcType="VARCHAR"/>
+		<result property="isShow" column="is_show_" jdbcType="NUMERIC"/>
+		<result property="lastReadTime" column="last_read_time_" jdbcType="TIMESTAMP"/>
+		<result property="joinTime" column="join_time_" jdbcType="TIMESTAMP"/>
+		<result property="from" column="from_" jdbcType="VARCHAR"/>
+		<result property="sessionCode" column="session_code_" jdbcType="VARCHAR"/>
+		<result property="userAccount" column="user_account_" jdbcType="VARCHAR"/>
+		<result property="sessionTitle" column="session_title_" jdbcType="VARCHAR"/>
+		
+		
+	</resultMap>
+	
+	<resultMap id="MySessionList" type="com.hotent.im.persistence.model.ImSessionUser">
+		<id property="id" column="id_" jdbcType="NUMERIC"/>
+		<result property="userAccount" column="user_account_" jdbcType="VARCHAR"/>
+		<result property="userAlias" column="user_alias_" jdbcType="VARCHAR"/>
+		<result property="isShow" column="is_show_" jdbcType="NUMERIC"/>
+		<result property="lastReadTime" column="last_read_time_" jdbcType="TIMESTAMP"/>
+		<result property="joinTime" column="join_time_" jdbcType="TIMESTAMP"/>
+		<result property="from" column="from_" jdbcType="VARCHAR"/>
+		<result property="sessionTitle" column="session_title_" jdbcType="VARCHAR"/>
+		
+		<result property="targetUser" column="target_user_" jdbcType="VARCHAR"/>
+		<result property="sessionOwner" column="owner_" jdbcType="VARCHAR"/>
+		<result property="sessionCode" column="code_" jdbcType="VARCHAR"/>
+		<result property="sessionScene" column="scene_" jdbcType="VARCHAR"/>
+		<result property="sessionIcon" column="icon_" jdbcType="VARCHAR"/>
+		<result property="sessionLastText" column="last_text_" jdbcType="VARCHAR"/>
+		<result property="sessionUnRead" column="un_read_" jdbcType="NUMERIC"/>
+		
+	</resultMap>
+	
+	<insert id="create" parameterType="com.hotent.im.persistence.model.ImSessionUser">
+		INSERT INTO portal_im_session_user
+		(id_,session_code_,session_title_,user_account_,user_alias_,is_show_,last_read_time_,join_time_,from_)
+		VALUES 
+		(#{id,jdbcType=NUMERIC}, #{sessionCode,jdbcType=VARCHAR}, #{sessionTitle,jdbcType=VARCHAR}, #{userAccount,jdbcType=VARCHAR}, #{userAlias,jdbcType=VARCHAR}, #{isShow,jdbcType=NUMERIC}, #{lastReadTime,jdbcType=TIMESTAMP}, #{joinTime,jdbcType=TIMESTAMP}, #{from,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="ImSessionUser">
+		SELECT * FROM portal_im_session_user 
+		WHERE 
+		id_=#{id}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="ImSessionUser">
+		SELECT * FROM portal_im_session_user
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+	
+	<select id="getUserByFilter" parameterType="java.util.Map" resultMap="ImSessionUser">
+		select user_account_,session_code_ from portal_im_session_user
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+	
+	
+	
+	<update id="update" parameterType="com.hotent.im.persistence.model.ImSessionUser">
+		UPDATE portal_im_session_user SET
+		session_code_=#{sessionCode,jdbcType=VARCHAR},
+		session_title_=#{sessionTitle,jdbcType=VARCHAR},
+		user_account_=#{userAccount,jdbcType=VARCHAR},
+		user_alias_=#{userAlias,jdbcType=VARCHAR},
+		is_show_=#{isShow,jdbcType=NUMERIC},
+		last_read_time_=#{lastReadTime,jdbcType=TIMESTAMP},
+		join_time_=#{joinTime,jdbcType=TIMESTAMP},
+		from_=#{from,jdbcType=VARCHAR}
+		WHERE
+		id_=#{id}
+	</update>
+	
+	<update id="updateUserAlias" parameterType="com.hotent.im.persistence.model.ImSessionUser">
+		UPDATE portal_im_session_user SET
+		user_alias_=#{userAlias,jdbcType=VARCHAR}
+		WHERE
+		session_code_=#{sessionCode,jdbcType=VARCHAR}
+		and
+		user_account_=#{userAccount,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM portal_im_session_user 
+		WHERE
+		id_=#{id}
+	</delete>
+	
+	<select id="mySessionListMysql" parameterType="java.util.Map" resultMap="MySessionList">
+		select isu.last_read_time_,ims.code_,ims.scene_,ims.icon_,ims.last_text_ ,isu.user_alias_,isu.session_title_ ,
+		(select group_concat(user_account_) from portal_im_session_user where session_code_ = isu.session_code_ and user_account_ != #{user_account_,jdbcType=VARCHAR} GROUP BY session_code_ ) as target_user_
+		from portal_im_session_user isu
+		LEFT JOIN portal_im_message_session ims on isu.session_code_ = ims.code_
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		ORDER BY isu.last_read_time_ DESC
+	</select>
+	
+	<select id="mySessionListOracle"   parameterType="java.util.Map" resultMap="MySessionList">
+		select isu.last_read_time_,ims.code_,ims.scene_,ims.icon_,ims.last_text_ ,isu.user_alias_,isu.session_title_ ,
+		(select wm_concat(user_account_) from portal_im_session_user where session_code_ = isu.session_code_ and user_account_ != #{user_account_,jdbcType=VARCHAR} GROUP BY session_code_ ) as target_user_
+		from portal_im_session_user isu
+		LEFT JOIN portal_im_message_session ims on isu.session_code_ = ims.code_
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		ORDER BY isu.last_read_time_ DESC
+	</select>
+	
+	<select id="getP2PSessionIcon"   parameterType="java.util.Map" resultMap="MySessionList">
+		select isu.session_code_ as sessionCode,su.PHOTO_ as sessionIcon from portal_im_session_user isu
+
+		INNER JOIN sys_user su on isu.user_account_ = su.ACCOUNT_
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+	</select>
+	
+	<select id="myTeamSessionList"   parameterType="java.util.Map" resultMap="MySessionList">
+		select ims.code_,ims.icon_,ims.owner_,isu.user_alias_,isu.session_title_ 
+		from portal_im_session_user isu
+		LEFT JOIN portal_im_message_session ims on isu.session_code_ = ims.code_
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		ORDER BY isu.last_read_time_ DESC
+	</select>
+	
+	
+	<update id="updateLastReadTime" parameterType="java.util.Map">
+		UPDATE portal_im_session_user SET
+		last_read_time_=#{lastReadTime,jdbcType=TIMESTAMP}
+		WHERE
+		1 = 1
+		<if test="sessionCode != null">
+			and
+			session_code_=#{sessionCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userAccount != null">
+			and
+			user_account_=#{userAccount,jdbcType=VARCHAR}
+		</if>
+	</update>
+	
+	<update id="updateSessionTitle" parameterType="java.util.Map">
+		UPDATE portal_im_session_user SET
+		session_title_=#{sessionTitle,jdbcType=VARCHAR}
+		WHERE
+		session_code_=#{sessionCode,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateSessionIsShow" parameterType="java.util.Map">
+		UPDATE portal_im_session_user SET
+		is_show_=#{isShow,jdbcType=NUMERIC}
+		WHERE
+		1 = 1
+		<if test="sessionCode != null">
+			and
+			session_code_=#{sessionCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userAccount != null">
+			and
+			user_account_=#{userAccount,jdbcType=VARCHAR}
+		</if>
+	</update>
+	
+	<delete id="quitSession" parameterType="java.util.Map">
+		DELETE FROM portal_im_session_user 
+		WHERE
+		session_code_= #{sessionCode,jdbcType=VARCHAR} and user_account_ = #{userAccount,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="getUserBySessionCode"   parameterType="java.lang.String" resultMap="ImSessionUser">
+		select isu.user_alias_,isu.user_account_,isu.session_title_,isu.join_time_ from portal_im_session_user isu
+		
+		WHERE 
+		
+		isu.session_code_=#{sessionCode,jdbcType=VARCHAR}
+		
+		order by isu.join_time_
+	</select>
+	
+	<select id="getByDynamicSql" parameterType="java.util.Map" resultMap="ImSessionUser" >
+		SELECT ${fieldSql} FROM portal_im_session_user 
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY join_time_ ASc
+		</if>
+	</select>
+	
+	<select id="userIsInTeamSession"   parameterType="java.util.Map" resultMap="ImSessionUser">
+		select id_ from portal_im_session_user
+		WHERE 
+		session_code_=#{sessionCode,jdbcType=VARCHAR}
+		and
+		user_account_=#{userAccount,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getSessionEarliestUser"   parameterType="java.util.Map" resultMap="ImSessionUser">
+		select user_account_,session_title_ from portal_im_session_user 
+		where session_code_ = #{sessionCode,jdbcType=VARCHAR} order by join_time_ desc  LIMIT 1
+	</select>
+	
+</mapper>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskActions xmlns="http://www.jee-soft.cn/bpm/plugin/taskAction"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.jee-soft.cn/bpm/plugin/taskAction taskActionPlugin.xsd">
+    
+    <taskAction name="agree" supportType="both" actionType="approve" script="true" init="true">
+        <description>同意</description>
+        <handlerClass>taskActionAgreeHandler</handlerClass>
+    </taskAction>
+ 
+    <!--<taskAction name="abandon" supportType="signtask" actionType="approve" script="true" init="false">-->
+        <!--<description>弃权</description>-->
+        <!--<handlerClass>taskActionAgreeHandler</handlerClass>-->
+    <!--</taskAction>-->
+    
+    <taskAction name="oppose" supportType="both" actionType="approve" script="true" init="true">
+        <description>反对</description>
+        <handlerClass>taskActionAgreeHandler</handlerClass>
+    </taskAction>
+    
+    <taskAction name="agreeTrans" supportType="usertask" actionType="trans" script="true" init="true">
+        <description>同意（流转）</description>
+        <handlerClass>taskActionTransHandler</handlerClass>
+    </taskAction>
+    
+    <taskAction name="opposeTrans" supportType="usertask" actionType="trans" script="true" init="true">
+        <description>反对（流转）</description>
+        <handlerClass>taskActionTransHandler</handlerClass>
+    </taskAction>
+    
+    <taskAction name="commu" supportType="both" actionType="commu" script="true" init="true">
+        <description>沟通反馈</description>
+        <handlerClass>taskActionCommuHandler</handlerClass>
+    </taskAction>
+    
+    <taskAction name="reject" supportType="both" actionType="back" script="true" init="true">
+        <description>驳回</description>
+        <handlerClass>taskActionBackHandler</handlerClass>
+    </taskAction>
+    
+    <taskAction name="backToStart" supportType="both" actionType="backToStart" script="true" init="false">
+        <description>驳回发起人</description>
+        <handlerClass>taskActionBackToStartHandler</handlerClass>
+    </taskAction>
+    
+    <!-- 其他节点和界面按钮相关 -->
+    <!--<taskAction name="rejectToAnyNode" supportType="both" actionType="back" script="false" init="false"> -->
+        <!--<description>驳回指定节点</description> -->
+    <!--</taskAction>-->
+    
+    <taskAction script="true" name="startFlow" actionType="other" supportType="start" init="true">
+    	<description>启动</description>
+    	<handlerClass></handlerClass>
+    </taskAction>
+    
+    <!--<taskAction script="false" name="flowImage" actionType="other" supportType="all" init="true">-->
+    	<!--<description>流程图</description>-->
+    	<!--<handlerClass></handlerClass>-->
+    <!--</taskAction>-->
+    <!--<taskAction script="false" name="approvalHistory" actionType="other" supportType="both" init="true">-->
+    	<!--<description>审批历史</description>-->
+    	<!--<handlerClass></handlerClass>-->
+    <!--</taskAction>-->
+	<!--<taskAction script="false" name="print" actionType="other" supportType="all" init="true">-->
+    	<!--<description>打印</description>-->
+    	<!--<handlerClass></handlerClass>-->
+    <!--</taskAction>-->
+
+    <taskAction script="false" name="inqu" actionType="other" supportType="both" init="true">
+        <description>征询</description>
+        <handlerClass></handlerClass>
+    </taskAction>
+    <taskAction script="false" name="delegate" actionType="other" supportType="both" init="true">
+    	<description>转办</description>
+    	<handlerClass></handlerClass>
+    </taskAction>
+    
+    <taskAction script="false" name="instanceTrans" actionType="other" supportType="both" init="false">
+    	<description>传阅</description>
+    	<handlerClass></handlerClass>
+    </taskAction>
+   
+    <taskAction script="false" name="startCommu" actionType="other" supportType="both" init="true">
+    	<description>沟通</description>
+    	<handlerClass></handlerClass>
+    </taskAction>
+    
+    <taskAction script="false" name="startTrans" actionType="other" supportType="usertask" init="false">
+    	<description>流转</description>
+    	<handlerClass></handlerClass>
+    </taskAction>
+    
+    <taskAction script="false" name="addSign" actionType="other" supportType="both" init="false">
+    	<description>加签</description>
+    	<handlerClass></handlerClass>
+    </taskAction>
+    
+   <!--  <taskAction script="false" name="taskDelay" actionType="other" supportType="both" init="false">
+    	<description>延期</description>
+    	<handlerClass></handlerClass>
+    </taskAction>
+ -->
+
+    <taskAction script="true" name="endProcess" actionType="other" supportType="usertask" init="false">
+        <description>终止</description>
+        <handlerClass></handlerClass>
+    </taskAction>
+    <taskAction script="false" name="lockUnlock" actionType="other" supportType="usertask" init="true">
+        <description>签收/强制签收</description>
+        <handlerClass></handlerClass>
+    </taskAction>
+    <taskAction script="true" name="saveDraft" actionType="other" supportType="all" init="true">
+        <description>保存</description>
+        <handlerClass></handlerClass>
+    </taskAction>
+
+
+    <!-- <taskAction name="approveLine" supportType="usertask" actionType="other" script="true" init="true">
+        <description>并行审批</description>
+        <handlerClass></handlerClass>
+    </taskAction> -->
+    <taskAction name="signLine" supportType="customsigntask" actionType="other" script="false" init="true">
+        <description>发起并行签署</description>
+        <handlerClass></handlerClass>
+    </taskAction>
+    <taskAction name="signSequence" supportType="customsigntask" actionType="other" script="false" init="true">
+        <description>发起顺序签署</description>
+        <handlerClass></handlerClass>
+    </taskAction>
+    
+    
+</taskActions>

@@ -1,0 +1,42 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    dynamic:
+      datasource:
+        master:
+          username: root
+          password: HUZIMBF0ckEWdgif9/133dgEU6kfC8xjihEFYeQ9bhGcWXRuN9EM81NZzzMRn9i63aAIT5C5cZYxR7aO4SX0QA==
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/eip?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
+          druid:
+            public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANRnrjXbx7azwaBOwFarcR2D3yH4zLts8bgjmczSwhrJOF9mH/GPQK3B/QUbQdzOFBdSSxVXDv5R8HdgUqxfhBMCAwEAAQ==
+#          oracle 连接驱动
+#          driver-class-name: oracle.jdbc.OracleDriver
+#          url: jdbc:oracle:thin:@192.168.1.80:1521:ORCL
+
+#          pgsql 连接驱动
+#          driver-class-name: org.postgresql.Driver
+#          url: jdbc:postgresql://localhost:5432/7.2.2_dev
+  redis:
+    database: 6
+    host: 127.0.0.1
+    port: 6379
+    password: $123myredis
+  activemq:
+    broker-url: tcp://127.0.0.1:61616
+    user: admin
+    password: admin
+
+server:
+  port: 8088
+
+jms:
+  enable: true
+
+redis:
+  enable: false
+
+# 分布式事务
+seata:
+  enabled: false

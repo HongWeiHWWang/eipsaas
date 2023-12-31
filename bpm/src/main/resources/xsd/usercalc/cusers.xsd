@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.jee-soft.cn/bpm/plugins/userCalc/cusers"
+    targetNamespace="http://www.jee-soft.cn/bpm/plugins/userCalc/cusers"
+    xmlns:base="http://www.jee-soft.cn/bpm/plugins/userCalc/base" elementFormDefault="qualified">
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/userCalc/base"
+        schemaLocation="base.xsd"/>
+    <xs:element name="cusers">
+        <xs:annotation>
+            <xs:documentation>用户配置</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="base:abstractLogic">
+                    <xs:all maxOccurs="1" minOccurs="0">
+                        <xs:element name="members" minOccurs="0">
+                            <xs:complexType>
+                                <xs:attribute name="account"  use="required"/>
+                                <xs:attribute name="userName" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="var" minOccurs="0" type="base:executorVar"/>
+                    </xs:all>
+                    <xs:attribute name="source" type="userType" use="required">
+                        <xs:annotation>
+                            <xs:documentation>用户类型</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+                
+            </xs:complexContent>
+            
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="userType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="start"></xs:enumeration>
+            <xs:enumeration value="prev"></xs:enumeration>
+            <xs:enumeration value="spec"></xs:enumeration>
+            <xs:enumeration value="var"></xs:enumeration>
+            <xs:enumeration value="currentUser">
+				<xs:annotation>
+					<xs:documentation>当前登录者所在的组织</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

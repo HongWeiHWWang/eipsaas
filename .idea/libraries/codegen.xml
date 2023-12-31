@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="codegen">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/tools/codegen/refLib/codegen.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/tools/codegen/refLib/codegen.jar!/" />
+    </SOURCES>
+  </library>
+</component>

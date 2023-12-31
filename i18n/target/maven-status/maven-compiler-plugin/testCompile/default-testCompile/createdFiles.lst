@@ -1,0 +1,4 @@
+com\hotent\i18n\I18nTestCase.class
+com\hotent\i18n\persistence\mapper\I18nMessageManagerTest.class
+com\hotent\i18n\persistence\mapper\I18nMessageTypeManagerTest.class
+com\hotent\i18n\persistence\mapper\RedisMessageServiceTest.class

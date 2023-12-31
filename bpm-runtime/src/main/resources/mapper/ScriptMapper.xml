@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.hotent.runtime.dao.ScriptDao">
+	<resultMap id="Script" type="com.hotent.runtime.model.Script">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="script" column="SCRIPT_" jdbcType="LONGVARCHAR"/>
+		<result property="category" column="CATEGORY_" jdbcType="VARCHAR"/>
+		<result property="memo" column="MEMO_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<sql id="columns">
+		ID_,NAME_,SCRIPT_,CATEGORY_,MEMO_
+	</sql>
+	
+	<select id="getDistinctCategory" resultType="java.lang.String">
+		SELECT DISTINCT CATEGORY_ FROM BPM_SCRIPT 
+	</select>
+	
+	<select id="isNameExists" resultType="int" parameterType="java.lang.String" >
+		SELECT COUNT(*) FROM BPM_SCRIPT WHERE NAME_=#{name}
+	</select>
+</mapper>

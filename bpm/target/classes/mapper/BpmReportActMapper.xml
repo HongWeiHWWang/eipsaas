@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmReportActDao">
+	<resultMap id="bpmReportAct" type="com.hotent.bpm.persistence.model.BpmReportAct">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		
+		<result property="reportId" column="REPORT_ID_" jdbcType="VARCHAR"/>
+		<result property="bpmDefId" column="BPM_DEF_ID_" jdbcType="VARCHAR"/>
+		<result property="reportName" column="REPORT_NAME_" jdbcType="VARCHAR"/>
+		<result property="dimensionId" column="DIMENSION_ID_" jdbcType="VARCHAR"/>
+		<result property="grade" column="GRADE_" jdbcType="VARCHAR"/>
+		<result property="params" column="PARAMS_" jdbcType="VARCHAR"/>
+		<result property="xAxis" column="X_AXIS_" jdbcType="VARCHAR"/>
+		<result property="yAxis" column="Y_AXIS_" jdbcType="VARCHAR"/>
+		<result property="rightContent" column="RIGHT_CONTENT_" jdbcType="VARCHAR"/>
+		<result property="isDefault" column="IS_DEFAULT_" jdbcType="VARCHAR"/>
+		<result property="porp" column="PORP_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="columns">
+		ID_,REPORT_ID_,BPM_DEF_ID_,REPORT_NAME_,DIMENSION_ID_,GRADE_,PARAMS_,X_AXIS_,Y_AXIS_,RIGHT_CONTENT_,IS_DEFAULT_,PORP_
+	</sql>
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(name)"> AND REPORT_NAME_=#{reportName} </if>
+		</where>
+	</sql>
+	
+	<insert id="create" parameterType="com.hotent.bpm.persistence.model.BpmReportAct">
+		INSERT INTO bpm_report_act
+		(ID_,REPORT_ID_,BPM_DEF_ID_,REPORT_NAME_,DIMENSION_ID_,GRADE_,PARAMS_,X_AXIS_,Y_AXIS_,RIGHT_CONTENT_,IS_DEFAULT_,PORP_)
+		VALUES 
+		(
+			#{id,jdbcType=VARCHAR},#{reportId,jdbcType=VARCHAR},#{bpmDefId,jdbcType=VARCHAR},#{reportName,jdbcType=VARCHAR},#{dimensionId,jdbcType=VARCHAR},#{grade,jdbcType=VARCHAR},#{params,jdbcType=VARCHAR},#{xAxis,jdbcType=VARCHAR},#{yAxis,jdbcType=VARCHAR},#{rightContent,jdbcType=VARCHAR},#{isDefault,jdbcType=VARCHAR},#{porp,jdbcType=VARCHAR}
+			
+		)
+	</insert>
+	
+	
+	<select id="queryList" parameterType="java.lang.String" resultMap="bpmReportAct">
+		SELECT * FROM bpm_report_act 
+		WHERE 
+		REPORT_ID_=#{reportId}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="bpmReportAct">
+		SELECT <include refid="columns"/> 
+		FROM bpm_report_act
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY ID_ DESC
+		</if>
+	</select>
+	
+	<delete id="removeByReportId" parameterType="java.lang.String">
+		DELETE FROM bpm_report_act 
+		WHERE
+		REPORT_ID_=#{reportId}
+	</delete>
+
+</mapper>

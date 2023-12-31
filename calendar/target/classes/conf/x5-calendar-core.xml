@@ -1,0 +1,27 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:component-scan base-package="com.hotent.system.worktime.*" />
+
+	
+	<bean id="shiftCalc" class="com.hotent.system.worktime.calc.impl.ShiftCalc"></bean>
+	<bean id="absenceCalc" class="com.hotent.system.worktime.calc.impl.AbsenceCalc"></bean>
+	<bean id="overCalc" class="com.hotent.system.worktime.calc.impl.OverCalc"></bean>
+	
+	<bean id="calendarCalcMap" class="java.util.TreeMap"> 
+	  <constructor-arg> 
+	  	<map> 
+			<entry key="1" value-ref="shiftCalc" /> 
+			<entry key="2" value-ref="absenceCalc" /> 
+			<entry key="3" value-ref="overCalc" /> 
+		</map> 
+	  </constructor-arg> 
+  </bean> 
+</beans>

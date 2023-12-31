@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.OrgPostDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.OrgPost">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="orgId" column="ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="relDefId" column="JOB_ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="POS_NAME_" jdbcType="VARCHAR"/>
+		<result property="code" column="CODE_" jdbcType="VARCHAR"/>
+		<result property="demName" column="DEM_NAME_" jdbcType="VARCHAR"/>
+		<result property="orgName" column="ORG_NAME_" jdbcType="VARCHAR"/>
+		<result property="jobName" column="JOB_NAME_" jdbcType="VARCHAR"/>
+		<result property="jobCode" column="JOB_CODE_" jdbcType="VARCHAR"/>
+		<result property="isCharge" column="IS_CHARGE_" jdbcType="NUMERIC"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+		<result property="orgCode" column="ORG_CODE_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<parameterMap id="OrgPost" type="com.hotent.uc.model.OrgPost" />
+	
+	<sql id="Base_Column_List">
+		ID_,ORG_ID_,JOB_ID_,POS_NAME_,CODE_,IS_CHARGE_,UPDATE_TIME_,IS_DELE_,VERSION_
+	</sql>
+	
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		select org.name_  "ORG_NAME_", orgrel.*,def.NAME_ "JOB_NAME_"  from UC_ORG_POST  orgrel inner join UC_ORG_JOB def on orgrel.JOB_ID_=def.ID_
+        inner JOIN UC_ORG org on orgrel.ORG_ID_=org.ID_
+		WHERE 
+		orgrel.ID_=#{id} AND orgrel.IS_DELE_!='1' AND org.IS_DELE_!='1' AND def.IS_DELE_!='1'
+	</select>
+	
+	<select id="getByCode"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT uop.*,uo.NAME_ "ORG_NAME_"
+        FROM UC_ORG_POST  uop
+        LEFT JOIN uc_org uo ON uo.ID_=uop.ORG_ID_
+        WHERE uop.CODE_=#{code} AND uop.IS_DELE_!='1'
+	</select>
+	
+	<select id="getByReldefId"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM UC_ORG_POST 
+		WHERE 
+		JOB_ID_=#{relDefId} AND IS_DELE_!='1'
+	</select>
+	
+	<select id="getByOrgIdRelDefId"   parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_ORG_POST 
+		WHERE 
+		ORG_ID_=#{orgId} and JOB_ID_=#{relDefId} AND IS_DELE_!='1'
+	</select>
+	
+
+	
+		<select id="getRelListByParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+SELECT  rel.*,orguser.USER_ID_ ,u.ACCOUNT_ FROM   UC_ORG_USER orguser inner join UC_ORG_POST rel ON
+orguser.POS_ID_=rel.ID_ inner join UC_USER u on orguser.USER_ID_=u.ID_ inner join UC_ORG org on orguser.ORG_ID_=org.ID_
+		<if test="userId!=null">
+			 and orguser.USER_ID_=#{userId}
+		</if>
+	    <if test="account!=null">
+			 and u.ACCOUNT_=#{account}
+		</if>
+		<if test="demId!=null">
+			 and org.DEM_ID_=#{demId}
+		</if>
+		<if test="orgId!=null">
+			 and rel.ORG_ID_=#{orgId}
+		</if>
+		<if test="relDefId!=null">
+			 and rel.JOB_ID_=#{relDefId}
+		</if>
+		 WHERE orguser.IS_DELE_!='1' AND rel.IS_DELE_!='1' AND u.IS_DELE_!='1' AND u.IS_DELE_!='1'
+	</select>
+	
+	<!-- 查询岗位全信息，包含组织名称，职务名称 -->
+	<select id="queryInfoList" parameterType="java.util.Map" resultMap="BaseResultMap">
+	select org.NAME_  "ORG_NAME_", orgrel.*,def.NAME_ "JOB_NAME_"  from UC_ORG_POST  orgrel inner join UC_ORG_JOB def on orgrel.JOB_ID_=def.ID_
+inner JOIN UC_ORG org on orgrel.ORG_ID_=org.ID_
+		<if test="orgId!=null">
+			and orgrel.ORG_ID_=#{orgId}
+		</if>
+		WHERE org.IS_DELE_!='1' AND orgrel.IS_DELE_!='1' AND def.IS_DELE_!='1'
+		<if test="whereSql!=null">
+			${whereSql}
+		</if>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY orgrel.ID_ DESC
+		</if>
+	</select>
+
+	
+
+	
+	<delete id="removePhysical" >
+		DELETE FROM UC_ORG_POST WHERE IS_DELE_='1' 
+	</delete>
+	
+	<delete id="delByOrgId" parameterType="java.util.Map">
+		UPDATE UC_ORG_POST SET IS_DELE_='1',UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP} where ORG_ID_ = #{orgId}
+	</delete>
+	
+	<!-- 设置主岗位-->
+	<update id="updateRelCharge" parameterType="java.util.Map" >
+      update UC_ORG_POST set IS_CHARGE_=#{isCharge},UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}  where ID_=#{id}   
+	</update>
+	
+	<!--取消用户所有主岗位-->
+	<update id="cancelRelCharge" parameterType="java.util.Map" >
+	<![CDATA[
+	  update UC_ORG_POST set IS_CHARGE_=0 ,UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP} where ORG_ID_=#{orgId}
+	]]>
+	</update>
+	
+	<select id="getRelChargeByOrgId"   parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT p.* ,j.NAME_ AS JOB_NAME_ , o.NAME_ AS ORG_NAME_ FROM UC_ORG_POST p 
+		INNER JOIN UC_ORG o ON p.ORG_ID_ = o.ID_ INNER JOIN UC_ORG_JOB j ON j.ID_ = p.JOB_ID_ 
+		WHERE p.IS_DELE_!='1' AND o.IS_DELE_ !='1' AND j.IS_DELE_ !='1'
+		<if test="orgId!=null">
+			and p.ORG_ID_=#{orgId}
+		</if>
+		<if test="isCharge!=null">
+			and p.IS_CHARGE_=#{isCharge}
+		</if>
+	</select>
+	
+	<select id="getListByOrgId"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" /> FROM UC_ORG_POST 
+		WHERE 
+		ORG_ID_=#{orgId} AND IS_DELE_!='1' 
+	</select>
+	
+	<select id="getOrgPost" resultMap="BaseResultMap">
+		select p.* , o.NAME_ as ORG_NAME_ ,j.NAME_ as JOB_NAME_ ,j.CODE_ as JOB_CODE_,o.PATH_NAME_ as pathName,o.CODE_ as ORG_CODE_,ud.DEM_NAME_  as DEM_NAME_
+		from uc_org_post p INNER JOIN uc_org o ON o.ID_ = p.ORG_ID_ INNER JOIN uc_org_job j ON j.ID_ = p.JOB_ID_ 
+		INNER JOIN  uc_demension  ud on  o.dem_id_ = ud.ID_ 
+		${ew.customSqlSegment}
+		 <!-- 
+		 where p.IS_DELE_ = 0
+		   <if test="whereSql!=null">
+			 and  ${whereSql}
+		    </if>
+			<if test="postName!=null">
+				and p.POS_NAME_ like #{postName}
+			</if>
+			<if test="orgId != null">
+				and p.ORG_ID_ = #{orgId}
+			</if>
+			
+			<if test="authSql != null">
+				${authSql}
+			</if>
+		
+			<if test="orderBySql!=null">
+				ORDER BY ${orderBySql}
+			</if>
+			<if test="orderBySql==null">
+				ORDER BY p.UPDATE_TIME_ DESC
+			</if> -->
+	</select>
+
+    <select id="getFullname" parameterType="java.lang.String" resultType="java.util.Map" >
+		SELECT
+			ucuser.FULLNAME_ as "fullName",
+			ucuser.ACCOUNT_  as "account",
+			ucuser.STATUS_  as "status",
+			uc_org.PATH_NAME_ as "pathName"
+		FROM
+			uc_org_post  ucorgpost
+		LEFT JOIN uc_org_user  ucorguser ON ucorgpost.ID_ = ucorguser.POS_ID_
+		LEFT JOIN uc_org ON ucorguser.ORG_ID_ = uc_org.ID_
+		LEFT JOIN uc_user  ucuser ON ucuser.ID_ = ucorguser.USER_ID_
+		WHERE
+			ucorguser.IS_DELE_!='1' and
+			ucorgpost.ID_ = #{postId}
+	</select>
+
+    <select id="getPostByJobId" parameterType="java.lang.String" resultType="java.util.Map" >
+		SELECT ucorgpost.POS_NAME_  postName,ucorgpost.CODE_  postCode,ucorg.PATH_NAME_  pathName
+        FROM uc_org_post  ucorgpost,uc_org  ucorg
+        WHERE ucorgpost.ORG_ID_ = ucorg.ID_ AND ucorgpost.JOB_ID_ =  #{jobId}
+	</select>
+
+    <select id="getUserByUserId" parameterType="java.lang.String" resultType="java.util.Map" >
+		SELECT uop.POS_NAME_  postName,uop.ID_  postId,uo.NAME_  orgName,uo.ID_  orgId,uo.CODE_ orgCode,uo.PATH_NAME_ pathName,
+		ud.DEM_NAME_ demName,uop.IS_CHARGE_ isCharge,uop.CODE_  postCode,uou.IS_MASTER_ isMaster
+        FROM uc_org_user uou 
+        LEFT JOIN uc_org uo ON uo.ID_=uou.ORG_ID_ AND uo.IS_DELE_='0'
+        LEFT JOIN uc_org_post uop ON uop.ID_=uou.POS_ID_ AND uop.IS_DELE_='0'
+        LEFT JOIN uc_demension ud ON uo.DEM_ID_=ud.ID_ AND ud.IS_DELE_='0'
+        WHERE uou.USER_ID_ = #{userId} and uou.IS_DELE_='0' and uou.IS_REL_ACTIVE_=1
+	</select>
+
+    <select id="getUserJobByUserId" parameterType="java.lang.String" resultType="java.util.Map" >
+        SELECT ur.NAME_  roleName FROM uc_user_role uur,uc_role ur
+            WHERE ur.ID_=uur.ROLE_ID_ AND uur.USER_ID_= #{userId} AND uur.IS_DELE_ = '0' AND ur.IS_DELE_ = '0'
+	</select>
+
+	<select id="getCountByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(1) FROM UC_ORG_POST
+		WHERE CODE_ = #{code}
+	</select>
+
+</mapper>

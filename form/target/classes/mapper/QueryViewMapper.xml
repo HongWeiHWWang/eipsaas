@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.QueryViewDao">
+	<resultMap id="QueryView" type="com.hotent.form.model.QueryView">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="sqlAlias" column="SQL_ALIAS_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="alias" column="ALIAS_" jdbcType="VARCHAR"/>
+		<result property="shows" column="SHOWS_" jdbcType="LONGVARCHAR"/>
+		<result property="conditions" column="CONDITIONS_" jdbcType="LONGVARCHAR"/>
+		<result property="filterType" column="FILTER_TYPE_" jdbcType="NUMERIC"/>
+		<result property="filter" column="FILTER_" jdbcType="LONGVARCHAR"/>
+		<result property="buttons" column="BUTTONS_" jdbcType="VARCHAR"/>
+		<result property="initQuery" column="INIT_QUERY_" jdbcType="NUMERIC"/>
+		<result property="template" column="TEMPLATE_" jdbcType="LONGVARCHAR"/>
+		<result property="supportGroup" column="SUPPORT_GROUP_" jdbcType="NUMERIC"/>
+		<result property="groupSetting" column="GROUP_SETTING_" jdbcType="VARCHAR"/>
+		<result property="pageSize" column="PAGE_SIZE_" jdbcType="NUMERIC"/>
+		<result property="showRowsNum" column="SHOW_ROWS_NUM_" jdbcType="NUMERIC"/>
+		<result property="sn" column="SN_" jdbcType="NUMERIC"/>
+		<result property="needPage" column="NEED_PAGE_" jdbcType="NUMERIC"/>
+		<result property="templateAlias" column="TEMPLATE_ALIAS_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getBySqlAlias"   parameterType="java.lang.String" resultMap="QueryView">
+		SELECT * FROM form_query_view 
+		WHERE 
+		SQL_ALIAS_=#{sqlAlias}
+	</select>
+	
+	<select id="getBySqlAliasAndAlias"   parameterType="java.lang.String" resultMap="QueryView">
+		SELECT * FROM form_query_view 
+		WHERE 
+		SQL_ALIAS_=#{sqlAlias} and ALIAS_ = #{alias}
+	</select>
+	
+	<delete id="removeBySqlAlias" parameterType="java.lang.String">
+		DELETE FROM form_query_view 
+		WHERE
+		SQL_ALIAS_=#{sqlAlias}
+	</delete>
+
+	<select id="getByAlias"   parameterType="java.lang.String" resultMap="QueryView">
+		SELECT * FROM form_query_view
+		WHERE
+		ALIAS_=#{alias}
+	</select>
+	
+	<select id="listByAlias"   parameterType="java.lang.String" resultMap="QueryView">
+		SELECT * FROM form_query_view
+		WHERE
+		ALIAS_=#{alias}
+	</select>
+</mapper>

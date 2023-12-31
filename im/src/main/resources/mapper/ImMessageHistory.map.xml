@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.im.persistence.dao.ImMessageHistoryDao">
+	<resultMap id="ImMessageHistory" type="com.hotent.im.persistence.model.ImMessageHistory">
+		<id property="id" column="id_" jdbcType="NUMERIC"/>
+		<result property="type" column="type_" jdbcType="VARCHAR"/>
+		<result property="from" column="from_" jdbcType="VARCHAR"/>
+		<result property="messageId" column="message_id_" jdbcType="VARCHAR"/>
+		<result property="sessionCode" column="session_code_" jdbcType="VARCHAR"/>
+		<result property="sendTime" column="send_time_" jdbcType="NUMERIC"/>
+		<result property="content" column="content_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="create" parameterType="com.hotent.im.persistence.model.ImMessageHistory">
+		INSERT INTO portal_im_message_history
+		(id_,type_,from_,session_code_,message_id_,send_time_,content_)
+		VALUES 
+		(#{id,jdbcType=NUMERIC}, #{type,jdbcType=VARCHAR}, #{from,jdbcType=VARCHAR}, #{sessionCode,jdbcType=VARCHAR},  #{messageId,jdbcType=VARCHAR}, #{sendTime,jdbcType=NUMERIC}, #{content,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="ImMessageHistory">
+		SELECT * FROM portal_im_message_history 
+		WHERE 
+		id_=#{id}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="ImMessageHistory">
+		SELECT * FROM portal_im_message_history
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+	
+	<select id="queryHistory" parameterType="java.util.Map" resultMap="ImMessageHistory">
+		SELECT  imh.* FROM portal_im_message_history imh
+
+		LEFT JOIN portal_im_session_user isu on isu.session_code_ = imh.session_code_ and isu.user_account_ = #{userAccount,jdbcType=VARCHAR}
+		
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY send_time_ desc
+		</if>
+	</select>
+	
+	<update id="update" parameterType="com.hotent.im.persistence.model.ImMessageHistory">
+		UPDATE portal_im_message_history SET
+		type_=#{type,jdbcType=VARCHAR},
+		from_=#{from,jdbcType=VARCHAR},
+		session_code_=#{sessionCode,jdbcType=VARCHAR},
+		message_id_=#{messageId,jdbcType=VARCHAR},
+		send_time_=#{sendTime,jdbcType=NUMERIC},
+		content_=#{content,jdbcType=VARCHAR}
+		WHERE
+		id_=#{id}
+	</update>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM portal_im_message_history 
+		WHERE
+		id_=#{id}
+	</delete>
+	
+	<select id="sessionMessage"   parameterType="java.util.Map" resultMap="ImMessageHistory">
+		select * from portal_im_message_history where send_time_ > 
+		(select last_read_time_ from portal_im_session_user where session_code_ = #{sessionCode,jdbcType=VARCHAR} and user_id_ = #{userId,jdbcType=VARCHAR}) 
+		ORDER BY send_time_ ASC
+	</select>
+	
+	<select id="getMsgHistory" parameterType="java.util.Map" resultMap="ImMessageHistory">
+		select imh.message_id_,imh.session_code_,imh.from_,imh.content_,imh.type_,imh.send_time_
+		
+		from portal_im_message_history imh
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY imh.send_time_ asc
+		</if>
+	</select>
+	
+
+	
+</mapper>

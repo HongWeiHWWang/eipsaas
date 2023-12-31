@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="qjlc" name="请假流程" isExecutable="true">
+    <documentation>请假流程</documentation>
+    <extensionElements>
+      <activiti:executionListener event="start" delegateExpression="${startEventListener}"/>
+      <activiti:executionListener event="end" delegateExpression="${endEventListener}"/>
+    </extensionElements>
+    <startEvent id="StartEvent1" name="开始1" activiti:initiator="startUser"/>
+    <userTask id="UserTask1" name="申请">
+      <extensionElements>
+        <activiti:taskListener event="create" delegateExpression="${taskCreateListener}"/>
+        <activiti:taskListener event="complete" delegateExpression="${taskCompleteListener}"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-366D162F-1378-406D-A1F0-AC338750285A" sourceRef="StartEvent1" targetRef="UserTask1"/>
+    <userTask id="UserTask2" name="主管审核">
+      <extensionElements>
+        <activiti:taskListener event="create" delegateExpression="${taskCreateListener}"/>
+        <activiti:taskListener event="complete" delegateExpression="${taskCompleteListener}"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-81746194-905B-4913-96DD-DF3C729DBD8F" sourceRef="UserTask1" targetRef="UserTask2"/>
+    <userTask id="UserTask3" name="经理审核">
+      <extensionElements>
+        <activiti:taskListener event="create" delegateExpression="${taskCreateListener}"/>
+        <activiti:taskListener event="complete" delegateExpression="${taskCompleteListener}"/>
+      </extensionElements>
+    </userTask>
+    <exclusiveGateway id="XORGateway1" name="请假天数是否大于3天"/>
+    <sequenceFlow id="SequenceFlow1" name="连线1" sourceRef="UserTask2" targetRef="XORGateway1"/>
+    <sequenceFlow id="SequenceFlow3" name="大于3天" sourceRef="XORGateway1" targetRef="UserTask3"/>
+    <userTask id="UserTask4" name="行政归档">
+      <extensionElements>
+        <activiti:taskListener event="create" delegateExpression="${taskCreateListener}"/>
+        <activiti:taskListener event="complete" delegateExpression="${taskCompleteListener}"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-44349F97-42B1-4298-8B82-B75696E1423A" sourceRef="XORGateway1" targetRef="UserTask4"/>
+    <sequenceFlow id="SequenceFlow4" name="连线4" sourceRef="UserTask3" targetRef="UserTask4"/>
+    <sequenceFlow id="sid-9E844702-8790-4347-B50C-51ADCFC7701C" sourceRef="UserTask4" targetRef="MessageTask1"/>
+    <serviceTask id="MessageTask1" name="消息任务1" activiti:delegateExpression="${customServiceTask}"/>
+    <endEvent id="EndEvent1" name="结束1"/>
+    <sequenceFlow id="sid-CD632825-579C-48F5-8402-6B18BD6EEC28" sourceRef="MessageTask1" targetRef="EndEvent1"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_qjlc">
+    <bpmndi:BPMNPlane bpmnElement="qjlc" id="BPMNPlane_qjlc">
+      <bpmndi:BPMNShape bpmnElement="StartEvent1" id="BPMNShape_StartEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="138.671875" y="104.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask1" id="BPMNShape_UserTask1">
+        <omgdc:Bounds height="80.0" width="100.0" x="256.671875" y="79.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask2" id="BPMNShape_UserTask2">
+        <omgdc:Bounds height="80.0" width="100.0" x="405.0" y="79.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask3" id="BPMNShape_UserTask3">
+        <omgdc:Bounds height="80.0" width="100.0" x="615.0" y="255.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="XORGateway1" id="BPMNShape_XORGateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="435.0" y="275.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask4" id="BPMNShape_UserTask4">
+        <omgdc:Bounds height="80.0" width="100.0" x="405.0" y="377.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="MessageTask1" id="BPMNShape_MessageTask1">
+        <omgdc:Bounds height="80.0" width="100.0" x="242.671875" y="377.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent1" id="BPMNShape_EndEvent1">
+        <omgdc:Bounds height="28.0" width="28.0" x="144.671875" y="403.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow4" id="BPMNEdge_SequenceFlow4">
+        <omgdi:waypoint x="665.0" y="335.0"/>
+        <omgdi:waypoint x="665.0" y="417.0"/>
+        <omgdi:waypoint x="505.0" y="417.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow3" id="BPMNEdge_SequenceFlow3">
+        <omgdi:waypoint x="474.54545454545456" y="295.45454545454544"/>
+        <omgdi:waypoint x="615.0" y="295.11933174224345"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-366D162F-1378-406D-A1F0-AC338750285A" id="BPMNEdge_sid-366D162F-1378-406D-A1F0-AC338750285A">
+        <omgdi:waypoint x="168.671875" y="119.0"/>
+        <omgdi:waypoint x="256.671875" y="119.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-81746194-905B-4913-96DD-DF3C729DBD8F" id="BPMNEdge_sid-81746194-905B-4913-96DD-DF3C729DBD8F">
+        <omgdi:waypoint x="356.671875" y="119.0"/>
+        <omgdi:waypoint x="405.0" y="119.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow1" id="BPMNEdge_SequenceFlow1">
+        <omgdi:waypoint x="455.00363636363636" y="159.0"/>
+        <omgdi:waypoint x="455.4270072992701" y="275.4270072992701"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-CD632825-579C-48F5-8402-6B18BD6EEC28" id="BPMNEdge_sid-CD632825-579C-48F5-8402-6B18BD6EEC28">
+        <omgdi:waypoint x="242.671875" y="417.0"/>
+        <omgdi:waypoint x="172.671875" y="417.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-44349F97-42B1-4298-8B82-B75696E1423A" id="BPMNEdge_sid-44349F97-42B1-4298-8B82-B75696E1423A">
+        <omgdi:waypoint x="455.42148760330576" y="314.57851239669424"/>
+        <omgdi:waypoint x="455.16460905349794" y="377.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-9E844702-8790-4347-B50C-51ADCFC7701C" id="BPMNEdge_sid-9E844702-8790-4347-B50C-51ADCFC7701C">
+        <omgdi:waypoint x="405.0" y="417.0"/>
+        <omgdi:waypoint x="342.671875" y="417.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

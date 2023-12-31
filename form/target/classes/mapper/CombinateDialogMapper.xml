@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.CombinateDialogDao">
+	<resultMap id="CombinateDialog" type="com.hotent.form.model.CombinateDialog">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="alias" column="alias_" jdbcType="VARCHAR"/>
+		<result property="width" column="width_" jdbcType="NUMERIC"/>
+		<result property="height" column="height_" jdbcType="NUMERIC"/>
+		<result property="treeDialogId" column="tree_dialog_id_" jdbcType="VARCHAR"/>
+		<result property="treeDialogName" column="tree_dialog_name_" jdbcType="VARCHAR"/>
+		<result property="listDialogId" column="list_dialog_id_" jdbcType="VARCHAR"/>
+		<result property="listDialogName" column="list_dialog_name_" jdbcType="VARCHAR"/>
+		<result property="field" column="field_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getByAlias" parameterType="java.lang.String" resultMap="CombinateDialog">
+		SELECT * FROM form_combinate_dialog
+		WHERE
+		alias_=#{alias}
+	</select>
+</mapper>

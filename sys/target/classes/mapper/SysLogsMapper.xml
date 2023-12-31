@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.sys.persistence.dao.SysLogsDao">
+	<resultMap id="SysLogs" type="com.hotent.sys.persistence.model.SysLogs">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="opeName" column="OPE_NAME_" jdbcType="VARCHAR"/>
+		<result property="executionTime" column="EXECUTION_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="executor" column="EXECUTOR_" jdbcType="VARCHAR"/>
+		<result property="ip" column="IP_" jdbcType="VARCHAR"/>
+		<result property="logType" column="LOG_TYPE_" jdbcType="VARCHAR"/>
+		<result property="moduleType" column="MODULE_TYPE_" jdbcType="VARCHAR"/>
+		<result property="reqUrl" column="REQ_URL_" jdbcType="VARCHAR"/>
+		<result property="opeContent" column="OPE_CONTENT_" jdbcType="LONGVARCHAR"/>
+		
+	</resultMap>
+	
+	<delete id="removeByEexcutionTime" parameterType="java.util.List">
+		DELETE FROM portal_sys_logs 
+		<where>
+			1=0
+			<foreach collection="params" item="param" separator="or" open="or">
+			MODULE_TYPE_ = #{param.moduleType} and EXECUTION_TIME_ &lt; #{param.executionTime,jdbcType=TIMESTAMP}
+			</foreach>
+		</where>
+	</delete>
+	
+	
+</mapper>

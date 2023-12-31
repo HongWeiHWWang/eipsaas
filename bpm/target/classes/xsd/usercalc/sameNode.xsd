@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.jee-soft.cn/bpm/plugins/userCalc/sameNode"
+    targetNamespace="http://www.jee-soft.cn/bpm/plugins/userCalc/sameNode"
+    xmlns:base="http://www.jee-soft.cn/bpm/plugins/userCalc/base" elementFormDefault="qualified"> 
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/userCalc/base"  schemaLocation="base.xsd"/>
+    
+    <xs:element name="sameNode">
+        <xs:annotation>
+            <xs:documentation>与已执行节点相同执行人</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="base:abstractLogic">
+                    <xs:attribute name="nodeId" type="xs:string" use="required">
+                        <xs:annotation>
+                            <xs:documentation>流程节点ID</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmTaskCandidateDao">
+	<resultMap id="BpmTaskCandidate" type="com.hotent.bpm.persistence.model.DefaultBpmTaskCandidate">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="task_id_" jdbcType="VARCHAR"/>
+		<result property="type" column="type_" jdbcType="VARCHAR"/>
+		<result property="executor" column="executor_" jdbcType="VARCHAR"/>
+		<result property="procInstId" column="proc_inst_id_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+	<select id="queryByTaskId"   parameterType="java.lang.String" resultMap="BpmTaskCandidate">
+		SELECT * FROM bpm_task_candidate 
+		WHERE 
+		task_id_=#{taskId}
+	</select>	
+	
+	<select id="getByTaskIdExeIdType" resultMap="BpmTaskCandidate">
+		select * from bpm_task_candidate t where t.task_id_=#{taskId} and executor_=#{executorId} and type_=#{type}
+	</select>
+	
+	<delete id="removeByTaskId" parameterType="java.lang.String">
+		DELETE FROM bpm_task_candidate 
+		WHERE
+		task_id_=#{taskId}
+	</delete>
+	
+	
+	<delete id="delByInstList" >
+		DELETE FROM bpm_task_candidate 
+		WHERE task_id_ in (select id_ from bpm_task where proc_inst_id_ in 
+			<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        	</foreach> 
+		)
+	</delete>
+	
+	
+	<select id="getByInstList" resultMap="BpmTaskCandidate">
+		select * FROM bpm_task_candidate 
+		WHERE
+		task_id_ in (select id_ from bpm_task where proc_inst_id_ in 
+			<foreach collection="list" index="index" item="instId" open="(" separator="," close=")"> 
+            #{instId} 
+        	</foreach> 
+		)
+	</select>
+
+	<update id="updateExecutor" parameterType="java.util.Map">
+		update bpm_task_candidate set executor_ = #{executor}
+		where proc_inst_id_ in
+		<foreach collection="instIds" index="index" item="instId" open="(" separator="," close=")">
+			#{instId}
+		</foreach>
+		and executor_ = #{userId}
+	</update>
+	
+</mapper>

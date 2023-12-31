@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bo.persistence.dao.BoEntDao">
+	<resultMap id="BOEnt" type="com.hotent.bo.model.BoEnt">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="packageId" column="package_id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="desc" column="desc_" jdbcType="VARCHAR"/>
+		<result property="status" column="status_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="isCreateTable" column="is_create_table_" jdbcType="NUMERIC"/>
+		<result property="dsName" column="ds_name_" jdbcType="VARCHAR"/>
+		<result property="tableName" column="table_name_" jdbcType="VARCHAR"/>
+		<result property="isExternal" column="is_external_" jdbcType="NUMERIC"/>
+		<result property="pk" column="pk_" jdbcType="VARCHAR"/>
+		<result property="fk" column="fk_" jdbcType="VARCHAR"/>
+		<result property="pkType" column="pk_type_" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<select id="getByDefId" parameterType="java.lang.String" resultMap="BOEnt">
+		SELECT a.*
+		FROM
+		form_bo_ent a
+		INNER JOIN form_bo_ent_relation b ON a.id_ = b.ref_ent_id_
+		WHERE
+		b.bo_defid_ = #{defId}
+	</select>
+	
+	<delete id="deleteByDefId" parameterType="java.lang.String">
+		DELETE FROM
+				form_bo_ent
+		WHERE ID_ in (
+			select ref_ent_id_ from form_bo_ent_relation where BO_DEFID_ = #{defId}
+		)
+	</delete>
+	
+	<select id="getByName"   parameterType="java.lang.String" resultMap="BOEnt">
+		SELECT * FROM form_bo_ent
+		WHERE 
+		name_=#{name,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getByTableName"   parameterType="java.lang.String" resultMap="BOEnt">
+		SELECT * FROM form_bo_ent WHERE table_name_=#{tableName,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getBySubEntId"   parameterType="java.lang.String" resultMap="BOEnt">
+		SELECT * FROM form_bo_ent
+		WHERE 
+		ID_ in(
+			select a.ref_ent_id_ from form_bo_ent_relation a LEFT JOIN form_bo_ent_relation b ON a.PARENT_ID_=b.ID_ 
+			where b.REF_ENT_ID_=#{entId,jdbcType=VARCHAR}
+		) 
+
+	</select>
+</mapper>

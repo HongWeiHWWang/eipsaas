@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmDefDataDao">
+	<resultMap id="BpmDefData" type="com.hotent.bpm.persistence.model.BpmDefData">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="defXml" column="def_xml_" jdbcType="LONGVARCHAR"/>
+		<result property="bpmnXml" column="bpmn_xml_" jdbcType="LONGVARCHAR"/>
+		<result property="defJson" column="def_json_" jdbcType="LONGVARCHAR"/>
+		
+	</resultMap>
+	
+	<insert id="create" parameterType="com.hotent.bpm.persistence.model.BpmDefData">
+		INSERT INTO bpm_def_data
+		(id_,def_xml_,bpmn_xml_,def_json_)
+		VALUES 
+		(#{id,jdbcType=VARCHAR}, #{defXml,jdbcType=LONGVARCHAR}, #{bpmnXml,jdbcType=LONGVARCHAR},#{defJson,jdbcType=LONGVARCHAR})
+	</insert>
+	
+	<select id="get"   parameterType="java.lang.String" resultMap="BpmDefData">
+		SELECT * FROM bpm_def_data 
+		WHERE 
+		id_=#{id}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="BpmDefData">
+		SELECT * FROM bpm_def_data
+		<where>
+			<if test="whereSql!=null">
+				${whereSql}
+			</if>
+		</where>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY id_ DESC
+		</if>
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM bpm_def_data 
+		WHERE
+		id_=#{id}
+	</delete>
+	
+	
+	<delete id="delByDefKey" parameterType="java.lang.String">
+		DELETE FROM bpm_def_data where id_ in (select def_id_ from  bpm_definition where def_key_=#{defKey} )
+	</delete>
+	
+</mapper>

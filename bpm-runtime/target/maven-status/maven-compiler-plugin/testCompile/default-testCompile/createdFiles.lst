@@ -1,0 +1,9 @@
+com\hotent\runtime\core\persistence\manager\IProcessManagerTest.class
+com\hotent\runtime\core\persistence\manager\BpmTestCaseManagerTest.class
+com\hotent\runtime\core\persistence\manager\BpmTaskTransRecordManagerTest.class
+com\hotent\runtime\core\RunTimeTestCase.class
+com\hotent\runtime\core\persistence\manager\TaskTransServiceTest.class
+com\hotent\runtime\core\persistence\manager\BpmExeStackRelationManagerTest.class
+com\hotent\runtime\core\persistence\manager\BpmTaskTransManagerTest.class
+com\hotent\runtime\core\persistence\manager\BpmTransReceiverManagerTest.class
+com\hotent\runtime\core\persistence\manager\IFlowManagerTest.class

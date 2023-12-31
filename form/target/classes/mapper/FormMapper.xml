@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.FormDao">
+	<resultMap id="BpmForm" type="com.hotent.form.model.Form">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="defId" column="def_id_" jdbcType="VARCHAR"/>
+		<result property="name" column="name_" jdbcType="VARCHAR"/>
+		<result property="formKey" column="form_key_" jdbcType="VARCHAR"/>
+		<result property="desc" column="desc_" jdbcType="VARCHAR"/>
+		<result property="formHtml" column="form_html_" jdbcType="LONGVARCHAR"/>
+		<result property="status" column="status_" jdbcType="VARCHAR"/>
+		<result property="formType" column="form_type_" jdbcType="VARCHAR"/>
+		<result property="typeId" column="type_id_" jdbcType="VARCHAR"/>
+		<result property="typeName" column="type_name_" jdbcType="VARCHAR"/>
+		<result property="isMain" column="is_main_" jdbcType="VARCHAR"/>
+		<result property="isPrint" column="is_print_" jdbcType="VARCHAR"/>
+		<result property="formTabTitle" column="form_tab_title_" jdbcType="VARCHAR"/>
+		<result property="version" column="version_" jdbcType="NUMERIC"/>
+		<result property="versionCount" column="versionCount" jdbcType="NUMERIC"/>
+        <result property="diyJs" column="diy_js_" jdbcType="LONGVARCHAR"/>
+        <result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+        <result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+        <result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<select id="getFormQueryList" parameterType="java.util.Map" resultMap="BpmForm">
+		select * from(
+		  SELECT a.*,(select count(*) from form_definition where form_key_=a.form_Key_) versionCount,
+		  (select count(*) from form_data_template where form_key_=a.form_key_ ) busDataTemplateCount,
+		  (SELECT count(*)FROM form_bo_relation WHERE form_id_  = a.DEF_ID_ GROUP BY	form_bo_relation.FORM_ID_)  boCount
+		  FROM form_definition a
+		) form
+		${ew.customSqlSegment}
+	</select>
+
+	<select id="getByBoCodes" parameterType="java.lang.String" resultMap="BpmForm">
+		select id_,def_id_,name_,form_key_,desc_,status_,form_type_,
+		type_name_,type_id_,is_main_,version_,create_by_,create_time_,
+		create_org_id_,update_by_,update_time_ from form_definition f where status_='deploy' and is_main_='Y' and f.def_id_ in(
+			select b.form_id_ from form_bo_relation b where b.bo_def_id_ in (
+				<if test="code!=null">
+					select t.id_ from form_bo_def t where  t.alias_ in
+						<foreach collection="codes" index="index" item="code" open="(" separator="," close=")"> 
+		            		#{code} 
+		        		</foreach> 
+        		</if>
+        		<if test="code==null">
+					select t.id_ from form_bo_def t where  t.alias_ in
+						('')
+        		</if>
+			)
+		)
+		<if test="formType!=null">
+			and form_type_=#{formType}
+		</if>
+		<if test="formKey!=null">
+			and form_key_ like #{formKey}
+		</if>
+		<if test="name!=null">
+			and name_ like #{name}
+		</if>
+	</select>
+
+	<select id="getByFormKey"  resultMap="BpmForm" >
+		SELECT * FROM form_definition
+		WHERE 
+		form_key_=#{formKey,jdbcType=VARCHAR} ORDER BY version_
+	</select>
+	
+	<select id="getPrintByFormKey"  resultMap="BpmForm" >
+		SELECT * FROM form_definition
+		WHERE 
+		form_key_=#{formKey,jdbcType=VARCHAR} and is_print_ = 'Y' ORDER BY version_
+	</select>
+	
+	<select id="getMainByFormKey"  resultMap="BpmForm" >
+		SELECT * FROM form_definition
+		WHERE 
+		form_key_=#{formKey,jdbcType=VARCHAR} and is_main_='Y'
+	</select>
+	
+	<select id="getBpmFormCountsByFormKey"   resultType="Integer"  parameterType="String" >
+		SELECT count(*) FROM form_definition
+		WHERE 
+		form_key_=#{formKey,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getMaxVersionByFormKey" parameterType="String" resultType="int">
+		SELECT max(version_) version_
+		FROM form_definition
+		WHERE form_key_ = #{formKey,jdbcType=VARCHAR}
+	</select>
+	<update id="updNotDefaultByFormKey" parameterType="String">
+		UPDATE form_definition SET  is_main_='N' where form_key_=#{formKey,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updDefaultByFormId" parameterType="String"> 
+		UPDATE form_definition SET  is_main_='Y' where id_=#{formId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getByDefId"  resultMap="BpmForm" >
+		SELECT * FROM form_definition
+		WHERE 
+		def_id_=#{defId,jdbcType=VARCHAR} and is_main_='Y'
+	</select>
+
+	<select id="getBoEnt" parameterType="java.lang.String"  resultType="java.util.HashMap">
+		SELECT bo.id_,bo.description_,bo.alias_ FROM form_bo_def bo
+		INNER JOIN form_bo_relation rel ON rel.bo_def_id_=bo.id_
+		WHERE rel.form_id_=#{id}
+	</select>
+</mapper>

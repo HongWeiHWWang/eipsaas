@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpmModel.dao.BpmOftenFlowDao">
+	<resultMap id="BpmOftenFlow" type="com.hotent.bpmModel.model.BpmOftenFlow">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="defKey" column="DEF_KEY_" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="userName" column="USER_NAME_" jdbcType="VARCHAR"/>
+		<result property="order" column="ORDER_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<delete id="removeByUserIdAndDefKeys" parameterType="java.lang.String">
+		DELETE FROM bpm_often_flow  WHERE user_id_ =#{userId} 
+		<if test="defkeys!=null">
+		and  DEF_KEY_ in 
+		<foreach collection="defkeys" index="index" item="defkey" open="(" close=")" separator=",">
+            #{defkey}
+        </foreach>
+       	</if>
+	</delete>
+	
+	<select id="customQuery" parameterType="java.util.Map" resultMap="BpmOftenFlow">
+		SELECT DISTINCT  bcdef.ID_,bcdef.DEF_KEY_,bcdef.USER_ID_,def.name_ NAME_,bcdef.USER_NAME_,bcdef.ORDER_,def.DEF_ID_ as detId FROM
+		bpm_often_flow bcdef inner join bpm_definition  def on   bcdef.DEF_KEY_ = def.DEF_KEY_  and def.IS_MAIN_='Y'
+		${ew.customSqlSegment}
+	</select>
+	
+	<select id="getBpmOftenFlows" parameterType="java.lang.String" resultMap="BpmOftenFlow">
+		SELECT * FROM bpm_often_flow where
+		user_id_ =#{userId} AND DEF_KEY_ =#{defkey}
+	</select>
+</mapper>

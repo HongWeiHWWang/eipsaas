@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.oa.persistence.dao.MeetingroomDao">
+	<resultMap id="Meetingroom" type="com.hotent.oa.model.Meetingroom">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="refId" column="REF_ID_" jdbcType="VARCHAR"/>
+		<result property="FName" column="F_NAME_" jdbcType="VARCHAR"/>
+		<result property="FNeedPending" column="F_NEED_PENDING_" jdbcType="NUMERIC"/>
+		<result property="FPendingUserId" column="F_PENDING_USER_ID_" jdbcType="VARCHAR"/>
+		<result property="FPendingUserName" column="F_PENDING_USER_NAME_" jdbcType="VARCHAR"/>
+		<result property="FLocation" column="F_LOCATION_" jdbcType="VARCHAR"/>
+		<result property="FCapacity" column="F_CAPACITY_" jdbcType="NUMERIC"/>
+		<result property="FMemo" column="F_MEMO_" jdbcType="VARCHAR"/>
+		<result property="FContact" column="F_CONTACT" jdbcType="VARCHAR"/>
+		<result property="FContactName" column="F_CONTACT_NAME_" jdbcType="VARCHAR"/>
+		<result property="FContactPhoto" column="F_CONTACT_PHOTO_" jdbcType="NUMERIC"/>
+		<result property="FArea" column="F_AREA_" jdbcType="NUMERIC"/>
+		<result property="FProjector" column="F_PROJECTOR_" jdbcType="VARCHAR"/>
+		<result property="FComputer" column="F_COMPUTER_" jdbcType="VARCHAR"/>
+		<result property="FStatus" column="F_STATUS_" jdbcType="NUMERIC"/>
+		<result property="FPrice" column="F_PRICE" jdbcType="NUMERIC"/>
+		<result property="FFormDataRev" column="F_form_data_rev_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+</mapper>

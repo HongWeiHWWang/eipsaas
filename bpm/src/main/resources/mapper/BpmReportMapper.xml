@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmReportDao">
+	<resultMap id="bpmReport" type="com.hotent.bpm.persistence.model.BpmReport">
+		
+		<result property="name" column="name" jdbcType="VARCHAR"/>
+		<result property="value" column="value" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="queryFlow"   parameterType="java.lang.String" resultMap="bpmReport">
+		SELECT count(TYPE_ID_) as value,CREATE_ORG_ID_ as name FROM bpm_pro_inst where PROC_DEF_ID_=#{defId} GROUP BY CREATE_ORG_ID_;
+	</select>
+	
+	
+</mapper>

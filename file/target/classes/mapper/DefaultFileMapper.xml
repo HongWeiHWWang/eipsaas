@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.file.persistence.dao.FileDao">
+	<resultMap id="DefaultFile" type="com.hotent.file.model.DefaultFile">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="xbTypeId" column="XB_TYPE_ID_" jdbcType="VARCHAR"/>
+		<result property="fileName" column="FILE_NAME_" jdbcType="VARCHAR"/>
+		<result property="fileType" column="FILE_TYPE_" jdbcType="VARCHAR"/>
+		<result property="storeType" column="STORE_TYPE_" jdbcType="VARCHAR"/>
+		<result property="filePath" column="FILE_PATH_" jdbcType="VARCHAR"/>
+		<result property="bytes" column="BYTES_" jdbcType="BLOB"/>
+		<result property="byteCount" column="BYTE_COUNT_" jdbcType="NUMERIC"/>
+		<result property="extensionName" column="EXT_" jdbcType="VARCHAR"/>
+		<result property="note" column="NOTE_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="CREATOR_" jdbcType="VARCHAR"/>
+		<result property="creatorName" column="CREATOR_NAME_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="isDel" column="IS_DEL_" jdbcType="VARCHAR"/>
+		<result property="prop1" column="prop1_" jdbcType="VARCHAR"/>
+        <result property="prop2" column="prop2_" jdbcType="VARCHAR"/>
+        <result property="prop3" column="prop3_" jdbcType="VARCHAR"/>
+        <result property="prop4" column="prop4_" jdbcType="VARCHAR"/>
+        <result property="prop5" column="prop5_" jdbcType="VARCHAR"/>
+        <result property="prop6" column="prop6_" jdbcType="LONGVARCHAR"/>
+        <result property="type" column="TYPE_" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+	<update id="updateExtraProps" parameterType="com.hotent.file.model.DefaultFile">
+		UPDATE portal_sys_file SET
+		prop1_=#{prop1,jdbcType=VARCHAR},
+		prop2_=#{prop2,jdbcType=VARCHAR},
+		prop3_=#{prop3,jdbcType=VARCHAR},
+		prop4_=#{prop4,jdbcType=VARCHAR},
+		prop5_=#{prop5,jdbcType=VARCHAR},
+		prop6_=#{prop6,jdbcType=LONGVARCHAR},
+		TYPE_=#{type,jdbcType=VARCHAR}
+		WHERE
+		id_=#{id}
+	</update>
+
+
+	<select id="getAllByExt" parameterType="java.util.Map"  resultMap="DefaultFile">
+		SELECT * FROM portal_sys_file
+		WHERE EXT_ in
+		<foreach collection="allowFiles" index="index" item="ext" open="(" close=")" separator=",">
+			#{ext}
+		</foreach>
+	</select>
+
+	<update id="setXbTypeId" parameterType="java.lang.String">
+		UPDATE portal_sys_file SET
+		XB_TYPE_ID_=#{xbTypeId,jdbcType=VARCHAR},
+        TYPE_ = #{type,jdbcType=VARCHAR}
+		WHERE
+		ID_ in
+		<foreach collection="fileId" index="index" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</update>
+
+</mapper>

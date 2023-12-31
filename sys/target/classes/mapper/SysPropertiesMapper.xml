@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.sys.persistence.dao.SysPropertiesDao">
+	<resultMap id="SysProperties" type="com.hotent.sys.persistence.model.SysProperties">
+		<id property="id" column="id" jdbcType="VARCHAR"/>
+		<result property="name" column="name" jdbcType="VARCHAR"/>
+		<result property="alias" column="alias" jdbcType="VARCHAR"/>
+		<result property="group" column="group_" jdbcType="VARCHAR"/>
+		<result property="value" column="value" jdbcType="VARCHAR"/>
+		<result property="encrypt" column="encrypt" jdbcType="NUMERIC"/>
+		<result property="description" column="description" jdbcType="VARCHAR"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="update_time_" jdbcType="TIMESTAMP"/>
+		
+	</resultMap>
+	
+	<select id="getGroups" resultType="java.lang.String">
+		SELECT distinct group_ FROM portal_sys_properties
+	</select>
+	
+	<select id="isExist" resultType="java.lang.Integer">
+		SELECT count(1) FROM portal_sys_properties where alias=#{alias}
+		<if test="id!=null">
+			and id!=#{id}
+		</if>
+	</select>
+</mapper>

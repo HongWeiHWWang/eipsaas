@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.sys.persistence.dao.SysMenuDao">
+	<resultMap id="SysMenu" type="com.hotent.sys.persistence.model.SysMenu">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="parentId" column="PARENT_ID_" jdbcType="VARCHAR"/>
+		<result property="name" column="NAME_" jdbcType="VARCHAR"/>
+		<result property="alias" column="ALIAS_" jdbcType="VARCHAR"/>
+		<result property="menuIcon" column="MENU_ICON_" jdbcType="VARCHAR"/>
+		<result property="open" column="OPENED_" jdbcType="NUMERIC"/>
+		<result property="sn" column="SN_" jdbcType="NUMERIC"/>
+		<result property="activeTab" column="ACTIVE_TAB_" jdbcType="VARCHAR"/>
+		<result property="tabsStyle" column="TABS_STYLE_" jdbcType="VARCHAR"/>
+		<result property="path" column="PATH_" jdbcType="VARCHAR"/>
+        <result property="href" column="HREF_" jdbcType="VARCHAR"/>
+        <result property="tenantId" column="tenant_id_" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	
+	<select id="getByAlias"   parameterType="java.lang.String" resultMap="SysMenu">
+		SELECT * FROM portal_sys_menu 
+		WHERE 
+		ALIAS_=#{alias}
+	</select>
+	
+	
+	<select id="isExistByAlias"   parameterType="java.lang.String"  resultType="int">
+		SELECT count(1) FROM portal_sys_menu 
+		WHERE 
+		ALIAS_=#{alias}
+	</select>
+	
+	
+	<select id="getByParentId"   parameterType="java.lang.String" resultMap="SysMenu">
+		SELECT * FROM portal_sys_menu 
+		WHERE 
+		PARENT_ID_=#{parentId}
+	</select>
+	
+	<select id="getByChidrensParentPath"   parameterType="java.lang.String" resultMap="SysMenu">
+		SELECT * FROM portal_sys_menu 
+		WHERE 
+		PATH_ like concat("",#{path},"%")
+	</select>
+	
+	<select id="getMenuByRoleAlias"   parameterType="java.util.List" resultMap="SysMenu">
+		select * from portal_sys_menu sysMenu 
+		LEFT JOIN portal_sys_role_auth sysRoleAuth on sysMenu.ALIAS_ = sysRoleAuth.MENU_ALIAS_ 
+		WHERE sysRoleAuth.ROLE_ALIAS_ IN 
+		<foreach collection="roles" item="role" separator="," open="(" close=")">
+      	#{role}
+   		</foreach>
+   		<if test="ignoreMenus!=null">
+			AND sysMenu.ALIAS_ NOT IN
+			<foreach collection="ignoreMenus" item="ignoreMenu" separator="," open="(" close=")">
+	      		#{ignoreMenu}
+	   		</foreach>
+		</if>
+   		ORDER BY SN_ ASC
+	</select>
+	
+	<select id="getAllMenuRoleAlias"   parameterType="string" resultType="map">
+		SELECT ID_ AS "id",PARENT_ID_ "parentId",NAME_ "name",ALIAS_ "alias", tenant_id_, 
+	    (SELECT COUNT(tmp.ID_) FROM portal_sys_menu tmp WHERE tmp.PARENT_ID_ = sysMenu.ID_ ) "isParent",
+	    (SELECT count(tmpB.id_) FROM portal_sys_role_auth tmpB WHERE tmpB.menu_alias_ = sysMenu.ALIAS_ AND tmpB.ROLE_ALIAS_ = #{roleAlias} ) "checked"
+		FROM
+		portal_sys_menu sysMenu
+		${ew.customSqlSegment}
+	</select>
+	
+</mapper>

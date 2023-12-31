@@ -1,0 +1,7 @@
+com\hotent\bpmModel\core\persistence\manager\BpmApprovalItemManagerTest.class
+com\hotent\bpmModel\core\persistence\manager\BpmTaskReminderManagerTest.class
+com\hotent\bpmModel\core\persistence\manager\BpmReminderHistoryManagerTest.class
+com\hotent\bpmModel\core\persistence\manager\BpmDefTransformTest.class
+com\hotent\bpmModel\core\persistence\manager\BpmAgentSettingManagerTest.class
+com\hotent\bpmModel\core\BpmModelTestCase.class
+com\hotent\bpmModel\core\persistence\manager\BpmProBoManagerTest.class

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.portal.persistence.dao.SysMessageDao">
+	<resultMap id="SysMessage" type="com.hotent.portal.model.SysMessage">
+		<id property="id" column="id_" jdbcType="VARCHAR"/>
+		<result property="subject" column="subject_" jdbcType="VARCHAR"/>
+		<result property="ownerId" column="owner_id_" jdbcType="VARCHAR"/>
+		<result property="owner" column="owner_" jdbcType="VARCHAR"/>
+		<result property="messageType" column="message_type_" jdbcType="VARCHAR"/>
+		<result property="canReply" column="can_reply_" jdbcType="NUMERIC"/>
+		<result property="isPublic" column="is_public_" jdbcType="NUMERIC"/>
+		<result property="content" column="content_" jdbcType="LONGVARCHAR"/>
+		<result property="fileMsg" column="file_msg_" jdbcType="VARCHAR"/>
+		<result property="receiverName" column="receiver_name_" jdbcType="VARCHAR"/>
+		<result property="createBy" column="CREATE_BY_" jdbcType="VARCHAR"/>
+		<result property="createOrgId" column="CREATE_ORG_ID_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="updateBy" column="UPDATE_BY_" jdbcType="VARCHAR"/>
+		<result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<select id="getMsgByUserId"  resultType="com.hotent.portal.model.SysMessage">
+		SELECT 
+		   id, subject, owner,  messageType,  createTime, 
+		    canReply,  isPublic,  rid, receivetime
+		FROM(
+			SELECT 
+			   send.id_ id,send.subject_ subject, send.owner_ owner,
+			   send.message_type_ messageType, send.create_time_ createTime, 
+			   send.can_reply_ canReply, send.is_public_ isPublic, rece.id_ rid,
+			   red.receiver_time_ receivetime FROM
+			   portal_sys_msg send 
+			LEFT JOIN portal_sys_msg_read red ON send.id_=red.msg_id_ and red.receiver_id_=#{receiverId} , 
+			portal_sys_msg_receiver rece
+			WHERE
+				 send.id_=rece.msg_id_
+			   and   rece.receiver_id_=#{receiverId}
+			<if test="subject!=null"> AND send.subject_ LIKE #{subject} </if>
+	        <if test="messageType!=null"> AND send.message_type_ LIKE #{messageType} </if>
+	        <if test="beginreceiveTime!=null"> AND send.create_time_>=#{beginreceiveTime,jdbcType=TIMESTAMP}</if>
+			<if test="endreceiveTime!=null"> AND send.create_time_ &lt;=#{endreceiveTime,jdbcType=TIMESTAMP}</if>
+			<if test="receiveTime == 1"> AND red.receiver_time_ is null  </if>
+	        <if test="receiveTime == 2"> AND red.receiver_time_ is not null </if>
+			UNION
+			SELECT 
+			   send1.id_ id,send1.subject_ subject, send1.owner_ owner,
+			   send1.message_type_ messageType, send1.create_time_ createTime, 
+			   send1.can_reply_ canReply, send1.is_public_ isPublic, send1.id_ rid,
+			   red1.receiver_time_ receivetime FROM
+			   portal_sys_msg send1 
+			LEFT JOIN portal_sys_msg_read red1 ON send1.id_=red1.msg_id_ and red1.receiver_id_=#{receiverId}
+			WHERE
+				 send1.is_public_=1
+			<if test="subject!=null"> AND send1.subject_ LIKE #{subject} </if>
+	        <if test="messageType!=null"> AND send1.message_type_ LIKE #{messageType} </if>
+	        <if test="beginreceiveTime!=null"> AND send1.create_time_>=#{beginreceiveTime,jdbcType=TIMESTAMP}</if>
+			<if test="endreceiveTime!=null"> AND send1.create_time_ &lt;=#{endreceiveTime,jdbcType=TIMESTAMP}</if>
+			<if test="receiveTime == 1"> AND red1.receiver_time_ is null  </if>
+	        <if test="receiveTime == 2"> AND red1.receiver_time_ is not null </if>
+			
+		)temp
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY rid DESC
+		</if>
+		
+	</select>
+	
+	<select id="getNotReadMsgByUserId" resultMap="SysMessage">
+	     <if test="isPublish == 0">
+	    	SELECT a.id_,a.subject_,a.owner_id_,a.message_type_
+	    	FROM portal_sys_msg a,portal_sys_msg_receiver b where a.id_=b.msg_id_ 
+			and (b.receiver_id_=#{receiverId} or b.receiver_id_ in (SELECT c.group_id_ FROM XOG_USER_GROUP c where c.user_id_=#{receiverId}))
+			and not exists (SELECT 1 FROM portal_sys_msg_read d where a.id_=d.msg_id_ and d.receiver_id_=#{receiverId}) and a.is_public_=0 order by a.create_time_ desc
+		</if>
+		<if test="isPublish == 1">
+		    SELECT a.id_,a.subject_,a.owner_id_,a.message_type_
+	    	FROM portal_sys_msg a
+			where a.is_public_=1
+			and not exists (SELECT 1 FROM portal_sys_msg_read d where a.id_=d.msg_id_ and d.receiver_id_=#{receiverId})  order by a.create_time_ desc
+		</if>
+		
+	</select>
+	
+	
+		
+	<select id="getOneNotReadMsgByUserIdOracle" resultMap="SysMessage">
+		    SELECT * 
+		    FROM(
+			    SELECT  *
+					FROM(
+						SELECT a.id_,a.subject_,a.owner_,a.message_type_,a.content_,a.create_time_,a.can_reply_
+				    	FROM portal_sys_msg a,portal_sys_msg_receiver b where a.id_=b.msg_id_ 
+						and (b.receiver_id_=#{receiverId} or b.receiver_id_ in (SELECT c.group_id_ FROM XOG_USER_GROUP c where c.user_id_=#{receiverId}))
+						and not exists (SELECT 1 FROM portal_sys_msg_read d where a.id_=d.msg_id_ and d.receiver_id_=#{receiverId}) and a.is_public_=0 
+						UNION
+						SELECT a.id_,a.subject_,a.owner_,a.message_type_,a.content_,a.create_time_,a.can_reply_
+				    	FROM portal_sys_msg a
+						where a.is_public_=1
+						and not exists (SELECT 1 FROM portal_sys_msg_read d where a.id_=d.msg_id_ and d.receiver_id_=#{receiverId})
+					) temp
+				order by create_time_ desc 
+			) temp1 where rownum &lt;=1
+		
+	</select>
+	
+	<select id="getOneNotReadMsgByUserIdMysql" resultMap="SysMessage">
+		    SELECT  *
+			FROM(
+				SELECT a.id_,a.subject_,a.owner_,a.message_type_,a.content_,a.create_time_,a.can_reply_
+		    	FROM portal_sys_msg a,portal_sys_msg_receiver b where a.id_=b.msg_id_ 
+				and (b.receiver_id_=#{receiverId} or b.receiver_id_ in (SELECT c.group_id_ FROM XOG_USER_GROUP c where c.user_id_=#{receiverId}))
+				and not exists (SELECT 1 FROM portal_sys_msg_read d where a.id_=d.msg_id_ and d.receiver_id_=#{receiverId}) and a.is_public_=0 
+				UNION
+				SELECT a.id_,a.subject_,a.owner_,a.message_type_,a.content_,a.create_time_,a.can_reply_
+		    	FROM portal_sys_msg a
+				where a.is_public_=1
+				and not exists (SELECT 1 FROM portal_sys_msg_read d where a.id_=d.msg_id_ and d.receiver_id_=#{receiverId})
+			) temp
+			order by create_time_ desc limit 1
+		
+	</select>
+	
+	<select id="getOneNotReadMsgByUserIdMssql" resultMap="SysMessage">
+		    SELECT top 1 *
+			FROM(
+				SELECT a.id_,a.subject_,a.owner_,a.message_type_,a.content_,a.create_time_,a.can_reply_
+		    	FROM portal_sys_msg a,portal_sys_msg_receiver b where a.id_=b.msg_id_ 
+				and (b.receiver_id_=#{receiverId} or b.receiver_id_ in (SELECT c.group_id_ FROM XOG_USER_GROUP c where c.user_id_=#{receiverId}))
+				and not exists (SELECT 1 FROM portal_sys_msg_read d where a.id_=d.msg_id_ and d.receiver_id_=#{receiverId}) and a.is_public_=0 
+				UNION
+				SELECT a.id_,a.subject_,a.owner_,a.message_type_,a.content_,a.create_time_,a.can_reply_
+		    	FROM portal_sys_msg a
+				where a.is_public_=1
+				and not exists (SELECT 1 FROM portal_sys_msg_read d where a.id_=d.msg_id_ and d.receiver_id_=#{receiverId})
+			) temp
+			order by create_time_ desc
+		
+	</select>
+	
+	<select id="getOneNotReadMsgByUserIdDb2" resultMap="SysMessage">
+	      SELECT * 
+		    FROM(
+			    SELECT  *
+				FROM(
+					SELECT a.id_,a.subject_,a.owner_,a.message_type_,a.content_,a.create_time_,a.can_reply_
+			    	FROM portal_sys_msg a,portal_sys_msg_receiver b where a.id_=b.msg_id_ 
+					and (b.receiver_id_=#{receiverId} or b.receiver_id_ in (SELECT c.group_id_ FROM XOG_USER_GROUP c where c.user_id_=#{receiverId}))
+					and not exists (SELECT 1 FROM portal_sys_msg_read d where a.id_=d.msg_id_ and d.receiver_id_=#{receiverId}) and a.is_public_=0 
+					UNION
+					SELECT a.id_,a.subject_,a.owner_,a.message_type_,a.content_,a.create_time_,a.can_reply_
+			    	FROM portal_sys_msg a
+					where a.is_public_=1
+					and not exists (SELECT 1 FROM portal_sys_msg_read d where a.id_=d.msg_id_ and d.receiver_id_=#{receiverId})
+				) temp
+				order by create_time_ desc
+			) temp1 where rownum &lt;=1
+	</select>
+	
+	 <select id="getNotReadMsgNum" resultMap="SysMessage">
+	    SELECT  *
+			FROM(
+				SELECT a.id_
+		    	FROM portal_sys_msg a,portal_sys_msg_receiver b where a.id_=b.msg_id_ 
+				and (b.receiver_id_=#{receiverId} or b.receiver_id_ in (SELECT c.group_id_ FROM XOG_USER_GROUP c where c.user_id_=#{receiverId}))
+				and not exists (SELECT 1 FROM portal_sys_msg_read d where a.id_=d.msg_id_ and d.receiver_id_=#{receiverId}) and a.is_public_=0 
+				UNION
+				SELECT a.id_
+		    	FROM portal_sys_msg a
+				where a.is_public_=1
+				and not exists (SELECT 1 FROM portal_sys_msg_read d where a.id_=d.msg_id_ and d.receiver_id_=#{receiverId})
+			) temp
+	</select>
+	
+	<select id="getMsgSize" parameterType="java.lang.String" resultType="com.hotent.portal.model.SysMessage">
+		SELECT *
+		FROM(
+			SELECT 
+			   send.id_ id,send.subject_ subject, send.owner_ owner,
+			   send.message_type_ messageType, send.create_time_ createTime, 
+			   send.can_reply_ canReply, send.is_public_ isPublic, rece.id_ rid,
+			   red.receiver_time_ receivetime FROM
+			   portal_sys_msg send 
+			LEFT JOIN portal_sys_msg_read red ON send.id_=red.msg_id_ and red.receiver_id_=#{receiverId} , 
+			portal_sys_msg_receiver rece
+			WHERE
+				 send.id_=rece.msg_id_
+			   and   rece.receiver_id_=#{receiverId}
+			
+			UNION
+			SELECT 
+			   send1.id_ id,send1.subject_ subject, send1.owner_ owner,
+			   send1.message_type_ messageType, send1.create_time_ createTime, 
+			   send1.can_reply_ canReply, send1.is_public_ isPublic, send1.id_ rid,
+			   red1.receiver_time_ receivetime FROM
+			   portal_sys_msg send1 
+			LEFT JOIN portal_sys_msg_read red1 ON send1.id_=red1.msg_id_ and red1.receiver_id_=#{receiverId}
+			WHERE
+				 send1.is_public_=1	
+		)temp
+		 where  receivetime is null
+			ORDER BY rid DESC
+	</select>
+</mapper>

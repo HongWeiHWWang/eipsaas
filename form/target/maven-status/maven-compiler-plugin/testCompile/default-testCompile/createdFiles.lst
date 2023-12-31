@@ -1,0 +1,12 @@
+form\core\persistence\manager\BpmFormDefManagerTest.class
+form\core\persistence\manager\BpmFormManagerTest.class
+form\core\persistence\manager\CustomQueryManagerTest.class
+form\core\persistence\manager\FormBusSetManagerTest.class
+form\core\persistence\manager\FormBusManagerTest.class
+form\core\persistence\manager\BpmFormTemplateManagerTest.class
+form\core\persistence\manager\BpmFormHistoryManagerImplTest.class
+form\core\persistence\manager\CustomDialogManagerTest.class
+form\core\GeneratorServiceTest.class
+form\core\persistence\manager\BpmFormRightManagerTest.class
+form\core\FormTestCase.class
+form\core\persistence\manager\CombinateDialogManagerTest.class

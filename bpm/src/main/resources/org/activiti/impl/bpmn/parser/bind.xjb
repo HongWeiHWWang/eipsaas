@@ -1,0 +1,1146 @@
+<bindings  xmlns="http://java.sun.com/xml/ns/jaxb"
+  
+           xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance"
+  
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  
+          version="2.1">
+  
+
+<bindings  schemaLocation="BPMN20.xsd" version="1.0">
+<bindings  node="//xs:complexType[@name='tDefinitions']">
+  
+                     <class  name="Definitions"></class>
+  
+</bindings>
+</bindings>
+
+<bindings  schemaLocation="Semantic.xsd" version="1.0">
+  
+        <!-- Customise the package name  -->
+  
+<schemaBindings>
+  
+       <package  name="com.hotent.bpmx.core.defxml.entity"/>
+  
+</schemaBindings>
+
+
+  
+<bindings  node="//xs:simpleType[@name='tAdHocOrdering']">
+  
+<typesafeEnumClass  name="AdHocOrdering"></typesafeEnumClass>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:simpleType[@name='tAssociationDirection']">
+  
+<typesafeEnumClass  name="AssociationDirection"></typesafeEnumClass>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:simpleType[@name='tChoreographyLoopType']">
+  
+<typesafeEnumClass  name="ChoreographyLoopType"></typesafeEnumClass>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:simpleType[@name='tEventBasedGatewayType']">
+  
+<typesafeEnumClass  name="EventBasedGatewayType"></typesafeEnumClass>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:simpleType[@name='tGatewayDirection']">
+  
+<typesafeEnumClass  name="GatewayDirection"></typesafeEnumClass>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:simpleType[@name='tItemKind']">
+  
+<typesafeEnumClass  name="ItemKind"></typesafeEnumClass>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:simpleType[@name='tMultiInstanceFlowCondition']">
+  
+<typesafeEnumClass  name="MultiInstanceFlowCondition"></typesafeEnumClass>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:simpleType[@name='tProcessType']">
+  
+<typesafeEnumClass  name="ProcessType"></typesafeEnumClass>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:simpleType[@name='tRelationshipDirection']">
+  
+<typesafeEnumClass  name="RelationshipDirection"></typesafeEnumClass>
+  
+</bindings>
+  
+  
+  
+  
+  
+  
+  
+<bindings  node="//xs:complexType[@name='tActivity']">
+  
+<class  name="Activity"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tAdHocSubProcess']">
+  
+<class  name="AdHocSubProcess"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tArtifact']">
+  
+<class  name="Artifact"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tAssignment']">
+  
+<class  name="Assignment"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tAssociation']">
+  
+<class  name="Association"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tAuditing']">
+  
+<class  name="Auditing"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tBaseElement']">
+  
+<class  name="BaseElement"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tBaseElementWithMixedContent']">
+  
+<class  name="BaseElementWithMixedContent"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tBoundaryEvent']">
+  
+<class  name="BoundaryEvent"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tBusinessRuleTask']">
+  
+<class  name="BusinessRuleTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCallableElement']">
+  
+<class  name="CallableElement"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCallActivity']">
+  
+<class  name="CallActivity"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCallChoreography']">
+  
+<class  name="CallChoreography"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCallConversation']">
+  
+<class  name="CallConversation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCancelEventDefinition']">
+  
+<class  name="CancelEventDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCatchEvent']">
+  
+<class  name="CatchEvent"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCategory']">
+  
+<class  name="Category"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCategoryValue']">
+  
+<class  name="CategoryValue"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tChoreography']">
+  
+<class  name="Choreography"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tChoreographyActivity']">
+  
+<class  name="ChoreographyActivity"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tChoreographyTask']">
+  
+<class  name="ChoreographyTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCollaboration']">
+  
+<class  name="Collaboration"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCompensateEventDefinition']">
+  
+<class  name="CompensateEventDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tComplexBehaviorDefinition']">
+  
+<class  name="ComplexBehaviorDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tComplexGateway']">
+  
+<class  name="ComplexGateway"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tConditionalEventDefinition']">
+  
+<class  name="ConditionalEventDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tConversation']">
+  
+<class  name="Conversation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tConversationAssociation']">
+  
+<class  name="ConversationAssociation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tConversationLink']">
+  
+<class  name="ConversationLink"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tConversationNode']">
+  
+<class  name="ConversationNode"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCorrelationKey']">
+  
+<class  name="CorrelationKey"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCorrelationProperty']">
+  
+<class  name="CorrelationProperty"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCorrelationPropertyBinding']">
+  
+<class  name="CorrelationPropertyBinding"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCorrelationPropertyRetrievalExpression']">
+  
+<class  name="CorrelationPropertyRetrievalExpression"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tCorrelationSubscription']">
+  
+<class  name="CorrelationSubscription"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tDataAssociation']">
+  
+<class  name="DataAssociation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tDataInput']">
+  
+<class  name="DataInput"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tDataInputAssociation']">
+  
+<class  name="DataInputAssociation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tDataObject']">
+  
+<class  name="DataObject"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tDataObjectReference']">
+  
+<class  name="DataObjectReference"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tDataOutput']">
+  
+<class  name="DataOutput"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tDataOutputAssociation']">
+  
+<class  name="DataOutputAssociation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tDataState']">
+  
+<class  name="DataState"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tDataStore']">
+  
+<class  name="DataStore"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tDataStoreReference']">
+  
+<class  name="DataStoreReference"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tDocumentation']">
+  
+<class  name="Documentation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tEndEvent']">
+  
+<class  name="EndEvent"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tEndPoint']">
+  
+<class  name="EndPoint"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tError']">
+  
+<class  name="Error"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tErrorEventDefinition']">
+  
+<class  name="ErrorEventDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tEscalation']">
+  
+<class  name="Escalation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tEscalationEventDefinition']">
+  
+<class  name="EscalationEventDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tEvent']">
+  
+<class  name="Event"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tEventBasedGateway']">
+  
+<class  name="EventBasedGateway"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tEventDefinition']">
+  
+<class  name="EventDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tExclusiveGateway']">
+  
+<class  name="ExclusiveGateway"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tExpression']">
+  
+<class  name="Expression"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tExtension']">
+  
+<class  name="Extension"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tExtensionElements']">
+  
+<class  name="ExtensionElements"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tFlowElement']">
+  
+<class  name="FlowElement"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tFlowNode']">
+  
+<class  name="FlowNode"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tFormalExpression']">
+  
+<class  name="FormalExpression"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tGateway']">
+  
+<class  name="Gateway"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tGlobalBusinessRuleTask']">
+  
+<class  name="GlobalBusinessRuleTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tGlobalChoreographyTask']">
+  
+<class  name="GlobalChoreographyTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tGlobalConversation']">
+  
+<class  name="GlobalConversation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tGlobalManualTask']">
+  
+<class  name="GlobalManualTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tGlobalScriptTask']">
+  
+<class  name="GlobalScriptTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tGlobalTask']">
+  
+<class  name="GlobalTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tGlobalUserTask']">
+  
+<class  name="GlobalUserTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tGroup']">
+  
+<class  name="Group"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tHumanPerformer']">
+  
+<class  name="HumanPerformer"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tImplicitThrowEvent']">
+  
+<class  name="ImplicitThrowEvent"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tInclusiveGateway']">
+  
+<class  name="InclusiveGateway"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tInputOutputBinding']">
+  
+<class  name="InputOutputBinding"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tInputOutputSpecification']">
+  
+<class  name="InputOutputSpecification"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tInputSet']">
+  
+<class  name="InputSet"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tInterface']">
+  
+<class  name="Interface"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tIntermediateCatchEvent']">
+  
+<class  name="IntermediateCatchEvent"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tIntermediateThrowEvent']">
+  
+<class  name="IntermediateThrowEvent"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tItemDefinition']">
+  
+<class  name="ItemDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tLane']">
+  
+<class  name="Lane"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tLaneSet']">
+  
+<class  name="LaneSet"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tLinkEventDefinition']">
+  
+<class  name="LinkEventDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tLoopCharacteristics']">
+  
+<class  name="LoopCharacteristics"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tManualTask']">
+  
+<class  name="ManualTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tMessage']">
+  
+<class  name="Message"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tMessageEventDefinition']">
+  
+<class  name="MessageEventDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tMessageFlow']">
+  
+<class  name="MessageFlow"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tMessageFlowAssociation']">
+  
+<class  name="MessageFlowAssociation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tMonitoring']">
+  
+<class  name="Monitoring"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tMultiInstanceLoopCharacteristics']">
+  
+<class  name="MultiInstanceLoopCharacteristics"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tOperation']">
+  
+<class  name="Operation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tOutputSet']">
+  
+<class  name="OutputSet"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tParallelGateway']">
+  
+<class  name="ParallelGateway"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tParticipant']">
+  
+<class  name="Participant"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tParticipantAssociation']">
+  
+<class  name="ParticipantAssociation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tParticipantMultiplicity']">
+  
+<class  name="ParticipantMultiplicity"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tPartnerEntity']">
+  
+<class  name="PartnerEntity"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tPartnerRole']">
+  
+<class  name="PartnerRole"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tPerformer']">
+  
+<class  name="Performer"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tPotentialOwner']">
+  
+<class  name="PotentialOwner"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tProcess']">
+  
+<class  name="Process"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tProperty']">
+  
+<class  name="Property"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tReceiveTask']">
+  
+<class  name="ReceiveTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tRelationship']">
+  
+<class  name="Relationship"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tRendering']">
+  
+<class  name="Rendering"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tResource']">
+  
+<class  name="Resource"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tResourceAssignmentExpression']">
+  
+<class  name="ResourceAssignmentExpression"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tResourceParameter']">
+  
+<class  name="ResourceParameter"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tResourceParameterBinding']">
+  
+<class  name="ResourceParameterBinding"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tResourceRole']">
+  
+<class  name="ResourceRole"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tRootElement']">
+  
+<class  name="RootElement"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tScript']">
+  
+<class  name="Script"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tScriptTask']">
+  
+<class  name="ScriptTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tSendTask']">
+  
+<class  name="SendTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tSequenceFlow']">
+  
+<class  name="SequenceFlow"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tServiceTask']">
+  
+<class  name="ServiceTask"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tSignal']">
+  
+<class  name="Signal"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tSignalEventDefinition']">
+  
+<class  name="SignalEventDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tStandardLoopCharacteristics']">
+  
+<class  name="StandardLoopCharacteristics"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tStartEvent']">
+  
+<class  name="StartEvent"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tSubChoreography']">
+  
+<class  name="SubChoreography"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tSubConversation']">
+  
+<class  name="SubConversation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tSubProcess']">
+  
+<class  name="SubProcess"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tTask']">
+  
+<class  name="Task"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tTerminateEventDefinition']">
+  
+<class  name="TerminateEventDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tText']">
+  
+<class  name="Text"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tTextAnnotation']">
+  
+<class  name="TextAnnotation"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tThrowEvent']">
+  
+<class  name="ThrowEvent"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tTimerEventDefinition']">
+  
+<class  name="TimerEventDefinition"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tTransaction']">
+  
+<class  name="Transaction"></class>
+  
+</bindings>
+  
+  
+<bindings  node="//xs:complexType[@name='tUserTask']">
+  
+<class  name="UserTask"></class>
+  
+</bindings>
+  
+  
+  
+  
+  
+</bindings>
+  
+    <bindings  schemaLocation="activiti-bpmn-extensions-5.11.xsd"  version="1.0">
+  
+        <!-- Customise the package name  -->
+  
+        <schemaBindings>
+  
+            <package  name="com.hotent.bpmx.core.defxml.entity.activiti"/>
+  
+        </schemaBindings>
+  
+  
+              <bindings  node="//xs:complexType[@name='tPotentialStarter']">
+  
+                     <class  name="PotentialStarter"></class>
+  
+              </bindings>
+  
+  
+        <!-- rename the value element  -->
+        
+            <bindings  node="//xs:element[@name='field']">
+  
+                             <bindings  node="./xs:complexType/xs:attribute[@name='expression']">
+  
+                                     <property  name="attrExpression"/>
+  
+                            </bindings>
+  
+                   </bindings>
+  
+                    <bindings  node="//xs:element[@name='formProperty']">
+  
+                             <bindings  node="./xs:complexType/xs:attribute[@name='value']">
+  
+                                     <property  name="attrValue"/>
+  
+                            </bindings>
+  
+                   </bindings>
+  
+  
+    </bindings>
+    
+    
+    
+    <bindings  schemaLocation="DC.xsd"  version="1.0">
+  
+        <!-- Customise the package name  -->
+        <schemaBindings>
+            <package  name="com.hotent.bpmx.core.defxml.entity.omgdc"/>
+        </schemaBindings>
+    </bindings>
+ 
+ 		<bindings  schemaLocation="DI.xsd"  version="1.0">
+  
+        <!-- Customise the package name  -->
+        <schemaBindings>
+            <package  name="com.hotent.bpmx.core.defxml.entity.omgdi"/>
+        </schemaBindings>
+    </bindings>
+    
+    <bindings  schemaLocation="BPMNDI.xsd"  version="1.0">
+  
+        <!-- Customise the package name  -->
+        <schemaBindings>
+            <package  name="com.hotent.bpmx.core.defxml.entity.bpmndi"/>
+        </schemaBindings>
+    </bindings>
+   
+    <bindings  schemaLocation="BaseBpmExtend.xsd"  version="1.0">
+  
+     
+        <schemaBindings>
+            <package  name="com.hotent.bpmx.core.defxml.entity.ext"/>
+        </schemaBindings>
+       
+        <bindings  node="//xs:complexType[@name='tDefinitions']">
+  
+                     <class  name="ExtDefinitions"></class>
+  
+        </bindings>
+      
+    </bindings>
+    
+    <bindings  schemaLocation="../../../../../xsd/usercalc/base.xsd"  version="1.0">
+  
+     
+        <schemaBindings>
+            <package  name="com.hotent.bpmx.core.defxml.entity.ext.base"/>
+        </schemaBindings>
+       
+        
+      
+    </bindings>
+  
+    <!--
+    <xs:complexType name="extPropertiesType">
+    <bindings  schemaLocation="BPMN20.xsd"  version="1.0">
+  
+     
+        <schemaBindings>
+            <package  name="com.hotent.bpmx.core.defxml.entity"/>
+        </schemaBindings>
+        
+        <bindings  node="//xs:complexType[@name='tDefinitions']">
+  
+				<typesafeEnumClass  name="Definitions"></typesafeEnumClass>
+				  
+				</bindings>
+    </bindings>
+	-->
+  
+</bindings>

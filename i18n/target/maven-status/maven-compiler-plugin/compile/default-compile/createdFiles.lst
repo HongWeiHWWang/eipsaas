@@ -1,0 +1,17 @@
+com\hotent\i18n\persistence\manager\impl\I18nMessageTypeManagerImpl.class
+com\hotent\i18n\support\service\impl\RedisMessageService.class
+com\hotent\i18n\persistence\manager\impl\I18nMessageErrorManagerImpl.class
+com\hotent\i18n\persistence\dao\I18nMessageErrorDao.class
+com\hotent\i18n\support\service\MessageService.class
+com\hotent\i18n\persistence\manager\impl\I18nMessageManagerImpl.class
+com\hotent\i18n\persistence\manager\I18nMessageErrorManager.class
+com\hotent\i18n\persistence\dao\I18nMessageTypeDao.class
+com\hotent\i18n\Application.class
+com\hotent\i18n\persistence\manager\I18nMessageManager.class
+com\hotent\i18n\persistence\model\I18nMessageType.class
+com\hotent\i18n\persistence\model\I18nMessageError.class
+com\hotent\i18n\persistence\model\I18nMessage.class
+com\hotent\i18n\persistence\manager\I18nMessageTypeManager.class
+com\hotent\i18n\persistence\dao\I18nMessageDao.class
+com\hotent\i18n\support\entity\MessageEntity.class
+com\hotent\i18n\util\I18nUtil.class

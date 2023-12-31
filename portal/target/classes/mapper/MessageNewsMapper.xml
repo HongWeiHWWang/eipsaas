@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.portal.persistence.dao.MessageNewsDao">
+	<resultMap id="MessageNews" type="com.hotent.portal.model.MessageNews">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="refId" column="REF_ID_" jdbcType="VARCHAR"/>
+		<result property="FBt" column="F_bt" jdbcType="VARCHAR"/>
+		<result property="FFl" column="F_fl" jdbcType="VARCHAR"/>
+		<result property="FNr" column="F_nr" jdbcType="CLOB"/>
+		<result property="FFj" column="F_fj" jdbcType="VARCHAR"/>
+		<result property="FZd" column="F_zd" jdbcType="VARCHAR"/>
+		<result property="FZz" column="F_zz" jdbcType="VARCHAR"/>
+		<result property="FKssj" column="F_kssj" jdbcType="DATE"/>
+		<result property="FJssj" column="F_jssj" jdbcType="DATE"/>
+		<result property="FSfxysp" column="F_sfxysp" jdbcType="VARCHAR"/>
+		<result property="FSpr" column="F_spr" jdbcType="VARCHAR"/>
+		<result property="FSprid" column="F_sprid" jdbcType="VARCHAR"/>
+		<result property="FYhid" column="F_yhid" jdbcType="VARCHAR"/>
+		<result property="FSlt" column="F_slt" jdbcType="VARCHAR"/>
+		<result property="FCkqxsz" column="F_ckqxsz" jdbcType="VARCHAR"/>
+		<result property="FStatus" column="F_status" jdbcType="VARCHAR"/>
+	</resultMap>
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.bpm.persistence.dao.BpmTaskDueTimeDao">
+	<resultMap id="BpmTaskDueTime" type="com.hotent.bpm.persistence.model.BpmTaskDueTime">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="parentId" column="PARENT_ID_" jdbcType="VARCHAR"/>
+		<result property="instId" column="INST_ID_" jdbcType="VARCHAR"/>
+		<result property="taskId" column="TASK_ID_" jdbcType="VARCHAR"/>
+		<result property="dateType" column="DATE_TYPE_" jdbcType="VARCHAR"/>
+		<result property="dueTime" column="DUE_TIME_" jdbcType="NUMERIC"/>
+		<result property="addDueTime" column="ADD_DUE_TIME_" jdbcType="NUMERIC"/>
+		<result property="startTime" column="START_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="expirationDate" column="EXPIRATION_DATE_" jdbcType="TIMESTAMP"/>
+		<result property="remainingTime" column="REMAINING_TIME_" jdbcType="NUMERIC"/>
+		<result property="createTime" column="CREATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="status" column="STATUS_" jdbcType="NUMERIC"/>
+		<result property="userId" column="USER_ID_" jdbcType="VARCHAR"/>
+		<result property="userName" column="USER_NAME_" jdbcType="VARCHAR"/>
+		<result property="remark" column="REMARK_" jdbcType="VARCHAR"/>
+		<result property="fileId" column="FILE_ID_" jdbcType="VARCHAR"/>
+		<result property="isNew" column="IS_NEW_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	
+	<select id="getByTaskId" parameterType="java.lang.String" resultMap="BpmTaskDueTime">
+		SELECT * FROM bpm_task_due_time WHERE TASK_ID_ = #{taskId} and is_new_ = 1
+	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		DELETE FROM bpm_task_due_time 
+		WHERE
+		ID_=#{id}
+	</delete>
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.runtime.dao.BpmTransReceiverDao">
+	<resultMap id="BpmTransReceiver" type="com.hotent.runtime.model.BpmTransReceiver">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="transRecordid" column="TRANS_RECORDID_" jdbcType="VARCHAR"/>
+		<result property="receiver" column="RECEIVER_" jdbcType="VARCHAR"/>
+		<result property="receiverId" column="RECEIVER_ID_" jdbcType="VARCHAR"/>
+		<result property="status" column="STATUS_" jdbcType="NUMERIC"/>
+		<result property="opinion" column="OPINION_" jdbcType="VARCHAR"/>
+		<result property="receiverTime" column="RECEIVER_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="checkTime" column="CHECK_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="checkType" column="CHECK_TYPE_" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<select id="getByTransRecordid" parameterType="java.lang.String" resultMap="BpmTransReceiver">
+		SELECT * FROM bpm_trans_receiver WHERE TRANS_RECORDID_ = #{transRecordid}
+	</select>
+	
+	<select id="getByTaskId" parameterType="java.lang.String" resultMap="BpmTransReceiver">
+		SELECT
+			*
+		FROM
+			bpm_trans_receiver
+		WHERE
+			TRANS_RECORDID_ = (
+				SELECT
+					ID_
+				FROM
+					bpm_task_trans_record
+				WHERE
+					TASK_ID_ = #{taskId}
+			)
+	</select>
+	
+	<select id="getByTransRecordAndUserId" parameterType="java.util.Map" resultMap="BpmTransReceiver">
+		SELECT * FROM bpm_trans_receiver WHERE TRANS_RECORDID_ = #{transRecordid} AND RECEIVER_ID_ = #{userId}
+	</select>
+
+    <update id="updateReceiver" parameterType="java.util.Map">
+        UPDATE bpm_trans_receiver SET
+        RECEIVER_ = #{receiver},
+        RECEIVER_ID_ =  #{receiverId}
+        WHERE
+        RECEIVER_ID_ = #{receiverIds}
+        AND STATUS_ = '0'
+        AND TRANS_RECORDID_ IN (
+        SELECT
+        ID_
+        FROM
+        bpm_task_trans_record
+        WHERE
+        PROC_INST_ID_ IN
+        <foreach collection="instIds" index="index" item="instId" open="(" close=")" separator=",">
+            #{instId}
+        </foreach>
+        AND TASK_ID_ IN (
+        SELECT
+        ID_
+        FROM
+        bpm_task
+        WHERE
+        bpm_task.PROC_INST_ID_ IN
+        <foreach collection="instIds" index="index" item="instId" open="(" close=")" separator=",">
+            #{instId}
+        </foreach>
+        )
+        AND STATUS_ = '0'
+        )
+    </update>
+</mapper>

@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: dev
+    base: com.hotent.bo.controller
+    title: "@@project.name@@"
+    description: "Hotent EIP X7"
+    version: "7.2.3"
+    platform: mysql
+    
+# Server settings (ServerProperties)
+server:
+  port: 8081
+  address: 0.0.0.0
+  sessionTimeout: 30
+  contextPath: /
+  session:
+    timeout: 30

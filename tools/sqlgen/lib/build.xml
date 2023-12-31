@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<project name="生成SQL"  default="生成SQL">
+	<property name="lib.dir" value="./refLib"/>
+
+
+	<target   name="生成SQL" description="生成SQL">
+		<path id="refLib">
+			<fileset dir="${lib.dir}" includes="*.jar" /> 
+	    </path>
+		
+	    <taskdef name="sqlgen" classname="com.hotent.tools.sqlgen.main.Sqlgen">
+	     	<classpath refid="refLib" />
+	    </taskdef>
+		<sqlgen/>
+	</target>
+	
+</project>

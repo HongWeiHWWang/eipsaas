@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    dynamic:
+      primary: master #设置默认的数据源或者数据源组,默认值即为master
+      datasource:
+        master:
+          username: sa
+          password: sa
+          driver-class-name: org.h2.Driver
+          url: jdbc:h2:mem:h2test;DB_CLOSE_DELAY=-1;MODE=MySQL
+  flyway:
+    locations: classpath:db
+    url: jdbc:h2:mem:h2test;DB_CLOSE_DELAY=-1;MODE=MySQL
+    user: sa
+    password: sa
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    com.hotent.base.dao: debug
+    com.hotent.base.example.dao: debug
+    com.hotent.bo.persistence.dao: debug
+    org.flywaydb: debug

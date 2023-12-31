@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.form.persistence.dao.FieldAuthDao">
+	<resultMap id="FieldAuth" type="com.hotent.form.model.FieldAuth">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="dsAlias" column="DS_ALIAS_" jdbcType="VARCHAR"/>
+		<result property="tableName" column="TABLE_NAME_" jdbcType="VARCHAR"/>
+		<result property="desc" column="DESC_" jdbcType="VARCHAR"/>
+		<result property="entName" column="ENT_NAME_" jdbcType="VARCHAR"/>
+		<result property="className" column="CLASS_NAME_" jdbcType="VARCHAR"/>
+		<result property="classPath" column="CLASS_PATH_" jdbcType="VARCHAR"/>
+		<result property="fieldList" column="FIELD_LIST_" jdbcType="LONGVARCHAR"/>
+        <result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+        <result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+        <result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time_" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<select id="getByEntName" parameterType="java.lang.String" resultMap="FieldAuth">
+		select * from form_field_auth where ENT_NAME_ = #{entName} 
+	</select>
+	
+	<select id="getByClassName" parameterType="java.lang.String" resultMap="FieldAuth">
+		select * from form_field_auth where class_name_ = #{className} 
+	</select>
+	
+	<select id="getByTableName" parameterType="java.lang.String" resultMap="FieldAuth">
+		select * from form_field_auth where TABLE_NAME_ = #{tableName} 
+	</select>
+</mapper>

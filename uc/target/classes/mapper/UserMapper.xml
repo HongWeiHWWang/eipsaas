@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotent.uc.dao.UserDao">
+	<resultMap id="BaseResultMap" type="com.hotent.uc.model.User">
+		<id property="id" column="ID_" jdbcType="VARCHAR"/>
+		<result property="fullname" column="FULLNAME_" jdbcType="VARCHAR"/>
+		<result property="account" column="ACCOUNT_" jdbcType="VARCHAR"/>
+		<result property="password" column="PASSWORD_" jdbcType="VARCHAR"/>
+		<result property="email" column="EMAIL_" jdbcType="VARCHAR"/>
+		<result property="mobile" column="MOBILE_" jdbcType="VARCHAR"/>
+		<result property="address" column="ADDRESS_" jdbcType="VARCHAR"/>
+		<result property="photo" column="PHOTO_" jdbcType="VARCHAR"/>
+		<result property="sex" column="SEX_" jdbcType="VARCHAR"/>
+		<result property="from" column="FROM_" jdbcType="VARCHAR"/>
+		<result property="status" column="STATUS_" jdbcType="NUMERIC"/>
+		<result property="hasSyncToWx" column="HAS_SYNC_TO_WX_" jdbcType="NUMERIC"/>
+		<result property="notifyType" column="NOTIFY_TYPE_" jdbcType="VARCHAR"/>
+		<result property="userNumber" column="USER_NUMBER_" jdbcType="VARCHAR"/>
+		<result property="idCard" column="ID_CARD_" jdbcType="VARCHAR"/>
+		<result property="phone" column="PHONE_" jdbcType="VARCHAR"/>
+		<result property="birthday" column="BIRTHDAY_" jdbcType="TIMESTAMP"/>
+		<result property="entryDate" column="ENTRY_DATE_" jdbcType="TIMESTAMP"/>
+		<result property="leaveDate" column="LEAVE_DATE_" jdbcType="TIMESTAMP"/>
+		<result property="education" column="EDUCATION_" jdbcType="VARCHAR"/>
+		<result property="isDelete" column="IS_DELE_" jdbcType="VARCHAR"/>
+		<result property="version" column="VERSION_" jdbcType="NUMERIC"/>
+        <result property="weixin" column="WEIXIN_" jdbcType="VARCHAR"/>
+        <result property="pwdCreateTime" column="PWD_CREATE_TIME_" jdbcType="TIMESTAMP"/>
+        
+        <result property="updateTime" column="UPDATE_TIME_" jdbcType="TIMESTAMP"/>
+		<result property="createBy" column="create_by_" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time_" jdbcType="TIMESTAMP"/>
+		<result property="createOrgId" column="create_org_id_" jdbcType="VARCHAR"/>
+		<result property="updateBy" column="update_by_" jdbcType="VARCHAR"/>
+		<result property="tenantId" column="tenant_id_" jdbcType="VARCHAR"/>
+		
+	</resultMap>
+	
+	<parameterMap id="User" type="com.hotent.uc.model.User" />
+	
+	<sql id="Base_Column_List">
+		ID_,FULLNAME_,ACCOUNT_,PASSWORD_,EMAIL_,MOBILE_,CREATE_TIME_,ADDRESS_,PHOTO_,SEX_,FROM_,STATUS_,HAS_SYNC_TO_WX_,
+		NOTIFY_TYPE_,USER_NUMBER_,ID_CARD_,PHONE_,
+		BIRTHDAY_,ENTRY_DATE_,LEAVE_DATE_,EDUCATION_,UPDATE_TIME_,IS_DELE_,VERSION_,WEIXIN_,PWD_CREATE_TIME_,tenant_id_
+	</sql>
+	
+	
+	<select id="getByAccount"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM uc_user 
+		WHERE 
+		ACCOUNT_=#{account} AND IS_DELE_!='1'
+	</select>
+
+	<select id="getCountByAccount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(1) FROM UC_USER
+		WHERE ACCOUNT_ = #{account}
+	</select>
+
+    <select id="getByMobile"   parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" /> FROM uc_user
+        WHERE MOBILE_=#{mobile} AND IS_DELE_!='1'
+    </select>
+    
+	<select id="getUserByOpenId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" /> FROM uc_user
+        WHERE WEIXIN_=#{openId} AND IS_DELE_!='1'
+    </select>
+	
+	<select id="getByNumber"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM uc_user 
+		WHERE 
+		USER_NUMBER_=#{userNumber,jdbcType=VARCHAR} AND IS_DELE_!='1'
+	</select>
+	
+	
+	<select id="getListByPostId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT org.ID_ "ORG_ID_", org.NAME_ "ORG_NAME_" ,org.CODE_ "ORG_CODE_",orguser.IS_MASTER_ "IS_MASTER_",orguser.POS_ID_ "relId",orguser.ID_ "orgUserId",  u.*,rel.POS_NAME_ "relName"  FROM uc_user u inner JOIN UC_ORG_USER orguser on u.ID_=orguser.USER_ID_
+inner join UC_ORG org on org.ID_=orguser.ORG_ID_ inner join UC_ORG_POST rel ON
+orguser.POS_ID_=rel.ID_  and orguser.POS_ID_=#{postId} where orguser.IS_REL_ACTIVE_=1 AND org.IS_DELE_!='1' AND orguser.IS_DELE_!='1' AND u.IS_DELE_!='1' AND rel.IS_DELE_!='1'
+	</select>
+	
+	<select id="getListByPostCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT org.ID_ "ORG_ID_", org.NAME_ "ORG_NAME_" ,org.CODE_ "ORG_CODE_",orguser.IS_MASTER_ "IS_MASTER_",orguser.POS_ID_ "relId",orguser.ID_ "orgUserId",  u.*,rel.POS_NAME_ "relName"  FROM uc_user u inner JOIN UC_ORG_USER orguser on u.ID_=orguser.USER_ID_
+inner join UC_ORG org on org.ID_=orguser.ORG_ID_ inner join UC_ORG_POST rel ON
+orguser.POS_ID_=rel.ID_ and rel.CODE_=#{postCode} where orguser.IS_REL_ACTIVE_=1 AND org.IS_DELE_!='1' AND orguser.IS_DELE_!='1' AND u.IS_DELE_!='1' AND rel.IS_DELE_!='1'
+	</select>
+		
+	<select id="getUserListByRoleId" parameterType="java.lang.String" resultMap="BaseResultMap">
+	SELECT u.*,r.CODE_ from uc_user u inner JOIN uc_user_role ur on u.ID_=ur.USER_ID_
+inner join UC_ROLE r on ur.ROLE_ID_=r.ID_ and ur.ROLE_ID_=#{roleId} WHERE u.IS_DELE_!='1' AND ur.IS_DELE_!='1' AND r.IS_DELE_!='1'
+	</select>
+	
+	<select id="getUserListByRoleCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+	SELECT u.*,r.CODE_ from uc_user u inner JOIN uc_user_role ur on u.ID_=ur.USER_ID_
+	inner join UC_ROLE r on ur.ROLE_ID_=r.ID_ 
+	 WHERE u.IS_DELE_!='1' AND ur.IS_DELE_!='1' AND r.IS_DELE_!='1' 
+	<if test="roleCode!=null">
+		and (r.CODE_=#{roleCode} or r.ID_=#{roleCode} )
+	</if>
+	</select>
+	
+	<select id="getUserListByRoleCodeMap" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT u.*,r.CODE_ from uc_user u
+		inner JOIN uc_user_role ur on u.ID_=ur.USER_ID_
+		inner join UC_ROLE r on ur.ROLE_ID_=r.ID_
+		WHERE u.IS_DELE_!='1' AND ur.IS_DELE_!='1' AND r.IS_DELE_!='1'
+		<if test="ew.paramNameValuePairs.role_code_!=null">
+			and (r.CODE_=#{ew.paramNameValuePairs.role_code_} or r.ID_=#{ew.paramNameValuePairs.role_code_} )
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.customSqlSegment)">
+			AND
+		</if>
+		${@com.hotent.base.ognl.Ognl@withOutWhere(ew.customSqlSegment)}
+	</select>
+	
+	<select id="getUserListByOrgQuery" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT DISTINCT
+		<include refid="Base_Column_List" />	
+		FROM
+			(
+		SELECT
+			u.*,
+			t1.ORG_ID_,
+			t1.DEM_ID_,
+			t2.POS_NAME_ "POST_NAME_",
+			t3.NAME_ "JOB_NAME_",
+			t4.NAME_  "ROLE_NAME_" 
+		FROM
+			( SELECT * FROM uc_user WHERE IS_DELE_ != '1' ) u
+			LEFT JOIN (
+		SELECT
+			orguser.ORG_ID_,
+			orguser.USER_ID_,
+			orguser.POS_ID_,
+			org.DEM_ID_ 
+		FROM
+			( SELECT DISTINCT ORG_ID_, USER_ID_,POS_ID_ FROM UC_ORG_USER WHERE IS_DELE_ != '1' ) orguser
+			INNER JOIN ( select ID_,DEM_ID_ from uc_org where IS_DELE_ != '1' ) org ON org.ID_ = orguser.ORG_ID_
+			INNER JOIN ( select ID_ from uc_demension where IS_DELE_ != '1' ) dem ON org.DEM_ID_ = dem.ID_ 
+			) t1 ON u.ID_ = t1.USER_ID_
+			LEFT JOIN ( SELECT ID_,post.POS_NAME_, post.ORG_ID_, post.JOB_ID_ FROM uc_org_post post WHERE IS_DELE_ != '1' ) t2 ON t1.POS_ID_ = t2.ID_
+			LEFT JOIN ( SELECT job.ID_, job.NAME_ FROM uc_org_job job WHERE IS_DELE_ != '1' ) t3 ON t2.JOB_ID_ = t3.ID_
+			LEFT JOIN ( SELECT roleuser.USER_ID_, role.NAME_ FROM uc_user_role roleuser INNER JOIN uc_role role ON roleuser.ROLE_ID_ = role.ID_ WHERE roleuser.IS_DELE_ != '1' AND role.IS_DELE_ != '1' ) t4 ON u.ID_ = t4.USER_ID_ 
+			) t5
+		${ew.customSqlSegment}
+	</select>
+	
+	<!-- 组织用户岗位   orgId,orgName,orgCode,isMaster,relName -->
+	<select id="queryOrgUserRel" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT orguser.ID_ "orgUserId", org.ID_ "orgId", org.NAME_ "orgName" ,org.CODE_ "orgCode",
+			orguser.IS_MASTER_ "isMaster",rel.POS_NAME_ "relName",rel.ID_ "relId",orguser.USER_ID_ "userId"  FROM   uc_org_user orguser 
+		 join UC_ORG org on org.ID_=orguser.ORG_ID_ LEFT JOIN UC_ORG_POST rel ON orguser.POS_ID_=rel.ID_ and rel.IS_DELE_!='1'  
+		${ew.customSqlSegment} 
+	</select>
+	
+	
+	<!-- 组织用户-->
+	<select id="queryOrgUser" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT org.ID_ "ORG_ID_", org.name_ "org_name_" ,org.CODE_ "org_CODE_", u.* 
+		FROM uc_user u inner JOIN (select DISTINCT ORG_ID_,USER_ID_ from UC_ORG_USER WHERE IS_DELE_!='1')  orguser on u.ID_=orguser.USER_ID_
+		inner join UC_ORG org on org.ID_=orguser.ORG_ID_ 
+		${ew.customSqlSegment} 
+	</select>
+	
+	<select id="getUserListByOrgId" parameterType="java.util.Map" resultMap="BaseResultMap">
+SELECT org.ID_ "ORG_ID_", org.NAME_ "ORG_NAME_" ,org.CODE_ "org_CODE_", u.* 
+FROM uc_user u inner JOIN (select DISTINCT ORG_ID_,USER_ID_ from UC_ORG_USER WHERE IS_DELE_!='1')  orguser on u.ID_=orguser.USER_ID_
+inner join UC_ORG org on org.ID_=orguser.ORG_ID_  and org.ID_=#{orgId} 
+ WHERE org.IS_DELE_!='1' AND u.IS_DELE_!='1'
+	</select>
+	
+	
+	<update id="updateStatusByAccounts">
+		update UC_USER set STATUS_=#{status},UPDATE_TIME_ = #{updateTime,jdbcType=TIMESTAMP}
+		where IS_DELE_!='1' AND ACCOUNT_ in
+		<foreach collection="accounts" index="index" item="account" open="(" close=")" separator=",">
+			#{account}
+		</foreach>
+	</update>
+	
+	
+	<delete id="removePhysical" >
+		DELETE FROM uc_user WHERE IS_DELE_='1'
+	</delete>
+
+	<!-- 根据email查询用户 -->
+	<select id="getByUserEmail" parameterType="java.util.Map" resultMap="BaseResultMap" >
+	    select 
+	    <include refid="Base_Column_List" />
+		 from uc_user where EMAIL_=#{email} AND IS_DELE_!='1'
+	</select>
+	
+	<!--获取用户的所有上级  -->
+	<select id="getUpUsersByUserId" parameterType="java.lang.String" resultMap="BaseResultMap"  >
+		select 
+		<include refid="Base_Column_List" />
+		 from uc_user u WHERE 
+		u.ID_ in (select ud.USER_ID_ from uc_user_under ud WHERE ud.UNDER_USER_ID_ = #{underUserId} AND ud.IS_DELE_!='1')  AND u.IS_DELE_!='1'
+	</select>
+	<!--获取用户某组织下的上级  -->
+	<select id="getUpUserByUserIdAndOrgId" resultMap="BaseResultMap"  >
+		select 
+		<include refid="Base_Column_List" />
+		from uc_user u WHERE u.ID_ in
+		(select ud.USER_ID_ from uc_user_under ud WHERE ud.UNDER_USER_ID_ = #{underUserId,jdbcType=VARCHAR} and ud.ORG_ID_=#{orgId,jdbcType=VARCHAR}  AND ud.IS_DELE_!='1')  AND u.IS_DELE_!='1'
+	</select>
+	<!--获取用户的所有下级  -->
+	<select id="getUnderUsersByUserId" parameterType="java.lang.String" resultMap="BaseResultMap"  >
+		select 
+		<include refid="Base_Column_List" />
+		from uc_user u WHERE 
+		u.ID_ in(select ud.UNDER_USER_ID_ from uc_user_under ud WHERE ud.USER_ID_ = #{upUserId} AND ud.IS_DELE_!='1') AND u.IS_DELE_!='1'
+	</select>
+	<!--获取用户某组织下的下级用户  -->
+	<select id="getUnderUserByUserIdAndOrgId" resultMap="BaseResultMap"  >
+		select 
+		<include refid="Base_Column_List" />
+		 from uc_user u WHERE u.ID_ in 
+		(select ud.UNDER_USER_ID_ from uc_user_under ud WHERE ud.USER_ID_ = #{upUserId,jdbcType=VARCHAR} and ud.ORG_ID_=#{orgId,jdbcType=VARCHAR} AND ud.IS_DELE_!='1') AND u.IS_DELE_!='1'
+	</select>
+	
+	<select id="getOrgUsers" parameterType="java.util.Map" resultMap="BaseResultMap" >
+		 select distinct u.* from UC_USER u inner join uc_org_user orguser on u.ID_ = orguser.USER_ID_
+		 where orguser.IS_REL_ACTIVE_ = 1  AND u.IS_DELE_!='1'  AND orguser.IS_DELE_!='1'
+		 <if test="orgId!=null">
+			and orguser.ORG_ID_ = #{orgId}	
+		</if>
+		<if test="isMain!=null">
+			and orguser.IS_MASTER_ =#{isMain}
+		</if>
+	</select>
+	
+	<!-- 根据组织编码、职务编码获取  -->
+	<select id="getByJobCodeAndOrgCode" resultMap="BaseResultMap"  >
+		select 
+		<include refid="Base_Column_List" />
+		from uc_user where ID_ in (
+		select DISTINCT USER_ID_ from uc_org_user where POS_ID_ in(
+		select a.ID_ from uc_org_post a left join uc_org_job b on a.JOB_ID_= b.ID_ 
+		LEFT JOIN uc_org c on a.ORG_ID_ = c.ID_ 
+		where c.CODE_=#{orgCode,jdbcType=VARCHAR} and b.CODE_=#{jobCode,jdbcType=VARCHAR} AND c.IS_DELE_!='1' AND b.IS_DELE_!='1' AND a.IS_DELE_!='1'
+		) AND IS_DELE_!='1') AND IS_DELE_!='1'
+	</select>
+	
+	
+	<!-- 获取机构下人员 -->
+	<select id="getUserByPost" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select a.* from uc_user a LEFT JOIN uc_org_user b on a.ID_=b.USER_ID_ LEFT JOIN uc_org_post c on b.POS_ID_=c.ID_ 
+		where c.CODE_=#{postCode} and a.IS_DELE_!='1' and b.IS_DELE_!='1' and c.IS_DELE_!='1'
+	</select>
+	
+	<select id="getGroupUsersPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT DISTINCT u.* FROM uc_user u 
+		LEFT JOIN uc_org_user uco ON u.ID_= uco.USER_ID_
+		LEFT JOIN uc_org_user ucp ON u.ID_= ucp.USER_ID_
+		LEFT JOIN uc_user_role ur ON u.ID_= ur.USER_ID_
+		WHERE u.IS_DELE_!='1'  <if test="userIds!=null || orgIds!=null || roleIds!=null || posIds!=null"> AND ( 
+		<if test="userIds!=null">
+		u.ID_ in 
+		<foreach collection="userIds" index="index" item="item" open="(" separator="," close=")">
+              #{item}
+        </foreach>
+        </if>
+        <if test="orgIds!=null">
+        <if test="userIds!=null">
+ 		OR  </if>( uco.ORG_ID_ in
+ 		<foreach collection="orgIds" index="index" item="item" open="(" separator="," close=")">
+              #{item}
+        </foreach>
+           and uco.IS_DELE_!='1'    )
+        </if>
+        <if test="roleIds!=null">
+        <if test="userIds!=null || orgIds!=null">
+ 		OR</if>( ur.ROLE_ID_ in  
+ 		<foreach collection="roleIds" index="index" item="item" open="(" separator="," close=")">
+              #{item}
+        </foreach>
+        and ur.IS_DELE_!='1' )
+        </if>
+        <if test="posIds!=null">
+        <if test="userIds!=null || orgIds!=null || roleIds!=null">
+ 		OR </if>( ucp.POS_ID_ in 
+ 		<foreach collection="posIds" index="index" item="item" open="(" separator="," close=")">
+              #{item}
+        </foreach>
+        and ucp.IS_DELE_!='1' )
+        </if>
+ 		) </if>
+		<if test="whereSql!=null">
+			and ${whereSql}
+		</if>
+		<if test="orderBySql!=null">
+			ORDER BY ${orderBySql}
+		</if>
+		<if test="orderBySql==null">
+			ORDER BY u.ID_ DESC
+		</if>
+	</select>
+	
+	<select id="queryByDim" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT * from(
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM uc_user 
+			${ew.customSqlSegment} 
+		) tmp 
+		<if test="ew.paramNameValuePairs.dimSql!=null">
+			where 1=1 	${ew.paramNameValuePairs.dimSql}
+		</if>
+	</select>
+	
+	<select id="queryByAccount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(1)
+		FROM uc_user 
+		WHERE 
+		ACCOUNT_=#{account} AND IS_DELE_!='1'
+	</select>
+	
+	<select id="queryByUserNumber" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(1)
+		FROM uc_user 
+		WHERE
+		USER_NUMBER_=#{userNumber,jdbcType=VARCHAR} AND IS_DELE_!='1'
+		<if test="account!=null">
+		AND ACCOUNT_!=#{account}
+		</if>
+	</select>
+	
+	<select id="getDemUserQuery" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT DISTINCT u.* 
+		FROM uc_user u inner JOIN (select DISTINCT ORG_ID_,USER_ID_ from UC_ORG_USER WHERE IS_DELE_!='1')  orguser on u.ID_=orguser.USER_ID_
+		inner join UC_ORG org on org.ID_=orguser.ORG_ID_  inner join UC_DEMENSION d on d.ID_ = org.DEM_ID_
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.paramNameValuePairs.customSqlSegment) and ew.paramNameValuePairs.org_id_==null">
+			${ew.paramNameValuePairs.customSqlSegment}
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isEmpty(ew.customSqlSegment)">
+			WHERE
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.customSqlSegment)">
+			AND
+		</if>
+		 org.IS_DELE_!='1' AND u.IS_DELE_!='1'
+		 <if test="ew.paramNameValuePairs.demId!=null">
+		 	AND org.DEM_ID_ = #{ew.paramNameValuePairs.demId}
+		 </if>
+		 <if test="ew.paramNameValuePairs.orgId!=null">
+		 	AND org.ID_ = #{ew.paramNameValuePairs.orgId}
+		 </if>
+		 <if test="ew.paramNameValuePairs.demCode!=null">
+		 	AND d.CODE_ = #{ew.paramNameValuePairs.demCode}
+		 </if>
+		 <if test="ew.paramNameValuePairs.dem_id_!=null">
+		 	AND org.DEM_ID_ = #{ew.paramNameValuePairs.dem_id_}
+		 </if>
+		 <if test="ew.paramNameValuePairs.org_id_!=null">
+		 	AND org.ID_ = #{ew.paramNameValuePairs.org_id_}
+		 </if>
+		 <if test="ew.paramNameValuePairs.dem_code_!=null">
+		 	AND d.CODE_ = #{ew.paramNameValuePairs.dem_code_}
+		 </if>
+
+	</select>
+	<select id="getDelDataByAccount"   parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM uc_user 
+		WHERE 
+		ACCOUNT_=#{account} AND IS_DELE_='1'
+	</select>
+	
+	
+	<select id="queryByType" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT DISTINCT
+		ucuser.ID_,ucuser.FULLNAME_,ucuser.ACCOUNT_,ucuser.EMAIL_,ucuser.MOBILE_,ucuser.CREATE_TIME_,ucuser.ADDRESS_,ucuser.PHOTO_,ucuser.SEX_,ucuser.FROM_,ucuser.STATUS_,ucuser.HAS_SYNC_TO_WX_,
+        ucuser.NOTIFY_TYPE_,ucuser.USER_NUMBER_,ucuser.ID_CARD_,ucuser.PHONE_,ucuser.WEIXIN_,
+		ucuser.BIRTHDAY_,ucuser.ENTRY_DATE_,ucuser.EDUCATION_,ucuser.UPDATE_TIME_,ucuser.IS_DELE_,ucuser.VERSION_
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.paramNameValuePairs.role_id_)" >
+		,ucuserrole.role_id_
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.paramNameValuePairs.org_id_)" >
+		,orguser.org_id_
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.paramNameValuePairs.pos_id_)" >
+		,orguser.pos_id_
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.paramNameValuePairs.dem_id_)" >
+		,org.dem_id_
+		</if>
+		FROM  uc_user ucuser
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.paramNameValuePairs.role_id_)" >
+			 LEFT JOIN uc_user_role ucuserrole on ucuserrole.user_id_ = ucuser.ID_ and ucuserrole.IS_DELE_!='1'
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.paramNameValuePairs.org_id_) || @com.hotent.base.ognl.Ognl@isNotEmpty(ew.paramNameValuePairs.pos_id_)" >
+			 LEFT JOIN uc_org_user orguser on ucuser.ID_=orguser.USER_ID_ and orguser.IS_DELE_!='1'
+		</if>
+		<if test="@com.hotent.base.ognl.Ognl@isNotEmpty(ew.paramNameValuePairs.dem_id_)" >
+			 LEFT JOIN uc_org_user orguser on ucuser.ID_=orguser.USER_ID_ and orguser.IS_DELE_!='1'
+			 LEFT JOIN uc_org org on org.ID_= orguser.org_id_
+		</if>
+		${ew.customSqlSegment}
+	</select>
+	
+	<select id="getSuperFromUnder" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT u.* 
+		FROM uc_user u LEFT JOIN uc_user_under under on u.ID_=under.USER_ID_ and under.IS_DELE_!='1' 
+		left JOIN uc_org org on under.ORG_ID_=org.ID_ and org.IS_DELE_!='1'
+		LEFT JOIN uc_demension dem on org.DEM_ID_ = dem.ID_ and dem.IS_DELE_!='1'
+		where u.IS_DELE_!='1' and under.UNDER_USER_ID_=#{userId}
+		 <if test="demId!=null">
+		 	AND ( org.DEM_ID_ = #{demId} or dem.code_ = #{demId} )
+		 </if>
+		 <if test="orgId!=null">
+		 	AND ( org.ID_ = #{orgId} or org.code_ = #{orgId})
+		 </if>
+		 <if test="whereSql!=null">
+		   AND	${whereSql}
+		</if>
+	</select>
+	
+	<select id="getUserDetailed" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT
+			ucuser.FULLNAME_ as fullName,
+			ucorg.NAME_ as orgName
+		FROM
+		uc_user AS ucuser
+		LEFT JOIN uc_org_user AS ucorguser ON ucuser.ID_ = ucorguser.USER_ID_ AND ucorguser.IS_DELE_ = '1'
+		AND ucorguser.IS_MASTER_ = '1'
+		LEFT JOIN uc_org AS ucorg ON ucorg.ID_ = ucorguser.ORG_ID_
+		WHERE  ucuser.ID_ = #{userId}
+	</select>
+	
+	<select id="getUserByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM uc_user t WHERE 
+		t.FULLNAME_ like #{query}
+		OR
+		t.EMAIL_ like #{query}
+	</select>
+</mapper>

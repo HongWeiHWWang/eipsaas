@@ -1,0 +1,1135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <xs:schema xmlns="http://www.jee-soft.cn/bpm" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:base="http://www.jee-soft.cn/bpm/plugins/userCalc/base"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:activiti="http://activiti.org/bpmn"
+    targetNamespace="http://www.jee-soft.cn/bpm" elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+    <xs:import namespace="http://www.omg.org/spec/BPMN/20100524/MODEL" schemaLocation="BPMN20.xsd"/>
+    <xs:import namespace="http://www.omg.org/spec/DD/20100524/DI" schemaLocation="DI.xsd"/>
+    <xs:import namespace="http://www.omg.org/spec/DD/20100524/DC" schemaLocation="DC.xsd"/>
+    <xs:import namespace="http://activiti.org/bpmn"
+        schemaLocation="activiti-bpmn-extensions-5.11.xsd"/>
+    <xs:import namespace="http://www.jee-soft.cn/bpm/plugins/userCalc/base"
+        schemaLocation="../../../../../xsd/usercalc/base.xsd"/>
+
+
+    <xs:element name="definitions" type="tDefinitions"> </xs:element>
+
+    <xs:complexType name="tDefinitions" mixed="false">
+        <xs:complexContent>
+            <xs:extension base="bpmn2:tDefinitions">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="0" ref="extProcess"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="varDefs">
+        <xs:annotation>
+            <xs:documentation>流程级别的变量定义列表</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="variableDef" maxOccurs="unbounded" minOccurs="0"
+                    type="variableDef"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="extProcess">
+        <xs:annotation>
+            <xs:documentation>扩展的流程定义</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="extProperties" minOccurs="1" maxOccurs="1" type="extProperties">
+                    <xs:annotation>
+                        <xs:documentation>流程定义的扩展配置属性</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element minOccurs="0" ref="varDefs"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="extNodes">
+                    <xs:annotation>
+                        <xs:documentation>节点定义列表</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="userNode"
+                                type="userNode">
+                                <xs:annotation>
+                                    <xs:documentation>任务节点</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="signNode"
+                                type="signNode">
+                                <xs:annotation>
+                                    <xs:documentation>会签节点</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+
+
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="baseNode"
+                                type="baseNode">
+                                <xs:annotation>
+                                    <xs:documentation>基础节点</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element minOccurs="0" ref="extPlugins">
+                    <xs:annotation>
+                        <xs:documentation>流程扩展插件</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element minOccurs="0" name="boList">
+                    <xs:annotation>
+                        <xs:documentation>BO接口定义</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="boDef" maxOccurs="unbounded" minOccurs="1"
+                                type="boDef"/>
+                        </xs:sequence>
+                        
+                        <xs:attribute name="saveMode" type="boSaveMode">
+                            <xs:annotation>
+                                <xs:documentation>BO保存模式</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                    </xs:complexType>
+
+                    <xs:unique name="keyUnique">
+                        <xs:selector xpath="boDef"/>
+                        <xs:field xpath="@key"/>
+                    </xs:unique>
+                    
+                </xs:element>
+                
+                
+
+                <xs:element name="globalForm" maxOccurs="1" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>全局表单</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element type="formExt" name="form" minOccurs="0" maxOccurs="unbounded"></xs:element>
+                            <xs:element type="mobileForm" name="mobileForm" minOccurs="0" maxOccurs="unbounded"></xs:element>
+                       </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+
+                <xs:element name="instForm" maxOccurs="1" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>流程实例表单</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element type="formExt" name="form" minOccurs="0" maxOccurs="unbounded"></xs:element>
+                            <xs:element type="mobileForm" name="mobileForm" minOccurs="0" maxOccurs="unbounded"></xs:element>
+                       </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+                
+            </xs:all>
+
+        </xs:complexType>
+    </xs:element>
+     
+    <xs:complexType name="formExt">
+        <xs:complexContent>
+            <xs:extension base="form">
+                <xs:attribute name="prevHandler" type="xs:string"></xs:attribute>
+                <xs:attribute name="postHandler" type="xs:string"></xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+     
+     <xs:complexType name="mobileForm">
+         <xs:annotation>
+             <xs:documentation>手机表单</xs:documentation>
+         </xs:annotation>
+         <xs:complexContent>
+             <xs:extension base="form"> </xs:extension>
+         </xs:complexContent>
+     </xs:complexType>
+     
+    <xs:simpleType name="formCategory">
+        <xs:annotation>
+            <xs:documentation>表单类型(内部和外部)</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="inner"/>
+            <xs:enumeration value="frame"/>
+        </xs:restriction>
+
+    </xs:simpleType>
+     
+     <xs:simpleType name="boSaveMode">
+         <xs:annotation>
+             <xs:documentation>BO在流程中保存模式</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:string">
+             <xs:enumeration value="boObject">
+                 <xs:annotation>
+                     <xs:documentation>bo对象</xs:documentation>
+                 </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="database">
+                 <xs:annotation>
+                     <xs:documentation>数据库</xs:documentation>
+                 </xs:annotation>
+             </xs:enumeration>
+         </xs:restriction>
+         
+     </xs:simpleType> 
+     
+    
+
+    <xs:complexType name="form">
+        
+    	<xs:attribute name="parentFlowKey" type="xs:string">
+    		<xs:annotation>
+                <xs:documentation>父流程定义KEY</xs:documentation>
+            </xs:annotation>
+    	</xs:attribute>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>表单名称</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="type" type="formCategory" use="required">
+            <xs:annotation>
+                <xs:documentation>表单类型</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="formValue" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>表单配置</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+       
+
+    </xs:complexType>
+
+	<!-- 
+    <xs:complexType name="boVar">
+        <xs:attribute name="name" type="xs:string"></xs:attribute>
+        <xs:attribute  name="varName" type="xs:string"></xs:attribute>
+        <xs:attribute name="type" type="variableType"></xs:attribute>
+        <xs:attribute name="path" type="xs:string"></xs:attribute>
+    </xs:complexType>
+	 -->
+
+
+    <xs:complexType name="boDef">
+    	<!-- 
+        <xs:sequence>
+            <xs:element name="boVar" type="boVar" minOccurs="0" maxOccurs="unbounded"></xs:element>
+            
+        </xs:sequence>
+         -->
+        <xs:attribute name="key" use="required" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>脚本或者条件中引用的名称</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+     
+        <xs:attribute name="name" use="required" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>BO定义的名称</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="isRequired"  type="xs:boolean" default="true">
+            <xs:annotation>
+                <xs:documentation>是否必须</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <xs:complexType name="extProperty">
+        <xs:annotation>
+            <xs:documentation>扩展的属性</xs:documentation>
+        </xs:annotation>
+
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>属性名称</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="value" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>属性值</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <xs:complexType name="variableDef">
+        <xs:annotation>
+            <xs:documentation>流程变量定义</xs:documentation>
+        </xs:annotation>
+        <xs:all>
+            <xs:element name="name" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>变量名称</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="key" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>变量Key</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element default="string" name="type" type="variableType">
+                <xs:annotation>
+                    <xs:documentation>变量类型</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="defaultVal" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>缺省值</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element default="true" minOccurs="0" name="isRequired" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>是否必填</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="description" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>变量描述</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:all>
+    </xs:complexType>
+
+
+
+
+    <xs:simpleType name="variableType">
+        <xs:annotation>
+            <xs:documentation>变量类型</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="string"/>
+            <xs:enumeration value="int"/>
+            <xs:enumeration value="double"/>
+            <xs:enumeration value="float"/>
+            <xs:enumeration value="datetime"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    
+
+    <xs:complexType name="extProperties">
+        <xs:annotation>
+            <xs:documentation>流程定义的扩展配置属性</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="subjectRule" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>流程实例标题</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="description" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>流程定义描述</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element default="mail" name="startNotifyType" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>启动时通知相关负责人的消息类型</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element default="mail" name="archiveNotifyType" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation> 归档时发送消息通知发起人类型</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element default="mail" name="notifyType" type="xs:string" minOccurs="0"
+                maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>通知消息类型</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+           
+            <xs:element default="true" name="skipFirstNode" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>是否跳过第一节点</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element default="false" name="firstNodeUserAssign" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>是否选择第一个节点的执行人</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element default="true" name="skipSameUser" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>相邻节点相同执行人跳过</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element default="false" name="allowCopyTo" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>允许抄送</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element default="false" name="allowTransTo" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>是否允许转办</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element default="" name="useMainForm" type="xs:string">
+    			<xs:annotation>
+    				<xs:documentation>使用表单主版本</xs:documentation>
+    			</xs:annotation>
+    		</xs:element>
+    		<xs:element default="history" name="doneDataVersion" type="xs:string">
+    			<xs:annotation>
+    				<xs:documentation>查看已办数据版本</xs:documentation>
+    			</xs:annotation>
+    		</xs:element>
+            <xs:element default="false" name="allowReference" type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation>允许参考</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element default="5" name="allowRefCounts" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>允许参考的数量</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="extProperty" maxOccurs="unbounded" minOccurs="0" type="extProperty">
+                <xs:annotation>
+                    <xs:documentation>扩展动态属性</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+
+        </xs:sequence>
+        <xs:attribute name="allowExecutorEmpty" default="true" type="xs:boolean" use="optional">
+            <xs:annotation>
+                <xs:documentation>允许执行人为空</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="skipExecutorEmpty" default="false" type="xs:boolean" use="optional">
+            <xs:annotation>
+                <xs:documentation>当任务执行人为空时跳过</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="testNotifyType" default="mail" type="xs:string" use="optional" >
+        	 <xs:annotation>
+                    <xs:documentation>测试状态通知类型</xs:documentation>
+                </xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="skipRules" use="optional">
+        	<xs:annotation>
+        		<xs:documentation>跳转规则,使用逗号分割(跳转规则为ISkipCondition的type属性)</xs:documentation>
+        	</xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dateType" default="worktime" type="xs:string" use="optional" >
+        	 <xs:annotation>
+                    <xs:documentation>任务审批天数类型(按日历计算， 工作日计算)</xs:documentation>
+                </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dueTime" default="0" type="xs:int" use="optional">
+        	<xs:annotation>
+        		<xs:documentation>任务审批期限（分钟）</xs:documentation>
+        	</xs:annotation>
+        </xs:attribute>
+        
+        
+    </xs:complexType>
+
+
+
+    <xs:complexType name="baseNode">
+        <xs:annotation>
+            <xs:documentation>流程节点配置基本信息</xs:documentation>
+        </xs:annotation>
+        
+		<xs:group ref="baseElements"></xs:group>
+        
+		<xs:attributeGroup ref="baseNodeAttr"></xs:attributeGroup>
+
+    </xs:complexType>
+    
+    <xs:group name="baseElements">
+    	<xs:annotation>
+    		<xs:documentation>base节点配置元素</xs:documentation>
+    	</xs:annotation>
+    	<xs:all >
+            <xs:element minOccurs="0" maxOccurs="1" ref="varDefs"/>
+            <xs:element minOccurs="0" maxOccurs="1" ref="extPlugins">
+                <xs:annotation>
+                    <xs:documentation>流程节点扩展插件</xs:documentation>
+                </xs:annotation>
+               
+            </xs:element>
+            
+            <xs:element minOccurs="0" maxOccurs="1" name="form" type="form">
+                <xs:annotation>
+                    <xs:documentation>流程表单</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+    	    
+    	    <xs:element minOccurs="0" maxOccurs="1" name="mobileForm" type="mobileForm">
+    	        <xs:annotation>
+    	            <xs:documentation>流程表单</xs:documentation>
+    	        </xs:annotation>
+    	    </xs:element>
+    	    
+    	    
+    	    
+    	    <xs:element name="scripts" type="scripts" minOccurs="0" maxOccurs="1" >
+    	        <xs:annotation>
+    	            <xs:documentation>事件脚本</xs:documentation>
+    	        </xs:annotation>
+    	    </xs:element>
+    	  
+    	    
+    	    <xs:element name="formInitSetting" type="formInitSetting" minOccurs="0">
+    	        <xs:annotation>
+    	            <xs:documentation>表单数据初始化</xs:documentation>
+    	        </xs:annotation>
+    	    </xs:element>
+    	    
+    	    <xs:element name="propers" type="propers" minOccurs="0" >
+            	<xs:annotation>
+            		<xs:documentation>节点的其他属性</xs:documentation>
+            	</xs:annotation>
+    	    </xs:element>
+    	    
+    	     <xs:element name="buttons" minOccurs="0" maxOccurs="1" type="buttons">
+                  <xs:annotation>
+                      <xs:documentation>流程按钮定义</xs:documentation>
+                  </xs:annotation>
+             </xs:element>
+            <xs:element name="subProcessForm" type="subProcessForm" minOccurs="0" maxOccurs="1">
+            	<xs:annotation>
+                    <xs:documentation>子流程表单</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:all>
+    </xs:group>
+     
+    
+    
+    <xs:complexType name="subProcessForm">
+    	<xs:annotation>
+    		<xs:documentation>子流程表单</xs:documentation>
+    	</xs:annotation>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+    		<xs:element name="form" minOccurs="0" maxOccurs="unbounded"  type="form"></xs:element>
+            <xs:element name="mobileForm" minOccurs="0" maxOccurs="unbounded"  type="mobileForm"></xs:element>
+    	</xs:choice>
+    </xs:complexType>
+    
+    <xs:element name="extPlugins">
+    	<xs:annotation>
+             <xs:documentation>流程节点扩展插件</xs:documentation>
+       </xs:annotation>
+        <xs:complexType>       
+	        <xs:sequence>
+	            <xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other"/>
+	        </xs:sequence>
+    	</xs:complexType>
+    </xs:element>
+    
+    <xs:group name="userNodeElements">
+    	<xs:annotation>
+    		<xs:documentation>userNode节点配置元素</xs:documentation>
+    	</xs:annotation>
+    	<xs:all >
+    		<!-- 基础 -->
+    		<xs:element minOccurs="0" maxOccurs="1" ref="varDefs"/>
+            <xs:element minOccurs="0" maxOccurs="1" ref="extPlugins">
+                <xs:annotation>
+                    <xs:documentation>流程节点扩展插件</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="form" type="form">
+                <xs:annotation>
+                    <xs:documentation>流程表单</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+    	    
+    	    <xs:element minOccurs="0" maxOccurs="1" name="mobileForm" type="mobileForm">
+    	        <xs:annotation>
+    	            <xs:documentation>流程手机表单</xs:documentation>
+    	        </xs:annotation>
+    	    </xs:element>
+    	    
+            <xs:element name="subProcessForm" type="subProcessForm" minOccurs="0" maxOccurs="1">
+            	<xs:annotation>
+                    <xs:documentation>子流程表单</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+    		
+    		<!--用户任务相关-->
+    		<xs:element minOccurs="0" maxOccurs="1" name="transformRules" type="transformRules">
+                  <xs:annotation>
+                      <xs:documentation>流程跳转规则</xs:documentation>
+                  </xs:annotation>
+                  
+             </xs:element>
+
+             <xs:element name="buttons" minOccurs="0" maxOccurs="1" type="buttons">
+                  <xs:annotation>
+                      <xs:documentation>流程按钮定义</xs:documentation>
+                  </xs:annotation>
+                 
+             </xs:element>
+    	    <xs:element name="scripts" type="scripts" minOccurs="0" maxOccurs="1" >
+    	        <xs:annotation>
+    	            <xs:documentation>事件脚本</xs:documentation>
+    	        </xs:annotation>
+    	    </xs:element>
+    	  
+    	    
+    	    <xs:element name="propers" type="propers" minOccurs="0" >
+            	<xs:annotation>
+            		<xs:documentation>节点的其他属性</xs:documentation>
+            	</xs:annotation>
+    	    </xs:element>
+    	    
+    	    <xs:element name="subTableRights" type="subTableRights" minOccurs="0">
+    	        <xs:annotation>
+    	            <xs:documentation>子表数据权限</xs:documentation>
+    	        </xs:annotation>
+    	    </xs:element>
+    	    <xs:element name="formInitSetting" type="formInitSetting" minOccurs="0">
+    	        <xs:annotation>
+    	            <xs:documentation>表单数据初始化</xs:documentation>
+    	        </xs:annotation>
+    	    </xs:element>
+        </xs:all>
+    </xs:group>
+    
+    
+    <xs:complexType name="transformRules">
+           <xs:sequence>
+               <xs:element name="rule" minOccurs="1" maxOccurs="unbounded"
+                   type="transformRule"/>
+           </xs:sequence>
+    </xs:complexType>
+    
+    
+    <xs:group name="signNodeElements">
+    	<xs:annotation>
+    		<xs:documentation>signNode节点配置元素</xs:documentation>
+    	</xs:annotation>
+    	<xs:all >
+    		<!-- 基础 -->
+    		<xs:element minOccurs="0" maxOccurs="1" ref="varDefs"/>
+            <xs:element minOccurs="0" maxOccurs="1" ref="extPlugins">
+                <xs:annotation>
+                    <xs:documentation>流程节点扩展插件</xs:documentation>
+                </xs:annotation>
+                
+            </xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="form" type="form">
+                <xs:annotation>
+                    <xs:documentation>流程表单</xs:documentation>
+                </xs:annotation>
+
+            </xs:element>
+    	    
+    	    <xs:element minOccurs="0" maxOccurs="1" name="mobileForm" type="mobileForm">
+    	        <xs:annotation>
+    	            <xs:documentation>流程手机表单</xs:documentation>
+    	        </xs:annotation>
+    	    </xs:element>
+            
+            <xs:element name="subProcessForm" type="subProcessForm" minOccurs="0">
+            	<xs:annotation>
+                    <xs:documentation>子流程表单</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+    		<!--用户任务相关-->
+    		<xs:element minOccurs="0" maxOccurs="1" name="transformRules" type="transformRules">
+                  <xs:annotation>
+                      <xs:documentation>流程跳转规则</xs:documentation>
+                  </xs:annotation>
+             </xs:element>
+
+             <xs:element name="buttons" minOccurs="0" maxOccurs="1" type="buttons">
+                  <xs:annotation>
+                      <xs:documentation>流程按钮定义</xs:documentation>
+                  </xs:annotation>
+                 
+             </xs:element>
+             <!-- 会签相关 -->
+    	     <xs:element name="signSetting" minOccurs="1">
+    	         <xs:complexType>
+    	             <xs:all>
+    	                 <xs:element name="signRule">
+    	                     <xs:complexType>
+    	                         <xs:attribute name="decideType" use="required" type="decideType"/>
+    	                         <xs:attribute name="voteType" use="required" type="voteType"/>
+    	                         <xs:attribute name="voteAmount" type="xs:int" use="required">
+    	                             <xs:annotation>
+    	                                 <xs:documentation>投票次数</xs:documentation>
+    	                             </xs:annotation>
+    	                         </xs:attribute>
+    	                         <xs:attribute name="followMode" use="required" type="followMode"/>
+    	                     </xs:complexType>
+    	                 </xs:element>
+    	                 
+    	                 <xs:element name="privilege" minOccurs="0" >
+    	                     <xs:annotation>
+    	                         <xs:documentation>操作特权</xs:documentation>
+    	                     </xs:annotation>
+    	                     <xs:complexType>
+    	                         <xs:sequence>
+    	                             <xs:element name="item" minOccurs="0" maxOccurs="unbounded">
+    	                                 <xs:complexType>
+    	                                     <xs:sequence>
+    	                                         <xs:element name="members">
+    	                                             <xs:annotation>
+    	                                                 <xs:documentation>特权的成员,使用人员插件</xs:documentation>
+    	                                             </xs:annotation>
+    	                                         </xs:element>
+    	                                     </xs:sequence>
+    	                                     <xs:attribute name="mode" use="required"
+    	                                         type="privilegeMode"/>
+    	                                 </xs:complexType>
+    	                             </xs:element>
+    	                         </xs:sequence>
+    	                     </xs:complexType>
+    	                 </xs:element>
+    	             </xs:all>
+    	         </xs:complexType>
+    	         
+    	     </xs:element>
+    	    
+    	    <xs:element name="scripts" type="scripts" minOccurs="0" maxOccurs="1" >
+    	        <xs:annotation>
+    	            <xs:documentation>事件脚本</xs:documentation>
+    	        </xs:annotation>
+    	    </xs:element>
+            <xs:element name="propers" type="propers" minOccurs="0" >
+            	<xs:annotation>
+            		<xs:documentation>节点的其他属性</xs:documentation>
+            	</xs:annotation>
+            </xs:element>
+    	    
+    	    <xs:element name="subTableRights" type="subTableRights" minOccurs="0">
+    	        <xs:annotation>
+    	            <xs:documentation>子表数据权限</xs:documentation>
+    	        </xs:annotation>
+    	    </xs:element>
+    	    
+    	    <xs:element name="formInitSetting" type="formInitSetting" minOccurs="0">
+    	        <xs:annotation>
+    	            <xs:documentation>表单数据初始化</xs:documentation>
+    	        </xs:annotation>
+    	    </xs:element>
+        </xs:all>
+    </xs:group>
+    
+    <xs:attributeGroup name="baseNodeAttr">
+    	<xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>节点名称</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="nodeType" type="nodeType" use="required">
+            <xs:annotation>
+                <xs:documentation>节点类型(普通任务节点,分发节点)</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="bpmnElement" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>流程节点ID</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+       
+        <xs:attribute name="description" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>节点描述</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    
+    </xs:attributeGroup>
+
+
+    <xs:complexType name="userNode">
+        <xs:annotation>
+            <xs:documentation>流程节点配置,包括开始节点,结束节点,子流程等</xs:documentation>
+        </xs:annotation>
+        
+        <xs:group ref="userNodeElements"></xs:group>
+        <xs:attributeGroup ref="baseNodeAttr"></xs:attributeGroup>
+    </xs:complexType>
+    
+    
+    <xs:complexType name="signNode">
+        <xs:annotation>
+            <xs:documentation>会签节点配置，继承自userNode</xs:documentation>
+        </xs:annotation>
+       	<xs:group ref="signNodeElements"></xs:group>
+       	
+       	
+       	<xs:attributeGroup ref="baseNodeAttr"></xs:attributeGroup>
+    </xs:complexType>
+    
+    <xs:complexType name="buttons">
+    	<xs:sequence>
+    		<xs:element name="button" type="buttonDef" minOccurs="0" maxOccurs="unbounded"></xs:element>
+    	</xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="buttonDef">
+        <xs:annotation>
+            <xs:documentation>按钮定义</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="beforeScript" type="xs:string" maxOccurs="1" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>前置脚本</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="afterScript" type="xs:string" maxOccurs="1" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>后置脚本</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="groovyScript" type="xs:string" maxOccurs="1" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>后置脚本</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="rejectMode" type="xs:string" maxOccurs="1" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>驳回模式</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>按钮名称</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="alias" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>按钮别名</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+    </xs:complexType>
+
+    <xs:simpleType name="nodeType">
+        <xs:annotation>
+            <xs:documentation>节点类型(普通任务节点,分发节点)</xs:documentation>
+        </xs:annotation>
+
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="common"/>
+            <xs:enumeration value="fork"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="transformRule">
+        <xs:annotation>
+            <xs:documentation>节点跳转规则</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="condition" type="xs:string" maxOccurs="1" minOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="targetnode" type="xs:string" use="required"/>
+    </xs:complexType>
+	
+	
+
+    <xs:simpleType name="decideType">
+        <xs:annotation>
+            <xs:documentation>决策方式 agree,通过,refuse拒绝</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="agree"/>
+            <xs:enumeration value="refuse"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="voteType">
+        <xs:annotation>
+            <xs:documentation>票数类型 amount,绝对票数,percent,百分比</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="amount"/>
+            <xs:enumeration value="percent"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="privilegeMode">
+        <xs:annotation>
+            <xs:documentation>特权模式 all,所有特权,oneticket,一票制,direct,直接处理,allowAddSign.允许补签</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="all"/>
+            <xs:enumeration value="oneticket"/>
+            <xs:enumeration value="direct"/>
+            <xs:enumeration value="allowAddSign"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="followMode">
+        <xs:annotation>
+            <xs:documentation>后续处理模式 wait,等待投完票,complete,直接完成</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="wait"/>
+            <xs:enumeration value="complete"/>
+        </xs:restriction>
+    </xs:simpleType>
+     
+     
+     <xs:simpleType name="scriptType">
+         <xs:annotation>
+             <xs:documentation>脚本类型</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:string">
+             <xs:enumeration value="start"/>
+             <xs:enumeration value="end"/>
+             <xs:enumeration value="create"></xs:enumeration>
+             <xs:enumeration value="complete"></xs:enumeration>
+         </xs:restriction>
+     </xs:simpleType>
+     
+     <xs:complexType name="scripts">
+         <xs:annotation>
+             <xs:documentation>节点脚本</xs:documentation>
+         </xs:annotation>
+         <xs:sequence>
+             <xs:element name="script" type="script" minOccurs="0" maxOccurs="unbounded"></xs:element>
+         </xs:sequence>
+     </xs:complexType>
+     
+    <xs:complexType name="script">
+        <xs:annotation>
+            <xs:documentation>节点脚本</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="content" type="xs:string"></xs:element>
+        </xs:sequence>
+        <xs:attribute name="scriptType" type="scriptType" use="required">
+            <xs:annotation>
+                <xs:documentation>脚本类型</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        
+    </xs:complexType>
+    
+    <xs:complexType name="propers">
+    	<xs:sequence>
+    		<xs:element name="item" type="propItem" minOccurs="1" maxOccurs="unbounded"> </xs:element>
+    	</xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="propItem">
+    	<xs:attribute name="parentDefKey" type="xs:string">
+    		<xs:annotation>
+    			<xs:documentation>父类流程定义KEY</xs:documentation>
+    		</xs:annotation>
+    	</xs:attribute>
+    
+    	<xs:attribute name="jumpType" type="xs:string">
+    		<xs:annotation>
+    			<xs:documentation>跳转类型</xs:documentation>
+    		</xs:annotation>
+    	</xs:attribute>
+    	
+    	<xs:attribute name="backMode" type="xs:string"  use="optional">
+    		<xs:annotation>
+    			<xs:documentation>返回方式</xs:documentation>
+    		</xs:annotation>
+    	</xs:attribute>
+    	<xs:attribute name="backNode" type="xs:string"  use="optional">
+    		<xs:annotation>
+    			<xs:documentation>返回节点</xs:documentation>
+    		</xs:annotation>
+    	</xs:attribute>
+    		
+    	<xs:attribute name="backUserMode" type="xs:string"  use="optional">
+    		<xs:annotation>
+    			<xs:documentation>驳回处理人模式</xs:documentation>
+    		</xs:annotation>
+    	</xs:attribute>
+    	
+    	<xs:attribute name="initFillData" type="xs:boolean" use="optional">
+    		<xs:annotation>
+    			<xs:documentation>初始化填报数据</xs:documentation>
+    		</xs:annotation>
+    	</xs:attribute>
+    	
+    	
+    	
+    	<xs:attribute name="hideOpinion" type="xs:boolean" use="optional">
+    		<xs:annotation>
+    			<xs:documentation>隐藏意见</xs:documentation>
+    		</xs:annotation>
+    	</xs:attribute>
+    	<xs:attribute name="hidePath" type="xs:boolean" use="optional">
+    		<xs:annotation>
+    			<xs:documentation>隐藏路径</xs:documentation>
+    		</xs:annotation>
+    	</xs:attribute>
+    	
+    	<xs:attribute name="prevHandler" type="xs:string">
+    		<xs:annotation>
+    			<xs:documentation>前置处理器</xs:documentation>
+    		</xs:annotation>
+    	</xs:attribute>
+    	<xs:attribute name="postHandler" type="xs:string">
+    		<xs:annotation>
+    			<xs:documentation>后置处理器</xs:documentation>
+    		</xs:annotation>
+    	</xs:attribute>
+    	
+    	<xs:attribute name="notifyType" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>通知类型使用逗号分割</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="allowExecutorEmpty" default="true" type="xs:boolean" use="optional">
+            <xs:annotation>
+                <xs:documentation>允许执行人为空</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="skipExecutorEmpty" default="false" type="xs:boolean" use="optional">
+            <xs:annotation>
+                <xs:documentation>当任务执行人为空时跳过</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="popWin" default="true" type="xs:boolean" use="optional">
+            <xs:annotation>
+                <xs:documentation>是否弹窗</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dateType" default="worktime" type="xs:string" use="optional" >
+        	 <xs:annotation>
+                    <xs:documentation>任务审批天数类型(按日历计算， 工作日计算)</xs:documentation>
+                </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dueTime" default="0" type="xs:int" use="optional">
+        	<xs:annotation>
+        		<xs:documentation>任务审批期限（分钟）</xs:documentation>
+        	</xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="choiceExcutor" type="xs:string" use="optional">
+        	<xs:annotation>
+        		<xs:documentation>选择执行人</xs:documentation>
+        	</xs:annotation>
+        </xs:attribute>
+    
+        <xs:attribute name="allowEditUrgentState" type="xs:boolean" use="optional">
+        	<xs:annotation>
+        		<xs:documentation>允许设置紧急状态</xs:documentation>
+        	</xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="allowSmsApproval" type="xs:boolean" use="optional">
+        	<xs:annotation>
+        		<xs:documentation>允许短信审批</xs:documentation>
+        	</xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="userNodeType" type="xs:string">
+    		<xs:annotation>
+    			<xs:documentation>节点类型</xs:documentation>
+    		</xs:annotation>
+    	</xs:attribute>
+    </xs:complexType>
+     
+     
+     <xs:complexType name="subTableRights">
+         <xs:sequence>
+             <xs:element name="rightsItem" type="rightsItem" maxOccurs="unbounded">
+                 <xs:annotation><xs:documentation>权限项</xs:documentation></xs:annotation>
+             </xs:element>
+         </xs:sequence>
+     </xs:complexType>
+     <xs:complexType name="rightsItem">
+         <xs:sequence>
+             <xs:element name="script" type="xs:string" minOccurs="0" maxOccurs="1"></xs:element>
+         </xs:sequence>
+         <xs:attribute name="parentDefKey" type="xs:string" use="optional">
+             <xs:annotation><xs:documentation>父流程KEY</xs:documentation></xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="tableName" use="required"><xs:annotation><xs:documentation>表名</xs:documentation></xs:annotation></xs:attribute>
+         <xs:attribute name="rightType" type="subRightType" use="required"><xs:annotation><xs:documentation>权限类型</xs:documentation></xs:annotation></xs:attribute>
+     </xs:complexType>
+     
+     <xs:simpleType name="subRightType">
+         <xs:annotation>
+             <xs:documentation>权限类型</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:string">
+             <xs:enumeration value="curUser"></xs:enumeration>
+             <xs:enumeration value="curOrg"></xs:enumeration>
+             <xs:enumeration value="script"></xs:enumeration>
+         </xs:restriction>
+         
+     </xs:simpleType>
+     
+     
+     
+     <xs:complexType name="formInitSetting">
+         <xs:annotation>
+             <xs:documentation>表单数据设定</xs:documentation>
+         </xs:annotation>
+         <xs:sequence>
+             <xs:element name="initItem" type="initItem" maxOccurs="unbounded" minOccurs="0"></xs:element>
+         </xs:sequence>
+     </xs:complexType>
+     
+     <xs:complexType name="initItem">
+         <xs:all>
+             <xs:element name="prevSetting"  minOccurs="0">
+                 <xs:annotation>
+                     <xs:documentation>前缀设定</xs:documentation>
+                 </xs:annotation>
+                 <xs:complexType>
+                     <xs:sequence>
+                         <xs:element name="fieldSetting" type="fieldSetting" maxOccurs="unbounded"></xs:element>
+                     </xs:sequence>
+                 </xs:complexType>
+             </xs:element>
+             <xs:element name="saveSetting" minOccurs="0" >
+                 <xs:annotation>
+                     <xs:documentation>后置设定</xs:documentation>
+                 </xs:annotation>
+                 <xs:complexType>
+                     <xs:sequence>
+                         <xs:element name="fieldSetting" type="fieldSetting" maxOccurs="unbounded"></xs:element>
+                     </xs:sequence>
+                 </xs:complexType>
+             </xs:element>
+         </xs:all>
+         <xs:attribute name="parentDefKey" type="xs:string">
+             <xs:annotation><xs:documentation>父流程KEY</xs:documentation></xs:annotation>
+         </xs:attribute>
+     </xs:complexType>
+     
+     <xs:complexType name="fieldSetting">
+         <xs:sequence>
+             <xs:element name="setting" type="xs:string"></xs:element>
+         </xs:sequence>
+         <xs:attribute name="description" type="xs:string"></xs:attribute>
+     </xs:complexType>
+</xs:schema>

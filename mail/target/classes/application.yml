@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: dev
+    base: com.hotent.mail.controller
+    title: "mail"
+    description: "mail"
+    version: "7.2.3"
+    platform: mysql
+    
+# Server settings (ServerProperties)
+server:
+  port: 8085
+  address: 0.0.0.0
+  sessionTimeout: 30
+  contextPath: /
+  session:
+    timeout: 30
